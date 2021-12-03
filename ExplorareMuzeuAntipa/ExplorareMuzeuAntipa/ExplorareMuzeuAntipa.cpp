@@ -1,7 +1,5 @@
-// Lab6 - Texturi.cpp : Defines the entry point for the console application.
-//
 
-#include <stdlib.h> // necesare pentru citirea shader-elor
+#include <stdlib.h> 
 #include <stdio.h>
 #include <math.h> 
 
@@ -23,8 +21,10 @@
 #pragma comment (lib, "OpenGL32.lib")
 
 // settings
-const unsigned int SCR_WIDTH = 800;
-const unsigned int SCR_HEIGHT = 600;
+const unsigned int SCR_WIDTH = 1900;
+const unsigned int SCR_HEIGHT = 900;
+
+
 
 enum ECameraMovementType
 {
@@ -47,8 +47,11 @@ private:
 	const float PITCH = 0.0f;
 	const float FOV = 45.0f;
 	glm::vec3 startPosition;
-
 public:
+
+
+	Camera() = default;
+
 	Camera(const int width, const int height, const glm::vec3& position)
 	{
 		startPosition = position;
@@ -93,6 +96,7 @@ public:
 
 	const glm::mat4 GetViewMatrix() const
 	{
+
 		// Returns the View Matrix
 		return glm::lookAt(position, position + forward, up);
 	}
@@ -100,6 +104,7 @@ public:
 	const glm::mat4 GetProjectionMatrix() const
 	{
 		glm::mat4 Proj = glm::mat4(1);
+
 		if (isPerspective) {
 			float aspectRatio = ((float)(width)) / height;
 			Proj = glm::perspective(glm::radians(FoVy), aspectRatio, zNear, zFar);
@@ -205,7 +210,7 @@ private:
 	}
 
 protected:
-	const float cameraSpeedFactor = 30.5f;
+	const float cameraSpeedFactor = 100.5f;
 	const float mouseSensitivity = 0.1f;
 
 	// Perspective properties
@@ -230,10 +235,10 @@ protected:
 	float lastX = 0.f, lastY = 0.f;
 };
 
-GLuint VAO, VBO, EBO;
+GLuint VAO, Exterior, Interior, EBO;
 unsigned int VertexShaderId, FragmentShaderId, ProgramId;
 GLuint ProjMatrixLocation, ViewMatrixLocation, WorldMatrixLocation;
-unsigned int texture1Location, texture2Location;
+unsigned int exteriorTextureLocation, interiorTextureLocation;
 
 
 Camera* pCamera = nullptr;
@@ -275,46 +280,81 @@ const GLchar* FragmentShader =
 };
 
 
-void CreateVBO()
+void CreateExterior()
 {
-	
-
 	float vertices[] = {
-		10.0f, 10.0f, 20.0f,   1.0f, 1.0f, 1.0f,   0.0f, 0.0f,
-		20.0f, 10.0f, 20.0f,   1.0f, 1.0f, 1.0f,   0.0f, 1.0f,
-		20.0f, 20.0f, 20.0f,   1.0f, 1.0f, 1.0f,   1.0f, 1.0f,
-		10.0f, 20.0f, 20.0f,   1.0f, 1.0f, 1.0f,   1.0f, 0.0f,
-		10.0f, 10.0f, 10.0f,   1.0f, 1.0f, 1.0f,   1.0f, 1.0f,
-		20.0f, 10.0f, 10.0f,   1.0f, 1.0f, 1.0f,   1.0f, 0.0f,
-		20.0f, 20.0f, 10.0f,   1.0f, 1.0f, 1.0f,   0.0f, 0.0f,
-		10.0f, 20.0f, 10.0f,   1.0f, 1.0f, 1.0f,   0.0f, 1.0f,
+		//front-face
+	   -85.0f,  50.0f,  50.0f,   1.0f, 1.0f, 1.0f,  0.0f,  1.0f,  // stanga-sus
+		85.0f,  50.0f,  50.0f,   1.0f, 1.0f, 1.0f,  1.0f,  1.0f,  // dreapta-sus
+		85.0f, -50.0f,  50.0f,   1.0f, 1.0f, 1.0f,  1.0f,  0.0f,  // dreapta-jos    
+	   -85.0f, -50.0f,  50.0f,   1.0f, 1.0f, 1.0f,  0.0f,  0.0f,  // stanga-jos
 
+	   //back-face
+	   -85.0f,  50.0f, -50.0f,   1.0f, 1.0f, 1.0f,  0.0f,  1.0f,  // stanga-sus
+		85.0f,  50.0f, -50.0f,   1.0f, 1.0f, 1.0f,  1.0f,  1.0f,  // dreapta-sus
+		85.0f, -50.0f, -50.0f,   1.0f, 1.0f, 1.0f,  1.0f,  0.0f,  // dreapta-jos       
+	   -85.0f, -50.0f, -50.0f,   1.0f, 1.0f, 1.0f,  0.0f,  0.0f,  // stanga-jos
 
+	   //left-face
+		-85.0f,  50.0f, -50.0f,   1.0f, 1.0f, 1.0f, 0.0f,  1.0f,  // stanga-sus
+		-85.0f,  50.0f,  50.0f,   1.0f, 1.0f, 1.0f, 1.0f,  1.0f,  // dreapta-sus
+		-85.0f, -50.0f,  50.0f,   1.0f, 1.0f, 1.0f, 1.0f,  0.0f,  // dreapta-jos        
+		-85.0f, -50.0f, -50.0f,   1.0f, 1.0f, 1.0f, 0.0f,  0.0f,  // stanga-jos
 
-		
+	   //right-face
+		85.0f,  50.0f,  50.0f,  1.0f,  1.0f, 1.0f,  0.0f,  1.0f,  // stanga-sus 
+		85.0f,  50.0f, -50.0f,  1.0f,  1.0f, 1.0f,  1.0f,  1.0f,  // dreapta-sus
+		85.0f, -50.0f, -50.0f,  1.0f,  1.0f, 1.0f,  1.0f,  0.0f,  // dreapta-jos    
+		85.0f, -50.0f,  50.0f,  1.0f,  1.0f, 1.0f,  0.0f,  0.0f,  // stanga-jos
+
+	   //top-face
+	   -85.0f,  50.0f, -50.0f,  1.0f, 1.0f, 1.0f,   0.0f,  1.0f,  // stanga-sus
+		85.0f,  50.0f, -50.0f,  1.0f, 1.0f, 1.0f,   1.0f,  1.0f,  // dreapta-sus
+		85.0f,  50.0f,  50.0f,  1.0f, 1.0f, 1.0f,   1.0f,  0.0f,  // dreapta-jos       
+	   -85.0f,  50.0f,  50.0f,  1.0f, 1.0f, 1.0f,   0.0f,  0.0f,  //stanga-sus
+
+	   //bottom-face
+	   -85.0f, -50.0f, -50.0f,  1.0f, 1.0f, 1.0f,   0.0f,  1.0f,  // stanga-sus
+		85.0f, -50.0f, -50.0f,  1.0f, 1.0f, 1.0f,   1.0f,  1.0f,  // dreapta-sus
+		85.0f, -50.0f,  50.0f,  1.0f, 1.0f, 1.0f,   1.0f,  0.0f,  // dreapta-jos         
+	   -85.0f, -50.0f,  50.0f,  1.0f, 1.0f, 1.0f,   0.0f,  0.0f,  // stanga-sus
+
 	};
 	unsigned int indices[] = {
-		0,1,2,
-	   0,2,3,
-	   1,5,6,
-	   1,6,2,
-	   5,4,7,
-	   5,7,6,
-	   4,0,3,
-	   4,3,7,
-	   0,5,1,
-	   0,4,5,
-	   3,2,6,
-	   3,6,7
+		//front
+		0,1,2, //down
+		2,3,0, //up
+
+		//left
+		8,9,10,
+		10,11,8,
+
+		//back
+		4,5,6,
+		6,7,4,
+
+		//right
+		12,13,14,
+		14,15,12,
+
+		//bottom
+		20,21,22,
+		22,23,20,
+
+		//top
+		16,17,18,
+		18,19,16
 	};
 
+
+
 	glGenVertexArrays(1, &VAO);
-	glGenBuffers(1, &VBO);
+	glGenBuffers(1, &Exterior);
 	glGenBuffers(1, &EBO);
 
 	glBindVertexArray(VAO);
 
-	glBindBuffer(GL_ARRAY_BUFFER, VBO);
+	glBindBuffer(GL_ARRAY_BUFFER, Exterior);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
@@ -330,12 +370,110 @@ void CreateVBO()
 	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
 	glEnableVertexAttribArray(2);
 }
-void DestroyVBO()
+
+void CreateInterior()
+{
+	float vertices[] = {
+		//front-face
+	   -84.9f,  49.9f,  49.9f,   1.0f, 1.0f, 1.0f,  0.0f,  1.0f,  // stanga-sus
+		84.9f,  49.9f,  49.9f,   1.0f, 1.0f, 1.0f,  1.0f,  1.0f,  // dreapta-sus
+		84.9f, -49.9f,  49.9f,   1.0f, 1.0f, 1.0f,  1.0f,  0.0f,  // dreapta-jos    
+	   -84.9f, -49.9f,  49.9f,   1.0f, 1.0f, 1.0f,  0.0f,  0.0f,  // stanga-jos
+
+	   //back-face
+	   -84.9f,  49.9f, -49.9f,   1.0f, 1.0f, 1.0f,  0.0f,  1.0f,  // stanga-sus
+		84.9f,  49.9f, -49.9f,   1.0f, 1.0f, 1.0f,  1.0f,  1.0f,  // dreapta-sus
+		84.9f, -49.9f, -49.9f,   1.0f, 1.0f, 1.0f,  1.0f,  0.0f,  // dreapta-jos       
+	   -84.9f, -49.9f, -49.9f,   1.0f, 1.0f, 1.0f,  0.0f,  0.0f,  // stanga-jos
+
+	   //left-face
+		-84.9f,  49.9f, -49.9f,   1.0f, 1.0f, 1.0f, 0.0f,  1.0f,  // stanga-sus
+		-84.9f,  49.9f,  49.9f,   1.0f, 1.0f, 1.0f, 1.0f,  1.0f,  // dreapta-sus
+		-84.9f, -49.9f,  49.9f,   1.0f, 1.0f, 1.0f, 1.0f,  0.0f,  // dreapta-jos        
+		-84.9f, -49.9f, -49.9f,   1.0f, 1.0f, 1.0f, 0.0f,  0.0f,  // stanga-jos
+
+	   //right-face
+		84.9f,  49.9f,  49.9f,  1.0f,  1.0f, 1.0f,  0.0f,  1.0f,  // stanga-sus 
+		84.9f,  49.9f, -49.9f,  1.0f,  1.0f, 1.0f,  1.0f,  1.0f,  // dreapta-sus
+		84.9f, -49.9f, -49.9f,  1.0f,  1.0f, 1.0f,  1.0f,  0.0f,  // dreapta-jos    
+		84.9f, -49.9f,  49.9f,  1.0f,  1.0f, 1.0f,  0.0f,  0.0f,  // stanga-jos
+
+	   //top-face
+	   -84.9f,  49.9f, -49.9f,  1.0f, 1.0f, 1.0f,   0.0f,  1.0f,  // stanga-sus
+		84.9f,  49.9f, -49.9f,  1.0f, 1.0f, 1.0f,   1.0f,  1.0f,  // dreapta-sus
+		84.9f,  49.9f,  49.9f,  1.0f, 1.0f, 1.0f,   1.0f,  0.0f,  // dreapta-jos       
+	   -84.9f,  49.9f,  49.9f,  1.0f, 1.0f, 1.0f,   0.0f,  0.0f,  //stanga-sus
+
+	   //bottom-face
+	   -84.9f, -49.9f, -49.9f,  1.0f, 1.0f, 1.0f,   0.0f,  1.0f,  // stanga-sus
+		84.9f, -49.9f, -49.9f,  1.0f, 1.0f, 1.0f,   1.0f,  1.0f,  // dreapta-sus
+		84.9f, -49.9f,  49.9f,  1.0f, 1.0f, 1.0f,   1.0f,  0.0f,  // dreapta-jos         
+	   -84.9f, -49.9f,  49.9f,  1.0f, 1.0f, 1.0f,   0.0f,  0.0f,  // stanga-sus
+
+	};
+	unsigned int indices[] = {
+		//front
+		0,1,2, //down
+		2,3,0, //up
+
+		//left
+		8,9,10,
+		10,11,8,
+
+		//back
+		4,5,6,
+		6,7,4,
+
+		//right
+		12,13,14,
+		14,15,12,
+
+		//bottom
+		20,21,22,
+		22,23,20,
+
+		//top
+		16,17,18,
+		18,19,16
+	};
+
+	glGenVertexArrays(1, &VAO);
+	glGenBuffers(1, &Interior);
+	glGenBuffers(1, &EBO);
+
+	glBindVertexArray(VAO);
+
+	glBindBuffer(GL_ARRAY_BUFFER, Interior);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
+
+	// position attribute
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
+	glEnableVertexAttribArray(0);
+	// color attribute
+	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float)));
+	glEnableVertexAttribArray(1);
+	// texture coord attribute
+	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
+	glEnableVertexAttribArray(2);
+}
+
+void DestroyExterior()
 {
 	glDeleteVertexArrays(1, &VAO);
-	glDeleteBuffers(1, &VBO);
+	glDeleteBuffers(1, &Exterior);
 	glDeleteBuffers(1, &EBO);
 }
+
+void DestroyInterior()
+{
+	glDeleteVertexArrays(1, &VAO);
+	glDeleteBuffers(1, &Interior);
+	glDeleteBuffers(1, &EBO);
+}
+
 void CreateShaders()
 {
 	VertexShaderId = glCreateShader(GL_VERTEX_SHADER);
@@ -375,10 +513,10 @@ void CreateShaders()
 	ViewMatrixLocation = glGetUniformLocation(ProgramId, "ViewMatrix");
 	WorldMatrixLocation = glGetUniformLocation(ProgramId, "WorldMatrix");
 
-	glUniform1i(glGetUniformLocation(ProgramId, "texture1"), 0);
-	glUniform1i(glGetUniformLocation(ProgramId, "texture2"), 1);
-	glUniform1f(glGetUniformLocation(ProgramId, "mixValue"), 0.5);
+	glUniform1i(glGetUniformLocation(ProgramId, "texture"), 0);
+
 }
+
 void DestroyShaders()
 {
 	glUseProgram(0);
@@ -392,14 +530,12 @@ void DestroyShaders()
 	glDeleteProgram(ProgramId);
 }
 
-void CreateTextures(const std::string& strExePath)
+void CreateExteriorTexture(const std::string& strExePath)
 {
 	// load and create a texture 
-	// -------------------------
-	// texture 1
-	// ---------
-	glGenTextures(1, &texture1Location);
-	glBindTexture(GL_TEXTURE_2D, texture1Location);
+
+	glGenTextures(1, &exteriorTextureLocation);
+	glBindTexture(GL_TEXTURE_2D, exteriorTextureLocation);
 	// set the texture wrapping parameters
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
@@ -409,7 +545,7 @@ void CreateTextures(const std::string& strExePath)
 	// load image, create texture and generate mipmaps
 	int width, height, nrChannels;
 	stbi_set_flip_vertically_on_load(true); // tell stb_image.h to flip loaded texture's on the y-axis.
-	unsigned char* data = stbi_load((strExePath + "\\bricks.jpg").c_str(), &width, &height, &nrChannels, 0);
+	unsigned char* data = stbi_load((strExePath + "\\exterior.jpg").c_str(), &width, &height, &nrChannels, 0);
 	if (data) {
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
 		glGenerateMipmap(GL_TEXTURE_2D);
@@ -418,10 +554,15 @@ void CreateTextures(const std::string& strExePath)
 		std::cout << "Failed to load texture" << std::endl;
 	}
 	stbi_image_free(data);
-	// texture 2
-	// ---------
-	glGenTextures(1, &texture2Location);
-	glBindTexture(GL_TEXTURE_2D, texture2Location);
+
+}
+
+void CreateInteriorTexture(const std::string& strExePath)
+{
+	// load and create a texture 
+
+	glGenTextures(1, &interiorTextureLocation);
+	glBindTexture(GL_TEXTURE_2D, interiorTextureLocation);
 	// set the texture wrapping parameters
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
@@ -429,9 +570,10 @@ void CreateTextures(const std::string& strExePath)
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	// load image, create texture and generate mipmaps
-	data = stbi_load((strExePath + "\\Bricks.jpg").c_str(), &width, &height, &nrChannels, 0);
+	int width, height, nrChannels;
+	stbi_set_flip_vertically_on_load(true); // tell stb_image.h to flip loaded texture's on the y-axis.
+	unsigned char* data = stbi_load((strExePath + "\\interior.jpg").c_str(), &width, &height, &nrChannels, 0);
 	if (data) {
-		// note that the awesomeface.png has transparency and thus an alpha channel, so make sure to tell OpenGL the data type is of GL_RGBA
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
 		glGenerateMipmap(GL_TEXTURE_2D);
 	}
@@ -439,10 +581,12 @@ void CreateTextures(const std::string& strExePath)
 		std::cout << "Failed to load texture" << std::endl;
 	}
 	stbi_image_free(data);
+
 }
+
 void Initialize(const std::string& strExePath)
 {
-	glClearColor(0.0f, 0.0f, 0.0f, 1.0f); // culoarea de fond a ecranului
+	glClearColor(0.1f, 0.1f, 0.2f, 0.8f); // culoarea de fond a ecranului
 	//glEnable(GL_CULL_FACE);
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_COLOR_MATERIAL);
@@ -451,17 +595,30 @@ void Initialize(const std::string& strExePath)
 	//glFrontFace(GL_CCW);
 	//glCullFace(GL_BACK);
 
-	CreateVBO();
+	CreateExterior();
+	CreateExteriorTexture(strExePath);
+	CreateInterior();
+	CreateInteriorTexture(strExePath);
 	CreateShaders();
-	CreateTextures(strExePath);
+
 
 	// Create camera
-	pCamera = new Camera(SCR_WIDTH, SCR_HEIGHT, glm::vec3(25.0, 25, 25));
+	pCamera = new Camera(SCR_WIDTH, SCR_HEIGHT, glm::vec3(18, 26, 250));
 }
 
-void RenderCube()
+void RenderExterior()
 {
-	glBindBuffer(GL_ARRAY_BUFFER, VBO);
+	glBindBuffer(GL_ARRAY_BUFFER, Exterior);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+
+	int indexArraySize;
+	glGetBufferParameteriv(GL_ELEMENT_ARRAY_BUFFER, GL_BUFFER_SIZE, &indexArraySize);
+	glDrawElements(GL_TRIANGLES, indexArraySize / sizeof(unsigned int), GL_UNSIGNED_INT, 0);
+}
+
+void RenderInterior()
+{
+	glBindBuffer(GL_ARRAY_BUFFER, Interior);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
 
 	int indexArraySize;
@@ -473,23 +630,19 @@ void RenderFunction()
 {
 	glm::vec3 cubePositions[] = {
 	   glm::vec3(10.0f,  10.0f,   10.0f),
-	   /* glm::vec3(10.0f,  20.0f,   20.0f),
-		glm::vec3(10.0f,  0.0f,   20.0f),
-		glm::vec3(10.0f,  10.0f,   30.0f),
-		glm::vec3(20.0f,  10.0f,   20.0f),
-		glm::vec3(0.0f,  10.0f,   20.0f),*/
-
+	   glm::vec3(9.9f,   9.9f,     9.9f),
 	};
 
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
 	glUseProgram(ProgramId);
 
 	// bind textures on corresponding texture units
+
 	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, texture1Location);
+	glBindTexture(GL_TEXTURE_2D, exteriorTextureLocation);
+
 	glActiveTexture(GL_TEXTURE1);
-	glBindTexture(GL_TEXTURE_2D, texture2Location);
+	glBindTexture(GL_TEXTURE_2D, interiorTextureLocation);
 
 	glm::mat4 projection = pCamera->GetProjectionMatrix();
 	glUniformMatrix4fv(ProjMatrixLocation, 1, GL_FALSE, glm::value_ptr(projection));
@@ -497,28 +650,23 @@ void RenderFunction()
 	glm::mat4 view = pCamera->GetViewMatrix();
 	glUniformMatrix4fv(ViewMatrixLocation, 1, GL_FALSE, glm::value_ptr(view));
 
-	/* glm::mat4 view;
-	 float radius = 10.0f;
-	 float camX = sin(glfwGetTime()) * radius;
-	 float camZ = cos(glfwGetTime()) * radius;
-	 view = glm::lookAt(glm::vec3(camX, 0.0f, camZ), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
-	 glUniformMatrix4fv(ViewMatrixLocation, 1, GL_FALSE, glm::value_ptr(view));*/
-
 	glBindVertexArray(VAO);
 
 	for (unsigned int i = 0; i < sizeof(cubePositions) / sizeof(cubePositions[0]); i++) {
 		// calculate the model matrix for each object and pass it to shader before drawing
 		glm::mat4 worldTransf = glm::translate(glm::mat4(1.0), cubePositions[i]);
 		glUniformMatrix4fv(WorldMatrixLocation, 1, GL_FALSE, glm::value_ptr(worldTransf));
-
-		RenderCube();
+		RenderExterior();
+		RenderInterior();
 	}
 }
+
 
 void Cleanup()
 {
 	DestroyShaders();
-	DestroyVBO();
+	DestroyExterior();
+	DestroyInterior();
 
 	delete pCamera;
 }
@@ -549,7 +697,7 @@ int main(int argc, char** argv)
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
 	// glfw window creation
-	GLFWwindow* window = glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, "Lab 6", NULL, NULL);
+	GLFWwindow* window = glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, "Explorare-Muzeu", NULL, NULL);
 	if (window == NULL) {
 		std::cout << "Failed to create GLFW window" << std::endl;
 		glfwTerminate();
@@ -643,24 +791,5 @@ void scroll_callback(GLFWwindow* window, double xoffset, double yOffset)
 
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
-
-	static float s_fMixValue = 0.5;
-	if (glfwGetKey(window, GLFW_KEY_I) == GLFW_PRESS) {
-
-		if (s_fMixValue < 1.0)
-		{
-			s_fMixValue += 0.1;
-			glUniform1f(glGetUniformLocation(ProgramId, "mixValue"), s_fMixValue);
-		}
-	}
-
-	if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) {
-		if (s_fMixValue > 0.0)
-		{
-			s_fMixValue -= 0.1;
-			glUniform1f(glGetUniformLocation(ProgramId, "mixValue"), s_fMixValue);
-		}
-	}
-
 
 }
