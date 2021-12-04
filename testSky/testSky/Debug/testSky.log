@@ -1,0 +1,5 @@
+﻿  Skybox.cpp
+C:\Users\Alex\Documents\GitHub\Explorare-Muzeu-Antipa\testSky\testSky\Camera.h(2,10): fatal error C1083: Cannot open include file: 'GLM.hpp': No such file or directory
+  testSky.cpp
+C:\Users\Alex\Documents\GitHub\Explorare-Muzeu-Antipa\testSky\testSky\testSky.cpp(3,10): fatal error C1083: Cannot open include file: 'glew.h': No such file or directory
+  Generating Code...
