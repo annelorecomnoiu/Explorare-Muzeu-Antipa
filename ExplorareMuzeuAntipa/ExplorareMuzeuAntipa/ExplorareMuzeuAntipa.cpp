@@ -1,10 +1,10 @@
-
-#include <stdlib.h> 
+#include <stdlib.h> // necesare pentru citirea shaderStencilTesting-elor
 #include <stdio.h>
 #include <math.h> 
 
 #include <GL/glew.h>
 
+#define GLM_FORCE_CTOR_INIT 
 #include <GLM.hpp>
 #include <gtc/matrix_transform.hpp>
 #include <gtc/type_ptr.hpp>
@@ -12,19 +12,20 @@
 #include <glfw3.h>
 
 #include <iostream>
+#include <fstream>
+#include <sstream>
 
 #define STB_IMAGE_IMPLEMENTATION
 #include <stb_image.h>
-
+#include "OBJ_Loader.h"
 #pragma comment (lib, "glfw3dll.lib")
 #pragma comment (lib, "glew32.lib")
 #pragma comment (lib, "OpenGL32.lib")
 
 // settings
-const unsigned int SCR_WIDTH = 1900;
-const unsigned int SCR_HEIGHT = 900;
-
-
+const unsigned int SCR_WIDTH = 1920;
+const unsigned int SCR_HEIGHT = 1080;
+objl::Loader Loader;
 
 enum ECameraMovementType
 {
@@ -47,11 +48,8 @@ private:
 	const float PITCH = 0.0f;
 	const float FOV = 45.0f;
 	glm::vec3 startPosition;
+
 public:
-
-
-	Camera() = default;
-
 	Camera(const int width, const int height, const glm::vec3& position)
 	{
 		startPosition = position;
@@ -94,9 +92,13 @@ public:
 		glViewport(0, 0, windowWidth, windowHeight);
 	}
 
+	const glm::vec3 GetPosition() const
+	{
+		return position;
+	}
+
 	const glm::mat4 GetViewMatrix() const
 	{
-
 		// Returns the View Matrix
 		return glm::lookAt(position, position + forward, up);
 	}
@@ -104,7 +106,6 @@ public:
 	const glm::mat4 GetProjectionMatrix() const
 	{
 		glm::mat4 Proj = glm::mat4(1);
-
 		if (isPerspective) {
 			float aspectRatio = ((float)(width)) / height;
 			Proj = glm::perspective(glm::radians(FoVy), aspectRatio, zNear, zFar);
@@ -205,12 +206,12 @@ private:
 		this->forward.z = sin(glm::radians(yaw)) * cos(glm::radians(pitch));
 		this->forward = glm::normalize(this->forward);
 		// Also re-calculate the Right and Up vector
-		right = glm::normalize(glm::cross(forward, worldUp));  // Normalize the vectors, because their length gets closer to 0 the more you look up or down which results in slower movement.
+		right = glm::normalize(glm::cross(forward, worldUp));
 		up = glm::normalize(glm::cross(right, forward));
 	}
 
 protected:
-	const float cameraSpeedFactor = 100.5f;
+	const float cameraSpeedFactor = 2.5f;
 	const float mouseSensitivity = 0.1f;
 
 	// Perspective properties
@@ -235,451 +236,281 @@ protected:
 	float lastX = 0.f, lastY = 0.f;
 };
 
-GLuint VAO, Exterior, Interior, EBO;
-unsigned int VertexShaderId, FragmentShaderId, ProgramId;
-GLuint ProjMatrixLocation, ViewMatrixLocation, WorldMatrixLocation;
-unsigned int exteriorTextureLocation, interiorTextureLocation;
+class Shader
+{
+public:
+	// constructor generates the shaderStencilTesting on the fly
+	// ------------------------------------------------------------------------
+	Shader(const char* vertexPath, const char* fragmentPath)
+	{
+		Init(vertexPath, fragmentPath);
+	}
 
+	~Shader()
+	{
+		glDeleteProgram(ID);
+	}
+
+	// activate the shaderStencilTesting
+	// ------------------------------------------------------------------------
+	void Use() const
+	{
+		glUseProgram(ID);
+	}
+
+	unsigned int GetID() const { return ID; }
+
+	// MVP
+	unsigned int loc_model_matrix;
+	unsigned int loc_view_matrix;
+	unsigned int loc_projection_matrix;
+
+	// utility uniform functions
+	void SetInt(const std::string& name, int value) const
+	{
+		glUniform1i(glGetUniformLocation(ID, name.c_str()), value);
+	}
+	void SetFloat(const std::string& name, float value) const
+	{
+		glUniform1f(glGetUniformLocation(ID, name.c_str()), value);
+	}
+	void SetVec3(const std::string& name, const glm::vec3& value) const
+	{
+		glUniform3fv(glGetUniformLocation(ID, name.c_str()), 1, &value[0]);
+	}
+	void SetVec3(const std::string& name, float x, float y, float z) const
+	{
+		glUniform3f(glGetUniformLocation(ID, name.c_str()), x, y, z);
+	}
+	void SetMat4(const std::string& name, const glm::mat4& mat) const
+	{
+		glUniformMatrix4fv(glGetUniformLocation(ID, name.c_str()), 1, GL_FALSE, &mat[0][0]);
+	}
+
+private:
+	void Init(const char* vertexPath, const char* fragmentPath)
+	{
+		// 1. retrieve the vertex/fragment source code from filePath
+		std::string vertexCode;
+		std::string fragmentCode;
+		std::ifstream vShaderFile;
+		std::ifstream fShaderFile;
+		// ensure ifstream objects can throw exceptions:
+		vShaderFile.exceptions(std::ifstream::failbit | std::ifstream::badbit);
+		fShaderFile.exceptions(std::ifstream::failbit | std::ifstream::badbit);
+		try {
+			// open files
+			vShaderFile.open(vertexPath);
+			fShaderFile.open(fragmentPath);
+			std::stringstream vShaderStream, fShaderStream;
+			// read file's buffer contents into streams
+			vShaderStream << vShaderFile.rdbuf();
+			fShaderStream << fShaderFile.rdbuf();
+			// close file handlers
+			vShaderFile.close();
+			fShaderFile.close();
+			// convert stream into string
+			vertexCode = vShaderStream.str();
+			fragmentCode = fShaderStream.str();
+		}
+		catch (std::ifstream::failure e) {
+			std::cout << "ERROR::SHADER::FILE_NOT_SUCCESFULLY_READ" << std::endl;
+		}
+		const char* vShaderCode = vertexCode.c_str();
+		const char* fShaderCode = fragmentCode.c_str();
+
+		// 2. compile shaders
+		unsigned int vertex, fragment;
+		// vertex shaderStencilTesting
+		vertex = glCreateShader(GL_VERTEX_SHADER);
+		glShaderSource(vertex, 1, &vShaderCode, NULL);
+		glCompileShader(vertex);
+		CheckCompileErrors(vertex, "VERTEX");
+		// fragment Shader
+		fragment = glCreateShader(GL_FRAGMENT_SHADER);
+		glShaderSource(fragment, 1, &fShaderCode, NULL);
+		glCompileShader(fragment);
+		CheckCompileErrors(fragment, "FRAGMENT");
+		// shaderStencilTesting Program
+		ID = glCreateProgram();
+		glAttachShader(ID, vertex);
+		glAttachShader(ID, fragment);
+		glLinkProgram(ID);
+		CheckCompileErrors(ID, "PROGRAM");
+
+		// 3. delete the shaders as they're linked into our program now and no longer necessery
+		glDeleteShader(vertex);
+		glDeleteShader(fragment);
+	}
+
+	// utility function for checking shaderStencilTesting compilation/linking errors.
+	// ------------------------------------------------------------------------
+	void CheckCompileErrors(unsigned int shaderStencilTesting, std::string type)
+	{
+		GLint success;
+		GLchar infoLog[1024];
+		if (type != "PROGRAM") {
+			glGetShaderiv(shaderStencilTesting, GL_COMPILE_STATUS, &success);
+			if (!success) {
+				glGetShaderInfoLog(shaderStencilTesting, 1024, NULL, infoLog);
+				std::cout << "ERROR::SHADER_COMPILATION_ERROR of type: " << type << "\n" << infoLog << "\n -- --------------------------------------------------- -- " << std::endl;
+			}
+		}
+		else {
+			glGetProgramiv(shaderStencilTesting, GL_LINK_STATUS, &success);
+			if (!success) {
+				glGetProgramInfoLog(shaderStencilTesting, 1024, NULL, infoLog);
+				std::cout << "ERROR::PROGRAM_LINKING_ERROR of type: " << type << "\n" << infoLog << "\n -- --------------------------------------------------- -- " << std::endl;
+			}
+		}
+	}
+private:
+	unsigned int ID;
+};
 
 Camera* pCamera = nullptr;
 
-// Shader-ul de varfuri / Vertex shader (este privit ca un sir de caractere)
-const GLchar* VertexShader =
+unsigned int CreateTexture(const std::string& strTexturePath)
 {
-   "#version 330\n"\
-   "layout (location = 0) in vec3 aPos;\n"\
-   "layout (location = 1) in vec3 aColor;\n"\
-   "layout (location = 2) in vec2 aTexCoord;\n"\
-   "out vec3 ourColor;\n"\
-   "out vec2 TexCoord;\n"\
-   "uniform mat4 ProjMatrix;\n"\
-   "uniform mat4 ViewMatrix;\n"\
-   "uniform mat4 WorldMatrix;\n"\
-   "void main()\n"\
-   "{\n"\
-   "gl_Position = ProjMatrix * ViewMatrix * WorldMatrix * vec4(aPos, 1.0);\n"\
-   "ourColor = aColor;\n"\
-   "TexCoord = vec2(aTexCoord.x, aTexCoord.y);\n"\
-   "}\n"
-};
-// Shader-ul de fragment / Fragment shader (este privit ca un sir de caractere)
-const GLchar* FragmentShader =
-{
-   "#version 330\n"\
-   "out vec4 FragColor;\n"\
-   "in vec3 ourColor;\n"\
-   "in vec2 TexCoord;\n"\
-   "uniform float mixValue;\n"\
-   "uniform sampler2D texture1;\n"\
-   "uniform sampler2D texture2;\n"\
-   "void main()\n"\
-   "{\n"\
-   "  FragColor = mix(texture(texture1, TexCoord), texture(texture2, TexCoord), mixValue) *vec4(ourColor,1.0);\n"\
+	unsigned int textureId = -1;
 
-   "}\n"
-};
-
-
-void CreateExterior()
-{
-	float vertices[] = {
-		//front-face
-	   -85.0f,  50.0f,  50.0f,   1.0f, 1.0f, 1.0f,  0.0f,  1.0f,  // stanga-sus
-		85.0f,  50.0f,  50.0f,   1.0f, 1.0f, 1.0f,  1.0f,  1.0f,  // dreapta-sus
-		85.0f, -50.0f,  50.0f,   1.0f, 1.0f, 1.0f,  1.0f,  0.0f,  // dreapta-jos    
-	   -85.0f, -50.0f,  50.0f,   1.0f, 1.0f, 1.0f,  0.0f,  0.0f,  // stanga-jos
-
-	   //back-face
-	   -85.0f,  50.0f, -50.0f,   1.0f, 1.0f, 1.0f,  0.0f,  1.0f,  // stanga-sus
-		85.0f,  50.0f, -50.0f,   1.0f, 1.0f, 1.0f,  1.0f,  1.0f,  // dreapta-sus
-		85.0f, -50.0f, -50.0f,   1.0f, 1.0f, 1.0f,  1.0f,  0.0f,  // dreapta-jos       
-	   -85.0f, -50.0f, -50.0f,   1.0f, 1.0f, 1.0f,  0.0f,  0.0f,  // stanga-jos
-
-	   //left-face
-		-85.0f,  50.0f, -50.0f,   1.0f, 1.0f, 1.0f, 0.0f,  1.0f,  // stanga-sus
-		-85.0f,  50.0f,  50.0f,   1.0f, 1.0f, 1.0f, 1.0f,  1.0f,  // dreapta-sus
-		-85.0f, -50.0f,  50.0f,   1.0f, 1.0f, 1.0f, 1.0f,  0.0f,  // dreapta-jos        
-		-85.0f, -50.0f, -50.0f,   1.0f, 1.0f, 1.0f, 0.0f,  0.0f,  // stanga-jos
-
-	   //right-face
-		85.0f,  50.0f,  50.0f,  1.0f,  1.0f, 1.0f,  0.0f,  1.0f,  // stanga-sus 
-		85.0f,  50.0f, -50.0f,  1.0f,  1.0f, 1.0f,  1.0f,  1.0f,  // dreapta-sus
-		85.0f, -50.0f, -50.0f,  1.0f,  1.0f, 1.0f,  1.0f,  0.0f,  // dreapta-jos    
-		85.0f, -50.0f,  50.0f,  1.0f,  1.0f, 1.0f,  0.0f,  0.0f,  // stanga-jos
-
-	   //top-face
-	   -85.0f,  50.0f, -50.0f,  1.0f, 1.0f, 1.0f,   0.0f,  1.0f,  // stanga-sus
-		85.0f,  50.0f, -50.0f,  1.0f, 1.0f, 1.0f,   1.0f,  1.0f,  // dreapta-sus
-		85.0f,  50.0f,  50.0f,  1.0f, 1.0f, 1.0f,   1.0f,  0.0f,  // dreapta-jos       
-	   -85.0f,  50.0f,  50.0f,  1.0f, 1.0f, 1.0f,   0.0f,  0.0f,  //stanga-sus
-
-	   //bottom-face
-	   -85.0f, -50.0f, -50.0f,  1.0f, 1.0f, 1.0f,   0.0f,  1.0f,  // stanga-sus
-		85.0f, -50.0f, -50.0f,  1.0f, 1.0f, 1.0f,   1.0f,  1.0f,  // dreapta-sus
-		85.0f, -50.0f,  50.0f,  1.0f, 1.0f, 1.0f,   1.0f,  0.0f,  // dreapta-jos         
-	   -85.0f, -50.0f,  50.0f,  1.0f, 1.0f, 1.0f,   0.0f,  0.0f,  // stanga-sus
-
-	};
-	unsigned int indices[] = {
-		//front
-		0,1,2, //down
-		2,3,0, //up
-
-		//left
-		8,9,10,
-		10,11,8,
-
-		//back
-		4,5,6,
-		6,7,4,
-
-		//right
-		12,13,14,
-		14,15,12,
-
-		//bottom
-		20,21,22,
-		22,23,20,
-
-		//top
-		16,17,18,
-		18,19,16
-	};
-
-
-
-	glGenVertexArrays(1, &VAO);
-	glGenBuffers(1, &Exterior);
-	glGenBuffers(1, &EBO);
-
-	glBindVertexArray(VAO);
-
-	glBindBuffer(GL_ARRAY_BUFFER, Exterior);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
-
-	// position attribute
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
-	glEnableVertexAttribArray(0);
-	// color attribute
-	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float)));
-	glEnableVertexAttribArray(1);
-	// texture coord attribute
-	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
-	glEnableVertexAttribArray(2);
-}
-
-void CreateInterior()
-{
-	float vertices[] = {
-		//front-face
-	   -84.9f,  49.9f,  49.9f,   1.0f, 1.0f, 1.0f,  0.0f,  1.0f,  // stanga-sus
-		84.9f,  49.9f,  49.9f,   1.0f, 1.0f, 1.0f,  1.0f,  1.0f,  // dreapta-sus
-		84.9f, -49.9f,  49.9f,   1.0f, 1.0f, 1.0f,  1.0f,  0.0f,  // dreapta-jos    
-	   -84.9f, -49.9f,  49.9f,   1.0f, 1.0f, 1.0f,  0.0f,  0.0f,  // stanga-jos
-
-	   //back-face
-	   -84.9f,  49.9f, -49.9f,   1.0f, 1.0f, 1.0f,  0.0f,  1.0f,  // stanga-sus
-		84.9f,  49.9f, -49.9f,   1.0f, 1.0f, 1.0f,  1.0f,  1.0f,  // dreapta-sus
-		84.9f, -49.9f, -49.9f,   1.0f, 1.0f, 1.0f,  1.0f,  0.0f,  // dreapta-jos       
-	   -84.9f, -49.9f, -49.9f,   1.0f, 1.0f, 1.0f,  0.0f,  0.0f,  // stanga-jos
-
-	   //left-face
-		-84.9f,  49.9f, -49.9f,   1.0f, 1.0f, 1.0f, 0.0f,  1.0f,  // stanga-sus
-		-84.9f,  49.9f,  49.9f,   1.0f, 1.0f, 1.0f, 1.0f,  1.0f,  // dreapta-sus
-		-84.9f, -49.9f,  49.9f,   1.0f, 1.0f, 1.0f, 1.0f,  0.0f,  // dreapta-jos        
-		-84.9f, -49.9f, -49.9f,   1.0f, 1.0f, 1.0f, 0.0f,  0.0f,  // stanga-jos
-
-	   //right-face
-		84.9f,  49.9f,  49.9f,  1.0f,  1.0f, 1.0f,  0.0f,  1.0f,  // stanga-sus 
-		84.9f,  49.9f, -49.9f,  1.0f,  1.0f, 1.0f,  1.0f,  1.0f,  // dreapta-sus
-		84.9f, -49.9f, -49.9f,  1.0f,  1.0f, 1.0f,  1.0f,  0.0f,  // dreapta-jos    
-		84.9f, -49.9f,  49.9f,  1.0f,  1.0f, 1.0f,  0.0f,  0.0f,  // stanga-jos
-
-	   //top-face
-	   -84.9f,  49.9f, -49.9f,  1.0f, 1.0f, 1.0f,   0.0f,  1.0f,  // stanga-sus
-		84.9f,  49.9f, -49.9f,  1.0f, 1.0f, 1.0f,   1.0f,  1.0f,  // dreapta-sus
-		84.9f,  49.9f,  49.9f,  1.0f, 1.0f, 1.0f,   1.0f,  0.0f,  // dreapta-jos       
-	   -84.9f,  49.9f,  49.9f,  1.0f, 1.0f, 1.0f,   0.0f,  0.0f,  //stanga-sus
-
-	   //bottom-face
-	   -84.9f, -49.9f, -49.9f,  1.0f, 1.0f, 1.0f,   0.0f,  1.0f,  // stanga-sus
-		84.9f, -49.9f, -49.9f,  1.0f, 1.0f, 1.0f,   1.0f,  1.0f,  // dreapta-sus
-		84.9f, -49.9f,  49.9f,  1.0f, 1.0f, 1.0f,   1.0f,  0.0f,  // dreapta-jos         
-	   -84.9f, -49.9f,  49.9f,  1.0f, 1.0f, 1.0f,   0.0f,  0.0f,  // stanga-sus
-
-	};
-	unsigned int indices[] = {
-		//front
-		0,1,2, //down
-		2,3,0, //up
-
-		//left
-		8,9,10,
-		10,11,8,
-
-		//back
-		4,5,6,
-		6,7,4,
-
-		//right
-		12,13,14,
-		14,15,12,
-
-		//bottom
-		20,21,22,
-		22,23,20,
-
-		//top
-		16,17,18,
-		18,19,16
-	};
-
-	glGenVertexArrays(1, &VAO);
-	glGenBuffers(1, &Interior);
-	glGenBuffers(1, &EBO);
-
-	glBindVertexArray(VAO);
-
-	glBindBuffer(GL_ARRAY_BUFFER, Interior);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
-
-	// position attribute
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
-	glEnableVertexAttribArray(0);
-	// color attribute
-	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float)));
-	glEnableVertexAttribArray(1);
-	// texture coord attribute
-	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
-	glEnableVertexAttribArray(2);
-}
-
-void DestroyExterior()
-{
-	glDeleteVertexArrays(1, &VAO);
-	glDeleteBuffers(1, &Exterior);
-	glDeleteBuffers(1, &EBO);
-}
-
-void DestroyInterior()
-{
-	glDeleteVertexArrays(1, &VAO);
-	glDeleteBuffers(1, &Interior);
-	glDeleteBuffers(1, &EBO);
-}
-
-void CreateShaders()
-{
-	VertexShaderId = glCreateShader(GL_VERTEX_SHADER);
-	glShaderSource(VertexShaderId, 1, &VertexShader, NULL);
-	glCompileShader(VertexShaderId);
-
-	FragmentShaderId = glCreateShader(GL_FRAGMENT_SHADER);
-	glShaderSource(FragmentShaderId, 1, &FragmentShader, NULL);
-	glCompileShader(FragmentShaderId);
-
-	ProgramId = glCreateProgram();
-	glAttachShader(ProgramId, VertexShaderId);
-	glAttachShader(ProgramId, FragmentShaderId);
-	glLinkProgram(ProgramId);
-
-	GLint Success = 0;
-	GLchar ErrorLog[1024] = { 0 };
-
-	glGetProgramiv(ProgramId, GL_LINK_STATUS, &Success);
-	if (Success == 0) {
-		glGetProgramInfoLog(ProgramId, sizeof(ErrorLog), NULL, ErrorLog);
-		fprintf(stderr, "Error linking shader program: '%s'\n", ErrorLog);
-		exit(1);
-	}
-
-	glValidateProgram(ProgramId);
-	glGetProgramiv(ProgramId, GL_VALIDATE_STATUS, &Success);
-	if (!Success) {
-		glGetProgramInfoLog(ProgramId, sizeof(ErrorLog), NULL, ErrorLog);
-		fprintf(stderr, "Invalid shader program: '%s'\n", ErrorLog);
-		exit(1);
-	}
-
-	glUseProgram(ProgramId);
-
-	ProjMatrixLocation = glGetUniformLocation(ProgramId, "ProjMatrix");
-	ViewMatrixLocation = glGetUniformLocation(ProgramId, "ViewMatrix");
-	WorldMatrixLocation = glGetUniformLocation(ProgramId, "WorldMatrix");
-
-	glUniform1i(glGetUniformLocation(ProgramId, "texture"), 0);
-
-}
-
-void DestroyShaders()
-{
-	glUseProgram(0);
-
-	glDetachShader(ProgramId, VertexShaderId);
-	glDetachShader(ProgramId, FragmentShaderId);
-
-	glDeleteShader(FragmentShaderId);
-	glDeleteShader(VertexShaderId);
-
-	glDeleteProgram(ProgramId);
-}
-
-void CreateExteriorTexture(const std::string& strExePath)
-{
-	// load and create a texture 
-
-	glGenTextures(1, &exteriorTextureLocation);
-	glBindTexture(GL_TEXTURE_2D, exteriorTextureLocation);
-	// set the texture wrapping parameters
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-	// set texture filtering parameters
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	// load image, create texture and generate mipmaps
 	int width, height, nrChannels;
 	stbi_set_flip_vertically_on_load(true); // tell stb_image.h to flip loaded texture's on the y-axis.
-	unsigned char* data = stbi_load((strExePath + "\\exterior.jpg").c_str(), &width, &height, &nrChannels, 0);
+	unsigned char* data = stbi_load(strTexturePath.c_str(), &width, &height, &nrChannels, 0);
 	if (data) {
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
+		GLenum format;
+		if (nrChannels == 1)
+			format = GL_RED;
+		else if (nrChannels == 3)
+			format = GL_RGB;
+		else if (nrChannels == 4)
+			format = GL_RGBA;
+
+		glGenTextures(1, &textureId);
+		glBindTexture(GL_TEXTURE_2D, textureId);
+		glTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, format, GL_UNSIGNED_BYTE, data);
 		glGenerateMipmap(GL_TEXTURE_2D);
+
+		// set the texture wrapping parameters
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+		// set texture filtering parameters
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	}
 	else {
-		std::cout << "Failed to load texture" << std::endl;
+		std::cout << "Failed to load texture: " << strTexturePath << std::endl;
 	}
 	stbi_image_free(data);
 
-}
-
-void CreateInteriorTexture(const std::string& strExePath)
-{
-	// load and create a texture 
-
-	glGenTextures(1, &interiorTextureLocation);
-	glBindTexture(GL_TEXTURE_2D, interiorTextureLocation);
-	// set the texture wrapping parameters
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-	// set texture filtering parameters
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-	// load image, create texture and generate mipmaps
-	int width, height, nrChannels;
-	stbi_set_flip_vertically_on_load(true); // tell stb_image.h to flip loaded texture's on the y-axis.
-	unsigned char* data = stbi_load((strExePath + "\\interior.jpg").c_str(), &width, &height, &nrChannels, 0);
-	if (data) {
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
-		glGenerateMipmap(GL_TEXTURE_2D);
-	}
-	else {
-		std::cout << "Failed to load texture" << std::endl;
-	}
-	stbi_image_free(data);
-
-}
-
-void Initialize(const std::string& strExePath)
-{
-	glClearColor(0.1f, 0.1f, 0.2f, 0.8f); // culoarea de fond a ecranului
-	//glEnable(GL_CULL_FACE);
-	glEnable(GL_DEPTH_TEST);
-	glEnable(GL_COLOR_MATERIAL);
-	glDisable(GL_LIGHTING);
-
-	//glFrontFace(GL_CCW);
-	//glCullFace(GL_BACK);
-
-	CreateExterior();
-	CreateExteriorTexture(strExePath);
-	CreateInterior();
-	CreateInteriorTexture(strExePath);
-	CreateShaders();
-
-
-	// Create camera
-	pCamera = new Camera(SCR_WIDTH, SCR_HEIGHT, glm::vec3(18, 26, 250));
-}
-
-void RenderExterior()
-{
-	glBindBuffer(GL_ARRAY_BUFFER, Exterior);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-
-	int indexArraySize;
-	glGetBufferParameteriv(GL_ELEMENT_ARRAY_BUFFER, GL_BUFFER_SIZE, &indexArraySize);
-	glDrawElements(GL_TRIANGLES, indexArraySize / sizeof(unsigned int), GL_UNSIGNED_INT, 0);
-}
-
-void RenderInterior()
-{
-	glBindBuffer(GL_ARRAY_BUFFER, Interior);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-
-	int indexArraySize;
-	glGetBufferParameteriv(GL_ELEMENT_ARRAY_BUFFER, GL_BUFFER_SIZE, &indexArraySize);
-	glDrawElements(GL_TRIANGLES, indexArraySize / sizeof(unsigned int), GL_UNSIGNED_INT, 0);
-}
-
-void RenderFunction()
-{
-	glm::vec3 cubePositions[] = {
-	   glm::vec3(10.0f,  10.0f,   10.0f),
-	   glm::vec3(9.9f,   9.9f,     9.9f),
-	};
-
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	glUseProgram(ProgramId);
-
-	// bind textures on corresponding texture units
-
-	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, exteriorTextureLocation);
-
-	glActiveTexture(GL_TEXTURE1);
-	glBindTexture(GL_TEXTURE_2D, interiorTextureLocation);
-
-	glm::mat4 projection = pCamera->GetProjectionMatrix();
-	glUniformMatrix4fv(ProjMatrixLocation, 1, GL_FALSE, glm::value_ptr(projection));
-
-	glm::mat4 view = pCamera->GetViewMatrix();
-	glUniformMatrix4fv(ViewMatrixLocation, 1, GL_FALSE, glm::value_ptr(view));
-
-	glBindVertexArray(VAO);
-
-	for (unsigned int i = 0; i < sizeof(cubePositions) / sizeof(cubePositions[0]); i++) {
-		// calculate the model matrix for each object and pass it to shader before drawing
-		glm::mat4 worldTransf = glm::translate(glm::mat4(1.0), cubePositions[i]);
-		glUniformMatrix4fv(WorldMatrixLocation, 1, GL_FALSE, glm::value_ptr(worldTransf));
-		RenderExterior();
-		RenderInterior();
-	}
-}
-
-
-void Cleanup()
-{
-	DestroyShaders();
-	DestroyExterior();
-	DestroyInterior();
-
-	delete pCamera;
+	return textureId;
 }
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void mouse_callback(GLFWwindow* window, double xpos, double ypos);
 void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
 void processInput(GLFWwindow* window);
-void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods);
+
+//textures
+void renderScene(const Shader& shader);
+void renderWall(const Shader& shader);
+
+//objects
+void renderCube();
+void renderFloor();
+
+//floor
+void renderRoomFloor();
+
+//room
+void renderWall1();
+void renderWall2();
+void renderWall3();
+void renderWall4();
+void renderWall5();
+
 
 // timing
 double deltaTime = 0.0f;    // time between current frame and last frame
 double lastFrame = 0.0f;
+
+void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
+{
+
+}
+
+GLuint VAO, VBO, EBO;
+void CreateVBO()
+{
+	float vertices[] = {
+-1, -1, 1,0, 0, 1,0.375, 0,
+1, -1, 1,0, 0, 1,0.625, 0,
+1, 1, 1,0, 0, 1,0.625, 0.25,
+-1, 1, 1,0, 0, 1,0.375, 0.25,
+-1, 1, 1,0, 1, 0,0.375, 0.25,
+1, 1, 1,0, 1, 0,0.625, 0.25,
+1, 1, -1,0, 1, 0,0.625, 0.5,
+-1, 1, -1,0, 1, 0,0.375, 0.5,
+-1, 1, -1,0, 0, -1,0.375, 0.5,
+1, 1, -1,0, 0, -1,0.625, 0.5,
+1, -1, -1,0, 0, -1,0.625, 0.75,
+-1, -1, -1,0, 0, -1,0.375, 0.75,
+-1, -1, -1,0, -1, 0,0.375, 0.75,
+1, -1, -1,0, -1, 0,0.625, 0.75,
+1, -1, 1,0, -1, 0,0.625, 1,
+-1, -1, 1,0, -1, 0,0.375, 1,
+1, -1, 1,1, 0, 0,0.625, 0,
+1, -1, -1,1, 0, 0,0.875, 0,
+1, 1, -1,1, 0, 0,0.875, 0.25,
+1, 1, 1,1, 0, 0,0.625, 0.25,
+-1, -1, -1,-1, 0, 0,0.125, 0,
+-1, -1, 1,-1, 0, 0,0.375, 0,
+-1, 1, 1,-1, 0, 0,0.375, 0.25,
+-1, 1, -1,-1, 0, 0,0.125, 0.25
+	};
+
+	unsigned int indices[] = {
+0, 1, 3,
+1, 2, 3,
+4, 5, 7,
+5, 6, 7,
+8, 9, 11,
+9, 10, 11,
+12, 13, 15,
+13, 14, 15,
+16, 17, 19,
+17, 18, 19,
+ 20, 21, 23,
+ 21, 22, 23
+	};
+
+
+	glGenVertexArrays(1, &VAO);
+	glGenBuffers(1, &VBO);
+	glGenBuffers(1, &EBO);
+
+	glBindVertexArray(VAO);
+
+	glBindBuffer(GL_ARRAY_BUFFER, VBO);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
+
+	// position attribute
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
+	glEnableVertexAttribArray(0);
+	// color attribute
+	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float)));
+	glEnableVertexAttribArray(1);
+	// texture coord attribute
+	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
+	glEnableVertexAttribArray(2);
+}
+
+
+
 
 int main(int argc, char** argv)
 {
@@ -697,7 +528,7 @@ int main(int argc, char** argv)
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
 	// glfw window creation
-	GLFWwindow* window = glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, "Explorare-Muzeu", NULL, NULL);
+	GLFWwindow* window = glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, "Explorarea muzeului Antipa", NULL, NULL);
 	if (window == NULL) {
 		std::cout << "Failed to create GLFW window" << std::endl;
 		glfwTerminate();
@@ -709,38 +540,808 @@ int main(int argc, char** argv)
 	glfwSetCursorPosCallback(window, mouse_callback);
 	glfwSetScrollCallback(window, scroll_callback);
 	glfwSetKeyCallback(window, key_callback);
-
-
 	// tell GLFW to capture our mouse
-	//glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
 	glewInit();
 
-	Initialize(strExePath);
+
+
+	// Create camera
+	pCamera = new Camera(SCR_WIDTH, SCR_HEIGHT, glm::vec3(0.0, 1.0, 3.0));
+
+	// configure global opengl state
+	// -----------------------------
+	glEnable(GL_DEPTH_TEST);
+
+	// build and compile shaders
+	// -------------------------
+	Shader shadowMappingShader("ShadowMapping.vs", "ShadowMapping.fs");
+	Shader shadowMappingDepthShader("ShadowMappingDepth.vs", "ShadowMappingDepth.fs");
+
+	// load textures
+
+	unsigned int floorTexture = CreateTexture(strExePath + "\\floor.jpg");
+	unsigned int wallTexture = CreateTexture(strExePath + "\\wall0.jpg");
+
+
+
+	// configure depth map FBO
+	// -----------------------
+	const unsigned int SHADOW_WIDTH = 4098, SHADOW_HEIGHT = 4098;
+	unsigned int depthMapFBO;
+	glGenFramebuffers(1, &depthMapFBO);
+	// create depth texture
+	unsigned int depthMap;
+	glGenTextures(1, &depthMap);
+	glBindTexture(GL_TEXTURE_2D, depthMap);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, SHADOW_WIDTH, SHADOW_HEIGHT, 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
+	float borderColor[] = { 1.0, 1.0, 1.0, 1.0 };
+	glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, borderColor);
+	// attach depth texture as FBO's depth buffer
+	glBindFramebuffer(GL_FRAMEBUFFER, depthMapFBO);
+	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, depthMap, 0);
+	glDrawBuffer(GL_NONE);
+	glReadBuffer(GL_NONE);
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+
+	// shader configuration
+	// --------------------
+	shadowMappingShader.Use();
+	shadowMappingShader.SetInt("diffuseTexture", 0);
+	shadowMappingShader.SetInt("shadowMap", 1);
+
+	// lighting info
+	// -------------
+	glm::vec3 lightPos(-2.0f, 4.0f, -1.0f);
+
+	glEnable(GL_CULL_FACE);
 
 	// render loop
-	while (!glfwWindowShouldClose(window)) {
+	// -----------
+	while (!glfwWindowShouldClose(window))
+	{
 		// per-frame time logic
-		double currentFrame = glfwGetTime();
+		// --------------------
+		float currentFrame = (float)glfwGetTime();
 		deltaTime = currentFrame - lastFrame;
 		lastFrame = currentFrame;
 
 		// input
+		// -----
 		processInput(window);
 
 		// render
-		RenderFunction();
+		// ------
+		glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+
+
+		// 1. render depth of scene to texture (from light's perspective)
+		glm::mat4 lightProjection, lightView;
+		glm::mat4 lightSpaceMatrix;
+		float near_plane = 1.0f, far_plane = 7.5f;
+		lightProjection = glm::ortho(10.0f, 10.0f, -10.0f, 10.0f, near_plane, far_plane);
+		lightView = glm::lookAt(lightPos, glm::vec3(0.0f), glm::vec3(0.0, 1.0, 0.0));
+		lightSpaceMatrix = lightProjection * lightView;
+
+		// render scene from light's point of view
+		shadowMappingDepthShader.Use();
+		shadowMappingDepthShader.SetMat4("lightSpaceMatrix", lightSpaceMatrix);
+
+		glViewport(0, 0, SHADOW_WIDTH, SHADOW_HEIGHT);
+		glBindFramebuffer(GL_FRAMEBUFFER, depthMapFBO);
+		glClear(GL_DEPTH_BUFFER_BIT);
+		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_2D, floorTexture);
+		glEnable(GL_CULL_FACE);
+		glCullFace(GL_FRONT);
+		renderScene(shadowMappingDepthShader);
+		glCullFace(GL_BACK);
+		glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+
+		glViewport(0, 0, SHADOW_WIDTH, SHADOW_HEIGHT);
+		glBindFramebuffer(GL_FRAMEBUFFER, depthMapFBO);
+		glClear(GL_DEPTH_BUFFER_BIT);
+		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_2D, wallTexture);
+		glEnable(GL_CULL_FACE);
+		glCullFace(GL_FRONT);
+		renderWall(shadowMappingDepthShader);
+		glCullFace(GL_BACK);
+		glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+
+
+		// reset viewport
+		glViewport(0, 0, SCR_WIDTH, SCR_HEIGHT);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+		// 2. render scene as normal using the generated depth/shadow map 
+		glViewport(0, 0, SCR_WIDTH, SCR_HEIGHT);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		shadowMappingShader.Use();
+		glm::mat4 projection = pCamera->GetProjectionMatrix();
+		glm::mat4 view = pCamera->GetViewMatrix();
+		shadowMappingShader.SetMat4("projection", projection);
+		shadowMappingShader.SetMat4("view", view);
+		// set light uniforms
+		shadowMappingShader.SetVec3("viewPos", pCamera->GetPosition());
+		shadowMappingShader.SetVec3("lightPos", lightPos);
+		shadowMappingShader.SetMat4("lightSpaceMatrix", lightSpaceMatrix);
+
+		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_2D, floorTexture);
+		glActiveTexture(GL_TEXTURE1);
+		glBindTexture(GL_TEXTURE_2D, depthMap);
+		glDisable(GL_CULL_FACE);
+		renderScene(shadowMappingShader);
+
+		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_2D, wallTexture);
+		glActiveTexture(GL_TEXTURE1);
+		glBindTexture(GL_TEXTURE_2D, depthMap);
+		glDisable(GL_CULL_FACE);
+		renderWall(shadowMappingShader);
+
 
 		// glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
 		glfwSwapBuffers(window);
 		glfwPollEvents();
 	}
 
-	Cleanup();
+	// optional: de-allocate all resources once they've outlived their purpose:
+	delete pCamera;
 
-	// glfw: terminate, clearing all previously allocated GLFW resources
 	glfwTerminate();
 	return 0;
+}
+
+// renders the 3D scene
+// --------------------
+void renderScene(const Shader& shader)
+{
+	// floor
+	glm::mat4 model;
+	shader.SetMat4("model", model);
+	renderFloor();
+
+	model = glm::mat4();
+	model = glm::translate(model, glm::vec3(0.0f, -1.0f, 0.0f));
+	model = glm::scale(model, glm::vec3(2.f));
+	shader.SetMat4("model", model);
+	renderRoomFloor();
+
+
+}
+
+
+void renderWall(const Shader& shader)
+{
+	glm::mat4 model;
+	model = glm::mat4();
+	model = glm::translate(model, glm::vec3(0.0f, -1.0f, 0.0f));
+	model = glm::scale(model, glm::vec3(2.f));
+	shader.SetMat4("model", model);
+	renderWall1();
+
+	model = glm::mat4();
+	model = glm::translate(model, glm::vec3(0.0f, -1.0f, 0.0f));
+	model = glm::scale(model, glm::vec3(2.f));
+	shader.SetMat4("model", model);
+	renderWall2();
+
+	model = glm::mat4();
+	model = glm::translate(model, glm::vec3(0.0f, -1.0f, 0.0f));
+	model = glm::scale(model, glm::vec3(2.f));
+	shader.SetMat4("model", model);
+	renderWall3();
+
+	model = glm::mat4();
+	model = glm::translate(model, glm::vec3(0.0f, -1.0f, 0.0f));
+	model = glm::scale(model, glm::vec3(2.f));
+	shader.SetMat4("model", model);
+	renderWall4();
+
+	model = glm::mat4();
+	model = glm::translate(model, glm::vec3(0.0f, -1.0f, 0.0f));
+	model = glm::scale(model, glm::vec3(2.f));
+	shader.SetMat4("model", model);
+	renderWall5();
+}
+unsigned int planeVAO = 0;
+void renderFloor()
+{
+	unsigned int planeVBO;
+
+	if (planeVAO == 0) {
+		// set up vertex data (and buffer(s)) and configure vertex attributes
+		float planeVertices[] = {
+			// positions            // normals         // texcoords
+			25.0f, -0.5f,  25.0f,  0.0f, 1.0f, 0.0f,  25.0f,  0.0f,
+			-25.0f, -0.5f,  25.0f,  0.0f, 1.0f, 0.0f,   0.0f,  0.0f,
+			-25.0f, -0.5f, -25.0f,  0.0f, 1.0f, 0.0f,   0.0f, 25.0f,
+
+			25.0f, -0.5f,  25.0f,  0.0f, 1.0f, 0.0f,  25.0f,  0.0f,
+			-25.0f, -0.5f, -25.0f,  0.0f, 1.0f, 0.0f,  0.0f, 25.0f,
+			25.0f, -0.5f, -25.0f,  0.0f, 1.0f, 0.0f,  25.0f, 25.0f
+		};
+		// plane VAO
+		glGenVertexArrays(1, &planeVAO);
+		glGenBuffers(1, &planeVBO);
+		glBindVertexArray(planeVAO);
+		glBindBuffer(GL_ARRAY_BUFFER, planeVBO);
+		glBufferData(GL_ARRAY_BUFFER, sizeof(planeVertices), planeVertices, GL_STATIC_DRAW);
+		glEnableVertexAttribArray(0);
+		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
+		glEnableVertexAttribArray(1);
+		glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float)));
+		glEnableVertexAttribArray(2);
+		glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
+		glBindVertexArray(0);
+	}
+
+	glBindVertexArray(planeVAO);
+	glDrawArrays(GL_TRIANGLES, 0, 6);
+}
+
+
+// renderCube() renders a 1x1 3D cube in NDC.
+// -------------------------------------------------
+unsigned int cubeVAO = 0;
+unsigned int cubeVBO = 0;
+void renderCube()
+{
+	// initialize (if necessary)
+	if (cubeVAO == 0)
+	{
+		float vertices[] = {
+			// back face
+			-1.0f, -1.0f, -1.0f,  0.0f,  0.0f, -1.0f, 0.0f, 0.0f, // bottom-left
+			1.0f,  1.0f, -1.0f,  0.0f,  0.0f, -1.0f, 1.0f, 1.0f, // top-right
+			1.0f, -1.0f, -1.0f,  0.0f,  0.0f, -1.0f, 1.0f, 0.0f, // bottom-right         
+			1.0f,  1.0f, -1.0f,  0.0f,  0.0f, -1.0f, 1.0f, 1.0f, // top-right
+			-1.0f, -1.0f, -1.0f,  0.0f,  0.0f, -1.0f, 0.0f, 0.0f, // bottom-left
+			-1.0f,  1.0f, -1.0f,  0.0f,  0.0f, -1.0f, 0.0f, 1.0f, // top-left
+			// front face
+			-1.0f, -1.0f,  1.0f,  0.0f,  0.0f,  1.0f, 0.0f, 0.0f, // bottom-left
+			1.0f, -1.0f,  1.0f,  0.0f,  0.0f,  1.0f, 1.0f, 0.0f, // bottom-right
+			1.0f,  1.0f,  1.0f,  0.0f,  0.0f,  1.0f, 1.0f, 1.0f, // top-right
+			1.0f,  1.0f,  1.0f,  0.0f,  0.0f,  1.0f, 1.0f, 1.0f, // top-right
+			-1.0f,  1.0f,  1.0f,  0.0f,  0.0f,  1.0f, 0.0f, 1.0f, // top-left
+			-1.0f, -1.0f,  1.0f,  0.0f,  0.0f,  1.0f, 0.0f, 0.0f, // bottom-left
+			// left face
+			-1.0f,  1.0f,  1.0f, -1.0f,  0.0f,  0.0f, 1.0f, 0.0f, // top-right
+			-1.0f,  1.0f, -1.0f, -1.0f,  0.0f,  0.0f, 1.0f, 1.0f, // top-left
+			-1.0f, -1.0f, -1.0f, -1.0f,  0.0f,  0.0f, 0.0f, 1.0f, // bottom-left
+			-1.0f, -1.0f, -1.0f, -1.0f,  0.0f,  0.0f, 0.0f, 1.0f, // bottom-left
+			-1.0f, -1.0f,  1.0f, -1.0f,  0.0f,  0.0f, 0.0f, 0.0f, // bottom-right
+			-1.0f,  1.0f,  1.0f, -1.0f,  0.0f,  0.0f, 1.0f, 0.0f, // top-right
+			// right face
+			1.0f,  1.0f,  1.0f,  1.0f,  0.0f,  0.0f, 1.0f, 0.0f, // top-left
+			1.0f, -1.0f, -1.0f,  1.0f,  0.0f,  0.0f, 0.0f, 1.0f, // bottom-right
+			1.0f,  1.0f, -1.0f,  1.0f,  0.0f,  0.0f, 1.0f, 1.0f, // top-right         
+			1.0f, -1.0f, -1.0f,  1.0f,  0.0f,  0.0f, 0.0f, 1.0f, // bottom-right
+			1.0f,  1.0f,  1.0f,  1.0f,  0.0f,  0.0f, 1.0f, 0.0f, // top-left
+			1.0f, -1.0f,  1.0f,  1.0f,  0.0f,  0.0f, 0.0f, 0.0f, // bottom-left     
+			// bottom face
+			-1.0f, -1.0f, -1.0f,  0.0f, -1.0f,  0.0f, 0.0f, 1.0f, // top-right
+			1.0f, -1.0f, -1.0f,  0.0f, -1.0f,  0.0f, 1.0f, 1.0f, // top-left
+			1.0f, -1.0f,  1.0f,  0.0f, -1.0f,  0.0f, 1.0f, 0.0f, // bottom-left
+			1.0f, -1.0f,  1.0f,  0.0f, -1.0f,  0.0f, 1.0f, 0.0f, // bottom-left
+			-1.0f, -1.0f,  1.0f,  0.0f, -1.0f,  0.0f, 0.0f, 0.0f, // bottom-right
+			-1.0f, -1.0f, -1.0f,  0.0f, -1.0f,  0.0f, 0.0f, 1.0f, // top-right
+			// top face
+			-1.0f,  1.0f, -1.0f,  0.0f,  1.0f,  0.0f, 0.0f, 1.0f, // top-left
+			1.0f,  1.0f , 1.0f,  0.0f,  1.0f,  0.0f, 1.0f, 0.0f, // bottom-right
+			1.0f,  1.0f, -1.0f,  0.0f,  1.0f,  0.0f, 1.0f, 1.0f, // top-right     
+			1.0f,  1.0f,  1.0f,  0.0f,  1.0f,  0.0f, 1.0f, 0.0f, // bottom-right
+			-1.0f,  1.0f, -1.0f,  0.0f,  1.0f,  0.0f, 0.0f, 1.0f, // top-left
+			-1.0f,  1.0f,  1.0f,  0.0f,  1.0f,  0.0f, 0.0f, 0.0f  // bottom-left        
+		};
+		glGenVertexArrays(1, &cubeVAO);
+		glGenBuffers(1, &cubeVBO);
+		// fill buffer
+		glBindBuffer(GL_ARRAY_BUFFER, cubeVBO);
+		glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+		// link vertex attributes
+		glBindVertexArray(cubeVAO);
+		glEnableVertexAttribArray(0);
+		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
+		glEnableVertexAttribArray(1);
+		glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float)));
+		glEnableVertexAttribArray(2);
+		glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
+		glBindBuffer(GL_ARRAY_BUFFER, 0);
+		glBindVertexArray(0);
+	}
+	// render Cube
+	glBindVertexArray(cubeVAO);
+	glDrawArrays(GL_TRIANGLES, 0, 36);
+	glBindVertexArray(0);
+}
+
+float vertices[82000];
+unsigned int indices[72000];
+
+float vertices7[82000];
+unsigned int indices7[72000];
+GLuint floorVAO, floorVBO, floorEBO;
+void renderRoomFloor()
+{
+	// initialize (if necessary)
+	if (floorVAO == 0)
+	{
+
+		std::vector<float> verticess;
+		std::vector<float> indicess;
+
+
+
+		Loader.LoadFile("room.obj");
+		objl::Mesh curMesh = Loader.LoadedMeshes[0];
+		int size = curMesh.Vertices.size();
+
+		for (int j = 0; j < curMesh.Vertices.size(); j++)
+		{
+
+			verticess.push_back((float)curMesh.Vertices[j].Position.X);
+			verticess.push_back((float)curMesh.Vertices[j].Position.Y);
+			verticess.push_back((float)curMesh.Vertices[j].Position.Z);
+			verticess.push_back((float)curMesh.Vertices[j].Normal.X);
+			verticess.push_back((float)curMesh.Vertices[j].Normal.Y);
+			verticess.push_back((float)curMesh.Vertices[j].Normal.Z);
+			verticess.push_back((float)curMesh.Vertices[j].TextureCoordinate.X);
+			verticess.push_back((float)curMesh.Vertices[j].TextureCoordinate.Y);
+		}
+		for (int j = 0; j < verticess.size(); j++)
+		{
+			vertices[j] = verticess.at(j);
+		}
+
+		for (int j = 0; j < curMesh.Indices.size(); j++)
+		{
+
+			indicess.push_back((float)curMesh.Indices[j]);
+
+		}
+		for (int j = 0; j < curMesh.Indices.size(); j++)
+		{
+			indices7[j] = indicess.at(j);
+		}
+
+		glGenVertexArrays(1, &floorVAO);
+		glGenBuffers(1, &floorVBO);
+		glGenBuffers(1, &floorEBO);
+		// fill buffer
+		glBindBuffer(GL_ARRAY_BUFFER, floorVBO);
+		glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_DYNAMIC_DRAW);
+
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, floorEBO);
+		glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices7), &indices7, GL_DYNAMIC_DRAW);
+		// link vertex attributes
+		glBindVertexArray(floorVAO);
+		glEnableVertexAttribArray(0);
+
+
+		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
+		glEnableVertexAttribArray(1);
+		glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float)));
+		glEnableVertexAttribArray(2);
+		glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
+		glBindBuffer(GL_ARRAY_BUFFER, 0);
+		glBindVertexArray(0);
+	}
+	// render Cube
+	glBindVertexArray(floorVAO);
+	glBindBuffer(GL_ARRAY_BUFFER, floorVBO);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, floorEBO);
+	int indexArraySize;
+	glGetBufferParameteriv(GL_ELEMENT_ARRAY_BUFFER, GL_BUFFER_SIZE, &indexArraySize);
+	glDrawElements(GL_TRIANGLES, indexArraySize / sizeof(unsigned int), GL_UNSIGNED_INT, 0);
+	glDrawArrays(GL_TRIANGLES, 0, 36);
+	glBindVertexArray(0);
+
+}
+
+GLuint floorVAO1, floorVBO1, floorEBO1;
+void renderWall1()
+{
+	// initialize (if necessary)
+	if (floorVAO1 == 0)
+	{
+
+		std::vector<float> verticess;
+		std::vector<float> indicess;
+
+
+
+		Loader.LoadFile("room.obj");
+		for (int i = 0; i < Loader.LoadedMeshes.size(); i++)
+		{
+			objl::Mesh curMesh = Loader.LoadedMeshes[1];
+			int size = curMesh.Vertices.size();
+
+			for (int j = 0; j < curMesh.Vertices.size(); j++)
+			{
+
+				verticess.push_back((float)curMesh.Vertices[j].Position.X);
+				verticess.push_back((float)curMesh.Vertices[j].Position.Y);
+				verticess.push_back((float)curMesh.Vertices[j].Position.Z);
+				verticess.push_back((float)curMesh.Vertices[j].Normal.X);
+				verticess.push_back((float)curMesh.Vertices[j].Normal.Y);
+				verticess.push_back((float)curMesh.Vertices[j].Normal.Z);
+				verticess.push_back((float)curMesh.Vertices[j].TextureCoordinate.X);
+				verticess.push_back((float)curMesh.Vertices[j].TextureCoordinate.Y);
+			}
+			for (int j = 0; j < verticess.size(); j++)
+			{
+				vertices[j] = verticess.at(j);
+			}
+
+			for (int j = 0; j < curMesh.Indices.size(); j++)
+			{
+
+				indicess.push_back((float)curMesh.Indices[j]);
+
+			}
+			for (int j = 0; j < curMesh.Indices.size(); j++)
+			{
+				indices[j] = indicess.at(j);
+			}
+		}
+		glGenVertexArrays(1, &floorVAO1);
+		glGenBuffers(1, &floorVBO1);
+		glGenBuffers(1, &floorEBO1);
+		// fill buffer
+		glBindBuffer(GL_ARRAY_BUFFER, floorVBO1);
+		glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_DYNAMIC_DRAW);
+
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, floorEBO1);
+		glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), &indices, GL_DYNAMIC_DRAW);
+		// link vertex attributes
+		glBindVertexArray(floorVAO1);
+		glEnableVertexAttribArray(0);
+
+
+		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
+		glEnableVertexAttribArray(1);
+		glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float)));
+		glEnableVertexAttribArray(2);
+		glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
+		glBindBuffer(GL_ARRAY_BUFFER, 0);
+		glBindVertexArray(0);
+	}
+	// render Cube
+	glBindVertexArray(floorVAO1);
+	glBindBuffer(GL_ARRAY_BUFFER, floorVBO1);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, floorEBO1);
+	int indexArraySize;
+	glGetBufferParameteriv(GL_ELEMENT_ARRAY_BUFFER, GL_BUFFER_SIZE, &indexArraySize);
+	glDrawElements(GL_TRIANGLES, indexArraySize / sizeof(unsigned int), GL_UNSIGNED_INT, 0);
+	glDrawArrays(GL_TRIANGLES, 0, 36);
+	glBindVertexArray(0);
+
+}
+GLuint floorVAO2, floorVBO2, floorEBO2;
+
+void renderWall2()
+{
+	// initialize (if necessary)
+	if (floorVAO2 == 0)
+	{
+
+		std::vector<float> verticess;
+		std::vector<float> indicess;
+
+
+
+		Loader.LoadFile("room.obj");
+		for (int i = 0; i < Loader.LoadedMeshes.size(); i++)
+		{
+			objl::Mesh curMesh = Loader.LoadedMeshes[2];
+			int size = curMesh.Vertices.size();
+
+			for (int j = 0; j < curMesh.Vertices.size(); j++)
+			{
+
+				verticess.push_back((float)curMesh.Vertices[j].Position.X);
+				verticess.push_back((float)curMesh.Vertices[j].Position.Y);
+				verticess.push_back((float)curMesh.Vertices[j].Position.Z);
+				verticess.push_back((float)curMesh.Vertices[j].Normal.X);
+				verticess.push_back((float)curMesh.Vertices[j].Normal.Y);
+				verticess.push_back((float)curMesh.Vertices[j].Normal.Z);
+				verticess.push_back((float)curMesh.Vertices[j].TextureCoordinate.X);
+				verticess.push_back((float)curMesh.Vertices[j].TextureCoordinate.Y);
+			}
+			for (int j = 0; j < verticess.size(); j++)
+			{
+				vertices[j] = verticess.at(j);
+			}
+
+			for (int j = 0; j < curMesh.Indices.size(); j++)
+			{
+
+				indicess.push_back((float)curMesh.Indices[j]);
+
+			}
+			for (int j = 0; j < curMesh.Indices.size(); j++)
+			{
+				indices[j] = indicess.at(j);
+			}
+		}
+		glGenVertexArrays(1, &floorVAO2);
+		glGenBuffers(1, &floorVBO2);
+		glGenBuffers(1, &floorEBO2);
+		// fill buffer
+		glBindBuffer(GL_ARRAY_BUFFER, floorVBO2);
+		glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_DYNAMIC_DRAW);
+
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, floorEBO2);
+		glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), &indices, GL_DYNAMIC_DRAW);
+		// link vertex attributes
+		glBindVertexArray(floorVAO2);
+		glEnableVertexAttribArray(0);
+
+
+		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
+		glEnableVertexAttribArray(1);
+		glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float)));
+		glEnableVertexAttribArray(2);
+		glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
+		glBindBuffer(GL_ARRAY_BUFFER, 0);
+		glBindVertexArray(0);
+	}
+	// render Cube
+	glBindVertexArray(floorVAO2);
+	glBindBuffer(GL_ARRAY_BUFFER, floorVBO2);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, floorEBO2);
+	int indexArraySize;
+	glGetBufferParameteriv(GL_ELEMENT_ARRAY_BUFFER, GL_BUFFER_SIZE, &indexArraySize);
+	glDrawElements(GL_TRIANGLES, indexArraySize / sizeof(unsigned int), GL_UNSIGNED_INT, 0);
+	glDrawArrays(GL_TRIANGLES, 0, 36);
+	glBindVertexArray(0);
+
+}
+GLuint floorVAO3, floorVBO3, floorEBO3;
+
+void renderWall3()
+{
+	// initialize (if necessary)
+	if (floorVAO3 == 0)
+	{
+
+		std::vector<float> verticess;
+		std::vector<float> indicess;
+
+
+
+		Loader.LoadFile("room.obj");
+		objl::Mesh curMesh = Loader.LoadedMeshes[3];
+		int size = curMesh.Vertices.size();
+
+		for (int j = 0; j < curMesh.Vertices.size(); j++)
+		{
+
+			verticess.push_back((float)curMesh.Vertices[j].Position.X);
+			verticess.push_back((float)curMesh.Vertices[j].Position.Y);
+			verticess.push_back((float)curMesh.Vertices[j].Position.Z);
+			verticess.push_back((float)curMesh.Vertices[j].Normal.X);
+			verticess.push_back((float)curMesh.Vertices[j].Normal.Y);
+			verticess.push_back((float)curMesh.Vertices[j].Normal.Z);
+			verticess.push_back((float)curMesh.Vertices[j].TextureCoordinate.X);
+			verticess.push_back((float)curMesh.Vertices[j].TextureCoordinate.Y);
+		}
+		for (int j = 0; j < verticess.size(); j++)
+		{
+			vertices[j] = verticess.at(j);
+		}
+
+		for (int j = 0; j < curMesh.Indices.size(); j++)
+		{
+
+			indicess.push_back((float)curMesh.Indices[j]);
+
+		}
+		for (int j = 0; j < curMesh.Indices.size(); j++)
+		{
+			indices[j] = indicess.at(j);
+		}
+
+		glGenVertexArrays(1, &floorVAO3);
+		glGenBuffers(1, &floorVBO3);
+		glGenBuffers(1, &floorEBO3);
+		// fill buffer
+		glBindBuffer(GL_ARRAY_BUFFER, floorVBO3);
+		glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_DYNAMIC_DRAW);
+
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, floorEBO);
+		glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), &indices, GL_DYNAMIC_DRAW);
+		// link vertex attributes
+		glBindVertexArray(floorVAO3);
+		glEnableVertexAttribArray(0);
+
+
+		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
+		glEnableVertexAttribArray(1);
+		glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float)));
+		glEnableVertexAttribArray(2);
+		glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
+		glBindBuffer(GL_ARRAY_BUFFER, 0);
+		glBindVertexArray(0);
+	}
+	// render Cube
+	glBindVertexArray(floorVAO3);
+	glBindBuffer(GL_ARRAY_BUFFER, floorVBO3);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, floorEBO3);
+	int indexArraySize;
+	glGetBufferParameteriv(GL_ELEMENT_ARRAY_BUFFER, GL_BUFFER_SIZE, &indexArraySize);
+	glDrawElements(GL_TRIANGLES, indexArraySize / sizeof(unsigned int), GL_UNSIGNED_INT, 0);
+	glDrawArrays(GL_TRIANGLES, 0, 36);
+	glBindVertexArray(0);
+
+}
+GLuint floorVAO4, floorVBO4, floorEBO4;
+
+void renderWall4()
+{
+	// initialize (if necessary)
+	if (floorVAO4 == 0)
+	{
+
+		std::vector<float> verticess;
+		std::vector<float> indicess;
+
+
+
+		Loader.LoadFile("room.obj");
+		objl::Mesh curMesh = Loader.LoadedMeshes[4];
+		int size = curMesh.Vertices.size();
+
+		for (int j = 0; j < curMesh.Vertices.size(); j++)
+		{
+
+			verticess.push_back((float)curMesh.Vertices[j].Position.X);
+			verticess.push_back((float)curMesh.Vertices[j].Position.Y);
+			verticess.push_back((float)curMesh.Vertices[j].Position.Z);
+			verticess.push_back((float)curMesh.Vertices[j].Normal.X);
+			verticess.push_back((float)curMesh.Vertices[j].Normal.Y);
+			verticess.push_back((float)curMesh.Vertices[j].Normal.Z);
+			verticess.push_back((float)curMesh.Vertices[j].TextureCoordinate.X);
+			verticess.push_back((float)curMesh.Vertices[j].TextureCoordinate.Y);
+		}
+		for (int j = 0; j < verticess.size(); j++)
+		{
+			vertices[j] = verticess.at(j);
+		}
+
+		for (int j = 0; j < curMesh.Indices.size(); j++)
+		{
+
+			indicess.push_back((float)curMesh.Indices[j]);
+
+		}
+		for (int j = 0; j < curMesh.Indices.size(); j++)
+		{
+			indices[j] = indicess.at(j);
+		}
+
+		glGenVertexArrays(1, &floorVAO4);
+		glGenBuffers(1, &floorVBO4);
+		glGenBuffers(1, &floorEBO4);
+		// fill buffer
+		glBindBuffer(GL_ARRAY_BUFFER, floorVBO4);
+		glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_DYNAMIC_DRAW);
+
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, floorEBO4);
+		glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), &indices, GL_DYNAMIC_DRAW);
+		// link vertex attributes
+		glBindVertexArray(floorVAO4);
+		glEnableVertexAttribArray(0);
+
+
+		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
+		glEnableVertexAttribArray(1);
+		glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float)));
+		glEnableVertexAttribArray(2);
+		glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
+		glBindBuffer(GL_ARRAY_BUFFER, 0);
+		glBindVertexArray(0);
+	}
+	// render Cube
+	glBindVertexArray(floorVAO4);
+	glBindBuffer(GL_ARRAY_BUFFER, floorVBO4);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, floorEBO4);
+	int indexArraySize;
+	glGetBufferParameteriv(GL_ELEMENT_ARRAY_BUFFER, GL_BUFFER_SIZE, &indexArraySize);
+	glDrawElements(GL_TRIANGLES, indexArraySize / sizeof(unsigned int), GL_UNSIGNED_INT, 0);
+	glDrawArrays(GL_TRIANGLES, 0, 36);
+	glBindVertexArray(0);
+
+}
+GLuint floorVAO5, floorVBO5, floorEBO5;
+
+void renderWall5()
+{
+	// initialize (if necessary)
+	if (floorVAO5 == 0)
+	{
+
+		std::vector<float> verticess;
+		std::vector<float> indicess;
+
+		Loader.LoadFile("room.obj");
+		objl::Mesh curMesh = Loader.LoadedMeshes[5];
+		int size = curMesh.Vertices.size();
+
+		for (int j = 0; j < curMesh.Vertices.size(); j++)
+		{
+
+			verticess.push_back((float)curMesh.Vertices[j].Position.X);
+			verticess.push_back((float)curMesh.Vertices[j].Position.Y);
+			verticess.push_back((float)curMesh.Vertices[j].Position.Z);
+			verticess.push_back((float)curMesh.Vertices[j].Normal.X);
+			verticess.push_back((float)curMesh.Vertices[j].Normal.Y);
+			verticess.push_back((float)curMesh.Vertices[j].Normal.Z);
+			verticess.push_back((float)curMesh.Vertices[j].TextureCoordinate.X);
+			verticess.push_back((float)curMesh.Vertices[j].TextureCoordinate.Y);
+		}
+		for (int j = 0; j < verticess.size(); j++)
+		{
+			vertices[j] = verticess.at(j);
+		}
+
+		for (int j = 0; j < curMesh.Indices.size(); j++)
+		{
+
+			indicess.push_back((float)curMesh.Indices[j]);
+
+		}
+		for (int j = 0; j < curMesh.Indices.size(); j++)
+		{
+			indices[j] = indicess.at(j);
+		}
+
+		glGenVertexArrays(1, &floorVAO5);
+		glGenBuffers(1, &floorVBO5);
+		glGenBuffers(1, &floorEBO5);
+		// fill buffer
+		glBindBuffer(GL_ARRAY_BUFFER, floorVBO5);
+		glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_DYNAMIC_DRAW);
+
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, floorEBO5);
+		glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), &indices, GL_DYNAMIC_DRAW);
+		// link vertex attributes
+		glBindVertexArray(floorVAO5);
+		glEnableVertexAttribArray(0);
+
+
+		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
+		glEnableVertexAttribArray(1);
+		glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float)));
+		glEnableVertexAttribArray(2);
+		glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
+		glBindBuffer(GL_ARRAY_BUFFER, 0);
+		glBindVertexArray(0);
+	}
+	// render Cube
+	glBindVertexArray(floorVAO5);
+	glBindBuffer(GL_ARRAY_BUFFER, floorVBO5);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, floorEBO5);
+	int indexArraySize;
+	glGetBufferParameteriv(GL_ELEMENT_ARRAY_BUFFER, GL_BUFFER_SIZE, &indexArraySize);
+	glDrawElements(GL_TRIANGLES, indexArraySize / sizeof(unsigned int), GL_UNSIGNED_INT, 0);
+	glDrawArrays(GL_TRIANGLES, 0, 36);
+	glBindVertexArray(0);
+
 }
 
 // process all input: query GLFW whether relevant keys are pressed/released this frame and react accordingly
@@ -787,9 +1388,4 @@ void mouse_callback(GLFWwindow* window, double xpos, double ypos)
 void scroll_callback(GLFWwindow* window, double xoffset, double yOffset)
 {
 	pCamera->ProcessMouseScroll((float)yOffset);
-}
-
-void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
-{
-
 }
