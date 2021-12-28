@@ -189,7 +189,7 @@ private:
 	}
 
 protected:
-	const float cameraSpeedFactor = 2.5f;
+	const float cameraSpeedFactor = 10.5f;
 	const float mouseSensitivity = 0.1f;
 
 	// Perspective properties

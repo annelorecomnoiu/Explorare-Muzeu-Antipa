@@ -82,11 +82,18 @@ void renderScene(const Shader& shader);
 void renderWallRoom(const Shader& shader);
 void renderDino(const Shader& shader);
 void renderGlassPlatform(const Shader& shader);
+void renderBlackPanther(const Shader& shader);
+void renderZebra(const Shader& shader);
+void renderGiraffe(const Shader& shader);
 
 //objects
 void renderFloor();
-void renderDino2();
+void renderDino();
 void renderGlassPlatform();
+void renderBlackPanther();
+void renderZebra();
+void renderGiraffe();
+
 
 
 //room
@@ -161,6 +168,9 @@ int main(int argc, char** argv)
 	unsigned int wallTexture = CreateTexture(strExePath + "\\wall.jpg");
 	unsigned int dinoTex = CreateTexture(strExePath + "\\trex.jpg");
 	unsigned int platformTexture = CreateTexture(strExePath + "\\black.jpg");
+	unsigned int pantherTexture = CreateTexture(strExePath + "\\panther.jpg");
+	unsigned int zebraTexture = CreateTexture(strExePath + "\\zebra.jpg");
+	unsigned int giraffeTexture = CreateTexture(strExePath + "\\giraffe.jpg");
 
 
 
@@ -281,6 +291,39 @@ int main(int argc, char** argv)
 		glCullFace(GL_BACK);
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
+		glViewport(0, 0, SHADOW_WIDTH, SHADOW_HEIGHT);
+		glBindFramebuffer(GL_FRAMEBUFFER, depthMapFBO);
+		glClear(GL_DEPTH_BUFFER_BIT);
+		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_2D, pantherTexture);
+		glEnable(GL_CULL_FACE);
+		glCullFace(GL_FRONT);
+		renderBlackPanther(shadowMappingDepthShader);
+		glCullFace(GL_BACK);
+		glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+		glViewport(0, 0, SHADOW_WIDTH, SHADOW_HEIGHT);
+		glBindFramebuffer(GL_FRAMEBUFFER, depthMapFBO);
+		glClear(GL_DEPTH_BUFFER_BIT);
+		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_2D, zebraTexture);
+		glEnable(GL_CULL_FACE);
+		glCullFace(GL_FRONT);
+		renderZebra(shadowMappingDepthShader);
+		glCullFace(GL_BACK);
+		glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+		glViewport(0, 0, SHADOW_WIDTH, SHADOW_HEIGHT);
+		glBindFramebuffer(GL_FRAMEBUFFER, depthMapFBO);
+		glClear(GL_DEPTH_BUFFER_BIT);
+		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_2D, giraffeTexture);
+		glEnable(GL_CULL_FACE);
+		glCullFace(GL_FRONT);
+		renderGiraffe(shadowMappingDepthShader);
+		glCullFace(GL_BACK);
+		glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
 		// reset viewport
 		glViewport(0, 0, SCR_WIDTH, SCR_HEIGHT);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -329,6 +372,27 @@ int main(int argc, char** argv)
 		glDisable(GL_CULL_FACE);
 		renderGlassPlatform(shadowMappingShader);
 
+
+		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_2D, pantherTexture);
+		glActiveTexture(GL_TEXTURE1);
+		glBindTexture(GL_TEXTURE_2D, depthMap);
+		glDisable(GL_CULL_FACE);
+		renderBlackPanther(shadowMappingShader);
+
+		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_2D, zebraTexture);
+		glActiveTexture(GL_TEXTURE1);
+		glBindTexture(GL_TEXTURE_2D, depthMap);
+		glDisable(GL_CULL_FACE);
+		renderZebra(shadowMappingShader);
+
+		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_2D, giraffeTexture);
+		glActiveTexture(GL_TEXTURE1);
+		glBindTexture(GL_TEXTURE_2D, depthMap);
+		glDisable(GL_CULL_FACE);
+		renderGiraffe(shadowMappingShader);
 
 
 		// glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
@@ -423,6 +487,71 @@ void renderWallRoom(const Shader& shader)
 	shader.SetMat4("model", model);
 	renderWall9();
 }
+
+void renderDino(const Shader& shader)
+{
+	//dino
+	glm::mat4 model;
+
+
+	model = glm::mat4();
+	model = glm::translate(model, glm::vec3(-3.0f, -3.0f, -4.0f));
+	model = glm::scale(model, glm::vec3(0.03f));
+	shader.SetMat4("model", model);
+	renderDino();
+
+
+}
+
+void renderGlassPlatform(const Shader& shader)
+{
+	//platform
+	glm::mat4 model;
+
+
+	model = glm::mat4();
+	model = glm::translate(model, glm::vec3(-9.5f, -1.0f, -7.0f));
+	model = glm::scale(model, glm::vec3(0.7f));
+	shader.SetMat4("model", model);
+
+	renderGlassPlatform();
+}
+
+
+void renderBlackPanther(const Shader& shader)
+{
+	//panther
+	glm::mat4 model;
+	model = glm::mat4();
+	model = glm::translate(model, glm::vec3(-65.5f, -1.0f, -13.4f));
+	model = glm::scale(model, glm::vec3(5.f));
+	shader.SetMat4("model", model);
+	renderBlackPanther();
+}
+
+void renderZebra(const Shader& shader)
+{
+	//zebra
+	glm::mat4 model;
+	model = glm::mat4();
+	model = glm::translate(model, glm::vec3(-50.5f, -1.0f, -13.4f));
+	model = glm::scale(model, glm::vec3(5.f));
+	shader.SetMat4("model", model);
+	renderZebra();
+}
+
+void renderGiraffe(const Shader& shader)
+{
+	//giraffe
+	glm::mat4 model;
+	model = glm::mat4();
+	model = glm::translate(model, glm::vec3(-37.5f, 8.0f, -13.4f));
+	model = glm::scale(model, glm::vec3(0.1f));
+	model = glm::rotate(model, glm::radians(90.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+	shader.SetMat4("model", model);
+	renderGiraffe();
+}
+
 
 
 
@@ -1242,15 +1371,267 @@ void renderWall10()
 
 }
 
+unsigned int indicesP[72000];
+objl::Vertex verP[82000];
+
+GLuint pantherVAO, pantherVBO, pantherEBO;
+
+void renderBlackPanther()
+{
+	// initialize (if necessary)
+	if (pantherVAO == 0)
+	{
+
+		std::vector<float> verticess;
+		std::vector<float> indicess;
+
+
+
+		Loader.LoadFile("..\\OBJ\\PANTHER.obj");
+		objl::Mesh curMesh = Loader.LoadedMeshes[0];
+		int size = curMesh.Vertices.size();
+		objl::Vertex v;
+		for (int j = 0; j < curMesh.Vertices.size(); j++)
+		{
+			v.Position.X = (float)curMesh.Vertices[j].Position.X;
+			v.Position.Y = (float)curMesh.Vertices[j].Position.Y;
+			v.Position.Z = (float)curMesh.Vertices[j].Position.Z;
+			v.Normal.X = (float)curMesh.Vertices[j].Normal.X;
+			v.Normal.Y = (float)curMesh.Vertices[j].Normal.Y;
+			v.Normal.Z = (float)curMesh.Vertices[j].Normal.Z;
+			v.TextureCoordinate.X = (float)curMesh.Vertices[j].TextureCoordinate.X;
+			v.TextureCoordinate.Y = (float)curMesh.Vertices[j].TextureCoordinate.Y;
+
+
+			verP[j] = v;
+		}
+		for (int j = 0; j < verticess.size(); j++)
+		{
+			vertices[j] = verticess.at(j);
+		}
+
+		for (int j = 0; j < curMesh.Indices.size(); j++)
+		{
+
+			indicess.push_back((float)curMesh.Indices[j]);
+
+		}
+		for (int j = 0; j < curMesh.Indices.size(); j++)
+		{
+			indicesP[j] = indicess.at(j);
+		}
+
+		glGenVertexArrays(1, &pantherVAO);
+		glGenBuffers(1, &pantherVBO);
+		glGenBuffers(1, &pantherEBO);
+		// fill buffer
+		glBindBuffer(GL_ARRAY_BUFFER, pantherVBO);
+		glBufferData(GL_ARRAY_BUFFER, sizeof(verP), verP, GL_DYNAMIC_DRAW);
+
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, pantherEBO);
+		glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indicesP), &indicesP, GL_DYNAMIC_DRAW);
+		// link vertex attributes
+		glBindVertexArray(pantherVAO);
+		glEnableVertexAttribArray(0);
+
+
+		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
+		glEnableVertexAttribArray(1);
+		glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float)));
+		glEnableVertexAttribArray(2);
+		glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
+		glBindBuffer(GL_ARRAY_BUFFER, 0);
+		glBindVertexArray(0);
+	}
+	// render Cube
+	glBindVertexArray(pantherVAO);
+	glBindBuffer(GL_ARRAY_BUFFER, pantherVBO);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, pantherEBO);
+	int indexArraySize;
+	glGetBufferParameteriv(GL_ELEMENT_ARRAY_BUFFER, GL_BUFFER_SIZE, &indexArraySize);
+	glDrawElements(GL_TRIANGLES, indexArraySize / sizeof(unsigned int), GL_UNSIGNED_INT, 0);
+	glDrawArrays(GL_TRIANGLES, 0, 36);
+	glBindVertexArray(0);
+}
+
+
+unsigned int indicesZ[72000];
+objl::Vertex verZ[82000];
+
+GLuint zebraVAO, zebraVBO, zebraEBO;
+
+void renderZebra()
+{
+	// initialize (if necessary)
+	if (zebraVAO == 0)
+	{
+
+		std::vector<float> verticess;
+		std::vector<float> indicess;
+
+
+
+		Loader.LoadFile("..\\OBJ\\ZEBRA.obj");
+		objl::Mesh curMesh = Loader.LoadedMeshes[0];
+		int size = curMesh.Vertices.size();
+		objl::Vertex v;
+		for (int j = 0; j < curMesh.Vertices.size(); j++)
+		{
+			v.Position.X = (float)curMesh.Vertices[j].Position.X;
+			v.Position.Y = (float)curMesh.Vertices[j].Position.Y;
+			v.Position.Z = (float)curMesh.Vertices[j].Position.Z;
+			v.Normal.X = (float)curMesh.Vertices[j].Normal.X;
+			v.Normal.Y = (float)curMesh.Vertices[j].Normal.Y;
+			v.Normal.Z = (float)curMesh.Vertices[j].Normal.Z;
+			v.TextureCoordinate.X = (float)curMesh.Vertices[j].TextureCoordinate.X;
+			v.TextureCoordinate.Y = (float)curMesh.Vertices[j].TextureCoordinate.Y;
+
+
+			verZ[j] = v;
+		}
+		for (int j = 0; j < verticess.size(); j++)
+		{
+			vertices[j] = verticess.at(j);
+		}
+
+		for (int j = 0; j < curMesh.Indices.size(); j++)
+		{
+
+			indicess.push_back((float)curMesh.Indices[j]);
+
+		}
+		for (int j = 0; j < curMesh.Indices.size(); j++)
+		{
+			indicesZ[j] = indicess.at(j);
+		}
+
+		glGenVertexArrays(1, &zebraVAO);
+		glGenBuffers(1, &zebraVBO);
+		glGenBuffers(1, &zebraEBO);
+		// fill buffer
+		glBindBuffer(GL_ARRAY_BUFFER, zebraVBO);
+		glBufferData(GL_ARRAY_BUFFER, sizeof(verZ), verZ, GL_DYNAMIC_DRAW);
+
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, zebraEBO);
+		glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indicesZ), &indicesZ, GL_DYNAMIC_DRAW);
+		// link vertex attributes
+		glBindVertexArray(zebraVAO);
+		glEnableVertexAttribArray(0);
+
+
+		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
+		glEnableVertexAttribArray(1);
+		glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float)));
+		glEnableVertexAttribArray(2);
+		glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
+		glBindBuffer(GL_ARRAY_BUFFER, 0);
+		glBindVertexArray(0);
+	}
+	// render Cube
+	glBindVertexArray(zebraVAO);
+	glBindBuffer(GL_ARRAY_BUFFER, zebraVBO);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, zebraEBO);
+	int indexArraySize;
+	glGetBufferParameteriv(GL_ELEMENT_ARRAY_BUFFER, GL_BUFFER_SIZE, &indexArraySize);
+	glDrawElements(GL_TRIANGLES, indexArraySize / sizeof(unsigned int), GL_UNSIGNED_INT, 0);
+	glDrawArrays(GL_TRIANGLES, 0, 36);
+	glBindVertexArray(0);
+}
+
+unsigned int indicesG[72000];
+objl::Vertex verG[82000];
+
+GLuint giraffeVAO, giraffeVBO, giraffeEBO;
+
+void renderGiraffe()
+{
+	// initialize (if necessary)
+	if (giraffeVAO == 0)
+	{
+
+		std::vector<float> verticess;
+		std::vector<float> indicess;
+
+
+
+		Loader.LoadFile("..\\OBJ\\giraffe.obj");
+		objl::Mesh curMesh = Loader.LoadedMeshes[0];
+		int size = curMesh.Vertices.size();
+		objl::Vertex v;
+		for (int j = 0; j < curMesh.Vertices.size(); j++)
+		{
+			v.Position.X = (float)curMesh.Vertices[j].Position.X;
+			v.Position.Y = (float)curMesh.Vertices[j].Position.Y;
+			v.Position.Z = (float)curMesh.Vertices[j].Position.Z;
+			v.Normal.X = (float)curMesh.Vertices[j].Normal.X;
+			v.Normal.Y = (float)curMesh.Vertices[j].Normal.Y;
+			v.Normal.Z = (float)curMesh.Vertices[j].Normal.Z;
+			v.TextureCoordinate.X = (float)curMesh.Vertices[j].TextureCoordinate.X;
+			v.TextureCoordinate.Y = (float)curMesh.Vertices[j].TextureCoordinate.Y;
+
+
+			verG[j] = v;
+		}
+		for (int j = 0; j < verticess.size(); j++)
+		{
+			vertices[j] = verticess.at(j);
+		}
+
+		for (int j = 0; j < curMesh.Indices.size(); j++)
+		{
+
+			indicess.push_back((float)curMesh.Indices[j]);
+
+		}
+		for (int j = 0; j < curMesh.Indices.size(); j++)
+		{
+			indicesG[j] = indicess.at(j);
+		}
+
+		glGenVertexArrays(1, &giraffeVAO);
+		glGenBuffers(1, &giraffeVBO);
+		glGenBuffers(1, &giraffeEBO);
+		// fill buffer
+		glBindBuffer(GL_ARRAY_BUFFER, giraffeVBO);
+		glBufferData(GL_ARRAY_BUFFER, sizeof(verG), verG, GL_DYNAMIC_DRAW);
+
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, giraffeEBO);
+		glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indicesG), &indicesG, GL_DYNAMIC_DRAW);
+		// link vertex attributes
+		glBindVertexArray(giraffeVAO);
+		glEnableVertexAttribArray(0);
+
+
+		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
+		glEnableVertexAttribArray(1);
+		glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float)));
+		glEnableVertexAttribArray(2);
+		glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
+		glBindBuffer(GL_ARRAY_BUFFER, 0);
+		glBindVertexArray(0);
+	}
+	// render Cube
+	glBindVertexArray(giraffeVAO);
+	glBindBuffer(GL_ARRAY_BUFFER, giraffeVBO);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, giraffeEBO);
+	int indexArraySize;
+	glGetBufferParameteriv(GL_ELEMENT_ARRAY_BUFFER, GL_BUFFER_SIZE, &indexArraySize);
+	glDrawElements(GL_TRIANGLES, indexArraySize / sizeof(unsigned int), GL_UNSIGNED_INT, 0);
+	glDrawArrays(GL_TRIANGLES, 0, 36);
+	glBindVertexArray(0);
+}
+
+
+
 
 unsigned int indicesD[72000];
 objl::Vertex verD[82000];
 
-GLuint dino2VAO, dino2VBO, dino2EBO;
-void renderDino2()
+GLuint dinoVAO, dinoVBO, dinoEBO;
+void renderDino()
 {
 	// initialize (if necessary)
-	if (dino2VAO == 0)
+	if (dinoVAO == 0)
 	{
 
 		std::vector<float> verticess;
@@ -1292,17 +1673,17 @@ void renderDino2()
 			indicesD[j] = indicess.at(j);
 		}
 
-		glGenVertexArrays(1, &dino2VAO);
-		glGenBuffers(1, &dino2VBO);
-		glGenBuffers(1, &dino2EBO);
+		glGenVertexArrays(1, &dinoVAO);
+		glGenBuffers(1, &dinoVBO);
+		glGenBuffers(1, &dinoEBO);
 		// fill buffer
-		glBindBuffer(GL_ARRAY_BUFFER, dino2VBO);
+		glBindBuffer(GL_ARRAY_BUFFER, dinoVBO);
 		glBufferData(GL_ARRAY_BUFFER, sizeof(verD), verD, GL_DYNAMIC_DRAW);
 
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, dino2EBO);
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, dinoEBO);
 		glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indicesD), &indicesD, GL_DYNAMIC_DRAW);
 		// link vertex attributes
-		glBindVertexArray(dino2VAO);
+		glBindVertexArray(dinoVAO);
 		glEnableVertexAttribArray(0);
 
 
@@ -1315,9 +1696,9 @@ void renderDino2()
 		glBindVertexArray(0);
 	}
 	// render Cube
-	glBindVertexArray(dino2VAO);
-	glBindBuffer(GL_ARRAY_BUFFER, dino2VBO);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, dino2EBO);
+	glBindVertexArray(dinoVAO);
+	glBindBuffer(GL_ARRAY_BUFFER, dinoVBO);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, dinoEBO);
 	int indexArraySize;
 	glGetBufferParameteriv(GL_ELEMENT_ARRAY_BUFFER, GL_BUFFER_SIZE, &indexArraySize);
 	glDrawElements(GL_TRIANGLES, indexArraySize / sizeof(unsigned int), GL_UNSIGNED_INT, 0);
@@ -1404,35 +1785,6 @@ void renderGlassPlatform()
 	glDrawElements(GL_TRIANGLES, indexArraySize / sizeof(unsigned int), GL_UNSIGNED_INT, 0);
 	glDrawArrays(GL_TRIANGLES, 0, 36);
 	glBindVertexArray(0);
-}
-
-void renderDino(const Shader& shader)
-{
-	//dino
-	glm::mat4 model;
-
-
-	model = glm::mat4();
-	model = glm::translate(model, glm::vec3(-3.0f, -3.0f, -4.0f));
-	model = glm::scale(model, glm::vec3(0.03f));
-	shader.SetMat4("model", model);
-	renderDino2();
-
-
-}
-
-void renderGlassPlatform(const Shader& shader)
-{
-	//platform
-	glm::mat4 model;
-
-
-	model = glm::mat4();
-	model = glm::translate(model, glm::vec3(-9.5f, -1.0f, -7.0f));
-	model = glm::scale(model, glm::vec3(0.7f));
-	shader.SetMat4("model", model);
-
-	renderGlassPlatform();
 }
 
 
