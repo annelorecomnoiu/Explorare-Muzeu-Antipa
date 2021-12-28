@@ -148,8 +148,8 @@ int main(int argc, char** argv)
 
 	// build and compile shaders
 	// -------------------------
-	Shader shadowMappingShader("ShadowMapping.vs", "ShadowMapping.fs");
-	Shader shadowMappingDepthShader("ShadowMappingDepth.vs", "ShadowMappingDepth.fs");
+	Shader shadowMappingShader("..\\Shaders\\ShadowMapping.vs", "..\\Shaders\\ShadowMapping.fs");
+	Shader shadowMappingDepthShader("..\\Shaders\\ShadowMappingDepth.vs", "..\\Shaders\\ShadowMappingDepth.fs");
 
 	// load textures
 
@@ -433,8 +433,7 @@ void renderWall1()
 		std::vector<float> indicess;
 
 
-
-		Loader.LoadFile("room.obj");
+		Loader.LoadFile("..\\OBJ\\room.obj");
 		for (int i = 0; i < Loader.LoadedMeshes.size(); i++)
 		{
 			objl::Mesh curMesh = Loader.LoadedMeshes[1];
@@ -513,7 +512,7 @@ void renderWall6()
 
 
 
-		Loader.LoadFile("room.obj");
+		Loader.LoadFile("..\\OBJ\\room.obj");
 		for (int i = 0; i < Loader.LoadedMeshes.size(); i++)
 		{
 			objl::Mesh curMesh = Loader.LoadedMeshes[1];
@@ -593,7 +592,7 @@ void renderWall2()
 
 
 
-		Loader.LoadFile("room.obj");
+		Loader.LoadFile("..\\OBJ\\room.obj");
 		for (int i = 0; i < Loader.LoadedMeshes.size(); i++)
 		{
 			objl::Mesh curMesh = Loader.LoadedMeshes[2];
@@ -671,8 +670,7 @@ void renderWall7()
 		std::vector<float> indicess;
 
 
-
-		Loader.LoadFile("room.obj");
+		Loader.LoadFile("..\\OBJ\\room.obj");
 		for (int i = 0; i < Loader.LoadedMeshes.size(); i++)
 		{
 			objl::Mesh curMesh = Loader.LoadedMeshes[2];
@@ -752,7 +750,7 @@ void renderWall3()
 
 
 
-		Loader.LoadFile("room.obj");
+		Loader.LoadFile("..\\OBJ\\room.obj");
 		objl::Mesh curMesh = Loader.LoadedMeshes[3];
 		int size = curMesh.Vertices.size();
 
@@ -828,8 +826,7 @@ void renderWall8()
 		std::vector<float> indicess;
 
 
-
-		Loader.LoadFile("room.obj");
+		Loader.LoadFile("..\\OBJ\\room.obj");
 		objl::Mesh curMesh = Loader.LoadedMeshes[3];
 		int size = curMesh.Vertices.size();
 
@@ -906,8 +903,7 @@ void renderWall4()
 		std::vector<float> indicess;
 
 
-
-		Loader.LoadFile("room.obj");
+		Loader.LoadFile("..\\OBJ\\room.obj");
 		objl::Mesh curMesh = Loader.LoadedMeshes[4];
 		int size = curMesh.Vertices.size();
 
@@ -983,8 +979,7 @@ void renderWall9()
 		std::vector<float> indicess;
 
 
-
-		Loader.LoadFile("room.obj");
+		Loader.LoadFile("..\\OBJ\\room.obj");
 		objl::Mesh curMesh = Loader.LoadedMeshes[4];
 		int size = curMesh.Vertices.size();
 
@@ -1059,8 +1054,7 @@ void renderWall5()
 
 		std::vector<float> verticess;
 		std::vector<float> indicess;
-
-		Loader.LoadFile("room.obj");
+		Loader.LoadFile("..\\OBJ\\room.obj");
 		objl::Mesh curMesh = Loader.LoadedMeshes[5];
 		int size = curMesh.Vertices.size();
 
@@ -1134,8 +1128,7 @@ void renderWall10()
 
 		std::vector<float> verticess;
 		std::vector<float> indicess;
-
-		Loader.LoadFile("room.obj");
+		Loader.LoadFile("..\\OBJ\\room.obj");
 		objl::Mesh curMesh = Loader.LoadedMeshes[5];
 		int size = curMesh.Vertices.size();
 
