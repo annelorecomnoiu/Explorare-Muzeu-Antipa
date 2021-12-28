@@ -80,9 +80,13 @@ void processInput(GLFWwindow* window);
 //textures
 void renderScene(const Shader& shader);
 void renderWallRoom(const Shader& shader);
+void renderDino(const Shader& shader);
+void renderGlassPlatform(const Shader& shader);
 
 //objects
 void renderFloor();
+void renderDino2();
+void renderGlassPlatform();
 
 
 //room
@@ -155,6 +159,8 @@ int main(int argc, char** argv)
 
 	unsigned int floorTexture = CreateTexture(strExePath + "\\floor.jpg");
 	unsigned int wallTexture = CreateTexture(strExePath + "\\wall.jpg");
+	unsigned int dinoTex = CreateTexture(strExePath + "\\trex.jpg");
+	unsigned int platformTexture = CreateTexture(strExePath + "\\black.jpg");
 
 
 
@@ -252,6 +258,29 @@ int main(int argc, char** argv)
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
 
+		glViewport(0, 0, SHADOW_WIDTH, SHADOW_HEIGHT);
+		glBindFramebuffer(GL_FRAMEBUFFER, depthMapFBO);
+		glClear(GL_DEPTH_BUFFER_BIT);
+		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_2D, dinoTex);
+		glEnable(GL_CULL_FACE);
+		glCullFace(GL_FRONT);
+		renderDino(shadowMappingDepthShader);
+		glCullFace(GL_BACK);
+		glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+
+		glViewport(0, 0, SHADOW_WIDTH, SHADOW_HEIGHT);
+		glBindFramebuffer(GL_FRAMEBUFFER, depthMapFBO);
+		glClear(GL_DEPTH_BUFFER_BIT);
+		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_2D, platformTexture);
+		glEnable(GL_CULL_FACE);
+		glCullFace(GL_FRONT);
+		renderGlassPlatform(shadowMappingDepthShader);
+		glCullFace(GL_BACK);
+		glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
 		// reset viewport
 		glViewport(0, 0, SCR_WIDTH, SCR_HEIGHT);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -282,6 +311,24 @@ int main(int argc, char** argv)
 		glBindTexture(GL_TEXTURE_2D, depthMap);
 		glDisable(GL_CULL_FACE);
 		renderWallRoom(shadowMappingShader);
+
+
+		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_2D, dinoTex);
+		glActiveTexture(GL_TEXTURE1);
+		glBindTexture(GL_TEXTURE_2D, depthMap);
+		glDisable(GL_CULL_FACE);
+		renderDino(shadowMappingShader);
+
+
+
+		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_2D, platformTexture);
+		glActiveTexture(GL_TEXTURE1);
+		glBindTexture(GL_TEXTURE_2D, depthMap);
+		glDisable(GL_CULL_FACE);
+		renderGlassPlatform(shadowMappingShader);
+
 
 
 		// glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
@@ -1192,7 +1239,203 @@ void renderWall10()
 	glDrawArrays(GL_TRIANGLES, 0, 36);
 	glBindVertexArray(0);
 
+
 }
+
+
+unsigned int indicesD[72000];
+objl::Vertex verD[82000];
+
+GLuint dino2VAO, dino2VBO, dino2EBO;
+void renderDino2()
+{
+	// initialize (if necessary)
+	if (dino2VAO == 0)
+	{
+
+		std::vector<float> verticess;
+		std::vector<float> indicess;
+
+
+
+		Loader.LoadFile("..\\OBJ\\T-Rex Model.obj");
+		objl::Mesh curMesh = Loader.LoadedMeshes[0];
+		int size = curMesh.Vertices.size();
+		objl::Vertex v;
+		for (int j = 0; j < curMesh.Vertices.size(); j++)
+		{
+			v.Position.X = (float)curMesh.Vertices[j].Position.X;
+			v.Position.Y = (float)curMesh.Vertices[j].Position.Y;
+			v.Position.Z = (float)curMesh.Vertices[j].Position.Z;
+			v.Normal.X = (float)curMesh.Vertices[j].Normal.X;
+			v.Normal.Y = (float)curMesh.Vertices[j].Normal.Y;
+			v.Normal.Z = (float)curMesh.Vertices[j].Normal.Z;
+			v.TextureCoordinate.X = (float)curMesh.Vertices[j].TextureCoordinate.X;
+			v.TextureCoordinate.Y = (float)curMesh.Vertices[j].TextureCoordinate.Y;
+
+
+			verD[j] = v;
+		}
+		for (int j = 0; j < verticess.size(); j++)
+		{
+			vertices[j] = verticess.at(j);
+		}
+
+		for (int j = 0; j < curMesh.Indices.size(); j++)
+		{
+
+			indicess.push_back((float)curMesh.Indices[j]);
+
+		}
+		for (int j = 0; j < curMesh.Indices.size(); j++)
+		{
+			indicesD[j] = indicess.at(j);
+		}
+
+		glGenVertexArrays(1, &dino2VAO);
+		glGenBuffers(1, &dino2VBO);
+		glGenBuffers(1, &dino2EBO);
+		// fill buffer
+		glBindBuffer(GL_ARRAY_BUFFER, dino2VBO);
+		glBufferData(GL_ARRAY_BUFFER, sizeof(verD), verD, GL_DYNAMIC_DRAW);
+
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, dino2EBO);
+		glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indicesD), &indicesD, GL_DYNAMIC_DRAW);
+		// link vertex attributes
+		glBindVertexArray(dino2VAO);
+		glEnableVertexAttribArray(0);
+
+
+		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
+		glEnableVertexAttribArray(1);
+		glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float)));
+		glEnableVertexAttribArray(2);
+		glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
+		glBindBuffer(GL_ARRAY_BUFFER, 0);
+		glBindVertexArray(0);
+	}
+	// render Cube
+	glBindVertexArray(dino2VAO);
+	glBindBuffer(GL_ARRAY_BUFFER, dino2VBO);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, dino2EBO);
+	int indexArraySize;
+	glGetBufferParameteriv(GL_ELEMENT_ARRAY_BUFFER, GL_BUFFER_SIZE, &indexArraySize);
+	glDrawElements(GL_TRIANGLES, indexArraySize / sizeof(unsigned int), GL_UNSIGNED_INT, 0);
+	glDrawArrays(GL_TRIANGLES, 0, 36);
+	glBindVertexArray(0);
+}
+
+
+float vertices1[82000];
+unsigned int indices1[72000];
+objl::Vertex ver1[82000];
+GLuint platformVAO, platformVBO, platformEBO;
+void renderGlassPlatform()
+{
+	if (platformVAO == 0)
+	{
+
+		std::vector<float> verticess;
+		std::vector<float> indicess;
+
+
+
+		Loader.LoadFile("..\\OBJ\\platformWindow.obj");
+		objl::Mesh curMesh = Loader.LoadedMeshes[0];
+		int size = curMesh.Vertices.size();
+
+		objl::Vertex v;
+		for (int j = 0; j < curMesh.Vertices.size(); j++)
+		{
+			v.Position.X = (float)curMesh.Vertices[j].Position.X;
+			v.Position.Y = (float)curMesh.Vertices[j].Position.Y;
+			v.Position.Z = (float)curMesh.Vertices[j].Position.Z;
+			v.Normal.X = (float)curMesh.Vertices[j].Normal.X;
+			v.Normal.Y = (float)curMesh.Vertices[j].Normal.Y;
+			v.Normal.Z = (float)curMesh.Vertices[j].Normal.Z;
+			v.TextureCoordinate.X = (float)curMesh.Vertices[j].TextureCoordinate.X;
+			v.TextureCoordinate.Y = (float)curMesh.Vertices[j].TextureCoordinate.Y;
+			ver1[j] = v;
+		}
+		/*for (int j = 0; j < verticess.size(); j++)
+		{
+			vertices[j] = verticess.at(j);
+		}*/
+
+		for (int j = 0; j < curMesh.Indices.size(); j++)
+		{
+
+			indicess.push_back((float)curMesh.Indices[j]);
+
+		}
+		for (int j = 0; j < curMesh.Indices.size(); j++)
+		{
+			indices1[j] = indicess.at(j);
+		}
+
+		glGenVertexArrays(1, &platformVAO);
+		glGenBuffers(1, &platformVBO);
+		glGenBuffers(1, &platformEBO);
+		// fill buffer
+		glBindBuffer(GL_ARRAY_BUFFER, platformVBO);
+		glBufferData(GL_ARRAY_BUFFER, sizeof(ver1), ver1, GL_DYNAMIC_DRAW);
+
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, platformEBO);
+		glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices1), &indices1, GL_DYNAMIC_DRAW);
+		// link vertex attributes
+		glBindVertexArray(platformVAO);
+		glEnableVertexAttribArray(0);
+
+
+		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
+		glEnableVertexAttribArray(1);
+		glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float)));
+		glEnableVertexAttribArray(2);
+		glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
+		glBindBuffer(GL_ARRAY_BUFFER, 0);
+		glBindVertexArray(0);
+	}
+	// render Cube
+	glBindVertexArray(platformVAO);
+	glBindBuffer(GL_ARRAY_BUFFER, platformVBO);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, platformEBO);
+	int indexArraySize;
+	glGetBufferParameteriv(GL_ELEMENT_ARRAY_BUFFER, GL_BUFFER_SIZE, &indexArraySize);
+	glDrawElements(GL_TRIANGLES, indexArraySize / sizeof(unsigned int), GL_UNSIGNED_INT, 0);
+	glDrawArrays(GL_TRIANGLES, 0, 36);
+	glBindVertexArray(0);
+}
+
+void renderDino(const Shader& shader)
+{
+	//dino
+	glm::mat4 model;
+
+
+	model = glm::mat4();
+	model = glm::translate(model, glm::vec3(-3.0f, -3.0f, -4.0f));
+	model = glm::scale(model, glm::vec3(0.03f));
+	shader.SetMat4("model", model);
+	renderDino2();
+
+
+}
+
+void renderGlassPlatform(const Shader& shader)
+{
+	//platform
+	glm::mat4 model;
+
+
+	model = glm::mat4();
+	model = glm::translate(model, glm::vec3(-9.5f, -1.0f, -7.0f));
+	model = glm::scale(model, glm::vec3(0.7f));
+	shader.SetMat4("model", model);
+
+	renderGlassPlatform();
+}
+
+
 
 
 
