@@ -81,7 +81,7 @@ void processInput(GLFWwindow* window);
 void renderFloor(const Shader& shader);
 void renderWallRoom(const Shader& shader);
 void renderDino(const Shader& shader);
-void renderGlassPlatform(const Shader& shader);
+void renderPlatform(const Shader& shader);
 void renderBlackPanther(const Shader& shader);
 void renderZebra(const Shader& shader);
 void renderGiraffe(const Shader& shader);
@@ -93,7 +93,7 @@ void renderBackground2(const Shader& shader);
 //objects
 void renderFloor();
 void renderDino();
-void renderGlassPlatform();
+void renderPlatform();
 void renderBlackPanther();
 void renderZebra();
 void renderGiraffe();
@@ -296,7 +296,7 @@ int main(int argc, char** argv)
 		glBindTexture(GL_TEXTURE_2D, platformTexture);
 		glEnable(GL_CULL_FACE);
 		glCullFace(GL_FRONT);
-		renderGlassPlatform(shadowMappingDepthShader);
+		renderPlatform(shadowMappingDepthShader);
 		glCullFace(GL_BACK);
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
@@ -424,7 +424,7 @@ int main(int argc, char** argv)
 		glActiveTexture(GL_TEXTURE1);
 		glBindTexture(GL_TEXTURE_2D, depthMap);
 		glDisable(GL_CULL_FACE);
-		renderGlassPlatform(shadowMappingShader);
+		renderPlatform(shadowMappingShader);
 
 
 		glActiveTexture(GL_TEXTURE0);
@@ -575,28 +575,34 @@ void renderDino(const Shader& shader)
 	//dino
 	glm::mat4 model;
 
+	static float Offset = 0.0f;
+	const float Increment = 0.005f;
+	Offset += Increment;
+
 
 	model = glm::mat4();
-	model = glm::translate(model, glm::vec3(-3.0f, -3.0f, -4.0f));
-	model = glm::scale(model, glm::vec3(0.03f));
+	model = glm::translate(model, glm::vec3(-7.2f, -3.2f, -0.7f));
+	model = glm::scale(model, glm::vec3(0.04f));
+	model = glm::rotate(model, Offset, glm::vec3(0, 1, 0));
 	shader.SetMat4("model", model);
 	renderDino();
 
 
 }
 
-void renderGlassPlatform(const Shader& shader)
+void renderPlatform(const Shader& shader)
 {
 	//platform
 	glm::mat4 model;
 
 
 	model = glm::mat4();
-	model = glm::translate(model, glm::vec3(-9.5f, -1.0f, -7.0f));
-	model = glm::scale(model, glm::vec3(0.7f));
+	model = glm::translate(model, glm::vec3(-23.0f, -1.0f, -17.0f));
+	model = glm::scale(model, glm::vec3(1.6f));
 	shader.SetMat4("model", model);
 
-	renderGlassPlatform();
+
+	renderPlatform();
 }
 
 
@@ -2091,7 +2097,7 @@ float vertices1[82000];
 unsigned int indices1[72000];
 objl::Vertex ver1[82000];
 GLuint platformVAO, platformVBO, platformEBO;
-void renderGlassPlatform()
+void renderPlatform()
 {
 	if (platformVAO == 0)
 	{
