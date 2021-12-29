@@ -92,6 +92,7 @@ void renderBackground2(const Shader& shader);
 void renderGlassWindows(const Shader& shader);
 void renderTree(const Shader& shader);
 void renderWoodpecker(const Shader& shader);
+void renderGrass(const Shader& shader);
 
 
 //objects
@@ -107,6 +108,7 @@ void renderBackground();
 void renderGlassWindows();
 void renderTree();
 void renderWoodpecker();
+void renderGrass();
 
 //room
 void renderWall1();
@@ -189,7 +191,7 @@ int main(int argc, char** argv)
 	unsigned int glassTexture = CreateTexture(strExePath + "\\glass.jpg");
 	unsigned int treeTexture = CreateTexture(strExePath + "\\tree.jpg");
 	unsigned int woodpeckerTexture = CreateTexture(strExePath + "\\woodpecker.jpg");
-
+	unsigned int GrassTexture = CreateTexture(strExePath + "\\Grass.jpg");
 
 	// configure depth map FBO
 	// -----------------------
@@ -421,6 +423,17 @@ int main(int argc, char** argv)
 		glCullFace(GL_BACK);
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
+		glViewport(0, 0, SHADOW_WIDTH, SHADOW_HEIGHT);
+		glBindFramebuffer(GL_FRAMEBUFFER, depthMapFBO);
+		glClear(GL_DEPTH_BUFFER_BIT);
+		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_2D, GrassTexture);
+		glEnable(GL_CULL_FACE);
+		glCullFace(GL_FRONT);
+		renderGrass(shadowMappingDepthShader);
+		glCullFace(GL_BACK);
+		glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
 		// reset viewport
 		glViewport(0, 0, SCR_WIDTH, SCR_HEIGHT);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -548,6 +561,13 @@ int main(int argc, char** argv)
 		glBindTexture(GL_TEXTURE_2D, depthMap);
 		glDisable(GL_CULL_FACE);
 		renderWoodpecker(shadowMappingShader);
+
+		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_2D, GrassTexture);
+		glActiveTexture(GL_TEXTURE1);
+		glBindTexture(GL_TEXTURE_2D, depthMap);
+		glDisable(GL_CULL_FACE);
+		renderGrass(shadowMappingShader);
 
 
 		// glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
@@ -748,8 +768,8 @@ void renderBackground1(const Shader& shader)
 	//background2
 	glm::mat4 model;
 	model = glm::mat4();
-	model = glm::translate(model, glm::vec3(-49.3f, 9.0f, -22.30f));
-	model = glm::scale(model, glm::vec3(5.0f));
+	model = glm::translate(model, glm::vec3(-49.3f, 9.9f, -22.30f));
+	model = glm::scale(model, glm::vec3(6.0f));
 	shader.SetMat4("model", model);
 	renderBackground();
 }
@@ -854,6 +874,32 @@ void renderWoodpecker(const Shader& shader)
 
 	shader.SetMat4("model", model);
 	renderWoodpecker();
+}
+
+void renderGrass(const Shader& shader)
+{
+
+	//Grass
+
+	glm::mat4 model;
+	model = glm::mat4();
+	model = glm::translate(model, glm::vec3(-37.47f, -0.45f, -18.6f));
+	model = glm::scale(model, glm::vec3(2.3f));
+	model = glm::rotate(model, glm::radians(180.0f), glm::vec3(0.0f, 0.0f, 1.0f));
+
+	shader.SetMat4("model", model);
+	renderGrass();
+
+
+	model = glm::mat4();
+	model = glm::translate(model, glm::vec3(-61.3f, -0.4f, -19.95f));
+	model = glm::scale(model, glm::vec3(2.6f));
+	model = glm::rotate(model, glm::radians(180.0f), glm::vec3(0.0f, 0.0f, 1.0f));
+
+	shader.SetMat4("model", model);
+	renderGrass();
+
+
 }
 
 
@@ -2581,7 +2627,87 @@ void renderWoodpecker()
 	glBindVertexArray(0);
 }
 
+unsigned int indicesGr[72000];
+objl::Vertex verGr[82000];
+GLuint GrassVAO, GrassVBO, GrassEBO;
 
+void renderGrass()
+{
+	// initialize (if necessary)
+	if (GrassVAO == 0)
+	{
+
+		std::vector<float> verticess;
+		std::vector<float> indicess;
+
+
+
+		Loader.LoadFile("..\\OBJ\\Grass.obj");
+		objl::Mesh curMesh = Loader.LoadedMeshes[0];
+		int size = curMesh.Vertices.size();
+		objl::Vertex v;
+		for (int j = 0; j < curMesh.Vertices.size(); j++)
+		{
+			v.Position.X = (float)curMesh.Vertices[j].Position.X;
+			v.Position.Y = (float)curMesh.Vertices[j].Position.Y;
+			v.Position.Z = (float)curMesh.Vertices[j].Position.Z;
+			v.Normal.X = (float)curMesh.Vertices[j].Normal.X;
+			v.Normal.Y = (float)curMesh.Vertices[j].Normal.Y;
+			v.Normal.Z = (float)curMesh.Vertices[j].Normal.Z;
+			v.TextureCoordinate.X = (float)curMesh.Vertices[j].TextureCoordinate.X;
+			v.TextureCoordinate.Y = (float)curMesh.Vertices[j].TextureCoordinate.Y;
+
+
+			verGr[j] = v;
+		}
+		for (int j = 0; j < verticess.size(); j++)
+		{
+			vertices[j] = verticess.at(j);
+		}
+
+		for (int j = 0; j < curMesh.Indices.size(); j++)
+		{
+
+			indicess.push_back((float)curMesh.Indices[j]);
+
+		}
+		for (int j = 0; j < curMesh.Indices.size(); j++)
+		{
+			indicesGr[j] = indicess.at(j);
+		}
+
+		glGenVertexArrays(1, &GrassVAO);
+		glGenBuffers(1, &GrassVBO);
+		glGenBuffers(1, &GrassEBO);
+		// fill buffer
+		glBindBuffer(GL_ARRAY_BUFFER, GrassVBO);
+		glBufferData(GL_ARRAY_BUFFER, sizeof(verGr), verGr, GL_DYNAMIC_DRAW);
+
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, GrassEBO);
+		glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indicesGr), &indicesGr, GL_DYNAMIC_DRAW);
+		// link vertex attributes
+		glBindVertexArray(GrassVAO);
+		glEnableVertexAttribArray(0);
+
+
+		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
+		glEnableVertexAttribArray(1);
+		glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float)));
+		glEnableVertexAttribArray(2);
+		glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
+		glBindBuffer(GL_ARRAY_BUFFER, 0);
+		glBindVertexArray(0);
+	}
+	// render Cube
+	glBindVertexArray(GrassVAO);
+	glBindBuffer(GL_ARRAY_BUFFER, GrassVBO);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, GrassEBO);
+	int indexArraySize;
+	glGetBufferParameteriv(GL_ELEMENT_ARRAY_BUFFER, GL_BUFFER_SIZE, &indexArraySize);
+	glDrawElements(GL_TRIANGLES, indexArraySize / sizeof(unsigned int), GL_UNSIGNED_INT, 0);
+	glDrawArrays(GL_TRIANGLES, 0, 36);
+	glBindVertexArray(0);
+}
 
 
 // process all input: query GLFW whether relevant keys are pressed/released this frame and react accordingly
