@@ -179,7 +179,7 @@ int main(int argc, char** argv)
 	unsigned int giraffeTexture = CreateTexture(strExePath + "\\giraffe.jpg");
 	unsigned int elephantTexture = CreateTexture(strExePath + "\\elephant.jpg");
 	unsigned int cheetahTexture = CreateTexture(strExePath + "\\cheetah.png");
-	unsigned int backgroundTexture = CreateTexture(strExePath + "\\blue.png");
+	unsigned int backgroundTexture = CreateTexture(strExePath + "\\sunset.jpg");
 
 
 
@@ -371,7 +371,7 @@ int main(int argc, char** argv)
 		glBindFramebuffer(GL_FRAMEBUFFER, depthMapFBO);
 		glClear(GL_DEPTH_BUFFER_BIT);
 		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D, backgroundTexture);
+		glBindTexture(GL_TEXTURE_2D, wallTexture);
 		glEnable(GL_CULL_FACE);
 		glCullFace(GL_FRONT);
 		renderBackground2(shadowMappingDepthShader);
@@ -472,7 +472,7 @@ int main(int argc, char** argv)
 
 
 		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D, backgroundTexture);
+		glBindTexture(GL_TEXTURE_2D, wallTexture);
 		glActiveTexture(GL_TEXTURE1);
 		glBindTexture(GL_TEXTURE_2D, depthMap);
 		glDisable(GL_CULL_FACE);
@@ -686,10 +686,42 @@ void renderBackground1(const Shader& shader)
 void renderBackground2(const Shader& shader)
 {
 	//background2
+
 	glm::mat4 model;
+
+	//1
+
 	model = glm::mat4();
-	model = glm::translate(model, glm::vec3(-49.3f, 9.0f, 22.30f));
-	model = glm::scale(model, glm::vec3(5.0f));
+	model = glm::translate(model, glm::vec3(-25.8f, -1.0f, -24.30f));
+	model = glm::scale(model, glm::vec3(3.99f));
+	model = glm::rotate(model, glm::radians(90.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+	shader.SetMat4("model", model);
+	renderBackground();
+
+	//2
+
+	model = glm::mat4();
+	model = glm::translate(model, glm::vec3(-25.8f, -1.0f, 24.30f));
+	model = glm::scale(model, glm::vec3(3.99f));
+	model = glm::rotate(model, glm::radians(90.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+	shader.SetMat4("model", model);
+	renderBackground();
+
+	//3
+
+	model = glm::mat4();
+	model = glm::translate(model, glm::vec3(-24.0f, -1.0f, -24.30f));
+	model = glm::scale(model, glm::vec3(3.99f));
+	model = glm::rotate(model, glm::radians(90.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+	shader.SetMat4("model", model);
+	renderBackground();
+
+	//4
+
+	model = glm::mat4();
+	model = glm::translate(model, glm::vec3(-24.0f, -1.0f, 24.30f));
+	model = glm::scale(model, glm::vec3(3.99f));
+	model = glm::rotate(model, glm::radians(90.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 	shader.SetMat4("model", model);
 	renderBackground();
 }
