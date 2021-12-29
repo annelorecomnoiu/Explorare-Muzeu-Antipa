@@ -78,13 +78,17 @@ void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
 void processInput(GLFWwindow* window);
 
 //textures
-void renderScene(const Shader& shader);
+void renderFloor(const Shader& shader);
 void renderWallRoom(const Shader& shader);
 void renderDino(const Shader& shader);
 void renderGlassPlatform(const Shader& shader);
 void renderBlackPanther(const Shader& shader);
 void renderZebra(const Shader& shader);
 void renderGiraffe(const Shader& shader);
+void renderElephant(const Shader& shader);
+void renderCheetah(const Shader& shader);
+void renderBackground1(const Shader& shader);
+void renderBackground2(const Shader& shader);
 
 //objects
 void renderFloor();
@@ -93,7 +97,9 @@ void renderGlassPlatform();
 void renderBlackPanther();
 void renderZebra();
 void renderGiraffe();
-
+void renderElephant();
+void renderCheetah();
+void renderBackground();
 
 
 //room
@@ -171,6 +177,9 @@ int main(int argc, char** argv)
 	unsigned int pantherTexture = CreateTexture(strExePath + "\\panther.jpg");
 	unsigned int zebraTexture = CreateTexture(strExePath + "\\zebra.jpg");
 	unsigned int giraffeTexture = CreateTexture(strExePath + "\\giraffe.jpg");
+	unsigned int elephantTexture = CreateTexture(strExePath + "\\elephant.jpg");
+	unsigned int cheetahTexture = CreateTexture(strExePath + "\\cheetah.png");
+	unsigned int backgroundTexture = CreateTexture(strExePath + "\\blue.png");
 
 
 
@@ -251,7 +260,7 @@ int main(int argc, char** argv)
 		glBindTexture(GL_TEXTURE_2D, floorTexture);
 		glEnable(GL_CULL_FACE);
 		glCullFace(GL_FRONT);
-		renderScene(shadowMappingDepthShader);
+		renderFloor(shadowMappingDepthShader);
 		glCullFace(GL_BACK);
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
@@ -324,6 +333,51 @@ int main(int argc, char** argv)
 		glCullFace(GL_BACK);
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
+		glViewport(0, 0, SHADOW_WIDTH, SHADOW_HEIGHT);
+		glBindFramebuffer(GL_FRAMEBUFFER, depthMapFBO);
+		glClear(GL_DEPTH_BUFFER_BIT);
+		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_2D, elephantTexture);
+		glEnable(GL_CULL_FACE);
+		glCullFace(GL_FRONT);
+		renderElephant(shadowMappingDepthShader);
+		glCullFace(GL_BACK);
+		glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+		glViewport(0, 0, SHADOW_WIDTH, SHADOW_HEIGHT);
+		glBindFramebuffer(GL_FRAMEBUFFER, depthMapFBO);
+		glClear(GL_DEPTH_BUFFER_BIT);
+		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_2D, cheetahTexture);
+		glEnable(GL_CULL_FACE);
+		glCullFace(GL_FRONT);
+		renderCheetah(shadowMappingDepthShader);
+		glCullFace(GL_BACK);
+		glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+
+		glViewport(0, 0, SHADOW_WIDTH, SHADOW_HEIGHT);
+		glBindFramebuffer(GL_FRAMEBUFFER, depthMapFBO);
+		glClear(GL_DEPTH_BUFFER_BIT);
+		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_2D, backgroundTexture);
+		glEnable(GL_CULL_FACE);
+		glCullFace(GL_FRONT);
+		renderBackground1(shadowMappingDepthShader);
+		glCullFace(GL_BACK);
+		glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+		glViewport(0, 0, SHADOW_WIDTH, SHADOW_HEIGHT);
+		glBindFramebuffer(GL_FRAMEBUFFER, depthMapFBO);
+		glClear(GL_DEPTH_BUFFER_BIT);
+		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_2D, backgroundTexture);
+		glEnable(GL_CULL_FACE);
+		glCullFace(GL_FRONT);
+		renderBackground2(shadowMappingDepthShader);
+		glCullFace(GL_BACK);
+		glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
 		// reset viewport
 		glViewport(0, 0, SCR_WIDTH, SCR_HEIGHT);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -346,7 +400,7 @@ int main(int argc, char** argv)
 		glActiveTexture(GL_TEXTURE1);
 		glBindTexture(GL_TEXTURE_2D, depthMap);
 		glDisable(GL_CULL_FACE);
-		renderScene(shadowMappingShader);
+		renderFloor(shadowMappingShader);
 
 		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D, wallTexture);
@@ -394,6 +448,36 @@ int main(int argc, char** argv)
 		glDisable(GL_CULL_FACE);
 		renderGiraffe(shadowMappingShader);
 
+		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_2D, elephantTexture);
+		glActiveTexture(GL_TEXTURE1);
+		glBindTexture(GL_TEXTURE_2D, depthMap);
+		glDisable(GL_CULL_FACE);
+		renderElephant(shadowMappingShader);
+
+		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_2D, cheetahTexture);
+		glActiveTexture(GL_TEXTURE1);
+		glBindTexture(GL_TEXTURE_2D, depthMap);
+		glDisable(GL_CULL_FACE);
+		renderCheetah(shadowMappingShader);
+
+
+		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_2D, backgroundTexture);
+		glActiveTexture(GL_TEXTURE1);
+		glBindTexture(GL_TEXTURE_2D, depthMap);
+		glDisable(GL_CULL_FACE);
+		renderBackground1(shadowMappingShader);
+
+
+		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_2D, backgroundTexture);
+		glActiveTexture(GL_TEXTURE1);
+		glBindTexture(GL_TEXTURE_2D, depthMap);
+		glDisable(GL_CULL_FACE);
+		renderBackground2(shadowMappingShader);
+
 
 		// glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
 		glfwSwapBuffers(window);
@@ -409,13 +493,11 @@ int main(int argc, char** argv)
 
 // renders the 3D scene
 // --------------------
-void renderScene(const Shader& shader)
+void renderFloor(const Shader& shader)
 {
 	// floor
 	glm::mat4 model;
 	shader.SetMat4("model", model);
-
-
 
 	model = glm::mat4();
 	model = glm::translate(model, glm::vec3(0.0f, 3.86f, 0.0f));
@@ -523,8 +605,9 @@ void renderBlackPanther(const Shader& shader)
 	//panther
 	glm::mat4 model;
 	model = glm::mat4();
-	model = glm::translate(model, glm::vec3(-65.5f, -1.0f, -13.4f));
+	model = glm::translate(model, glm::vec3(-54.0f, -1.0f, -13.4f));
 	model = glm::scale(model, glm::vec3(5.f));
+	model = glm::rotate(model, glm::radians(20.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 	shader.SetMat4("model", model);
 	renderBlackPanther();
 }
@@ -532,10 +615,12 @@ void renderBlackPanther(const Shader& shader)
 void renderZebra(const Shader& shader)
 {
 	//zebra
+
 	glm::mat4 model;
 	model = glm::mat4();
-	model = glm::translate(model, glm::vec3(-50.5f, -1.0f, -13.4f));
+	model = glm::translate(model, glm::vec3(-40.5f, -1.0f, -13.4f));
 	model = glm::scale(model, glm::vec3(5.f));
+	model = glm::rotate(model, glm::radians(10.0f), glm::vec3(0.0f, -1.0f, 0.0f));
 	shader.SetMat4("model", model);
 	renderZebra();
 }
@@ -543,16 +628,65 @@ void renderZebra(const Shader& shader)
 void renderGiraffe(const Shader& shader)
 {
 	//giraffe
+
 	glm::mat4 model;
 	model = glm::mat4();
-	model = glm::translate(model, glm::vec3(-37.5f, 8.0f, -13.4f));
+	model = glm::translate(model, glm::vec3(-33.5f, 8.0f, -13.4f));
 	model = glm::scale(model, glm::vec3(0.1f));
-	model = glm::rotate(model, glm::radians(90.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+	model = glm::rotate(model, glm::radians(50.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 	shader.SetMat4("model", model);
 	renderGiraffe();
 }
 
+void renderElephant(const Shader& shader)
+{
+	//elephant
 
+	glm::mat4 model;
+	model = glm::mat4();
+	model = glm::translate(model, glm::vec3(-62.5f, -1.0f, -13.0f));
+	model = glm::scale(model, glm::vec3(2.7f));
+	model = glm::rotate(model, glm::radians(145.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+	shader.SetMat4("model", model);
+	renderElephant();
+}
+
+void renderCheetah(const Shader& shader)
+{
+	//cheetah
+
+	glm::mat4 model;
+	model = glm::mat4();
+	model = glm::translate(model, glm::vec3(-47.5f, 1.9f, -13.4f));
+	model = glm::scale(model, glm::vec3(6.f));
+	model = glm::rotate(model, glm::radians(90.0f), glm::vec3(0.0f, 0.0f, 1.0f));
+	model = glm::rotate(model, glm::radians(180.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+	model = glm::rotate(model, glm::radians(90.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+	shader.SetMat4("model", model);
+	renderCheetah();
+}
+
+void renderBackground1(const Shader& shader)
+{
+	//background2
+	glm::mat4 model;
+	model = glm::mat4();
+	model = glm::translate(model, glm::vec3(-49.3f, 9.0f, -22.30f));
+	model = glm::scale(model, glm::vec3(5.0f));
+	shader.SetMat4("model", model);
+	renderBackground();
+}
+
+void renderBackground2(const Shader& shader)
+{
+	//background2
+	glm::mat4 model;
+	model = glm::mat4();
+	model = glm::translate(model, glm::vec3(-49.3f, 9.0f, 22.30f));
+	model = glm::scale(model, glm::vec3(5.0f));
+	shader.SetMat4("model", model);
+	renderBackground();
+}
 
 
 unsigned int planeVAO = 0;
@@ -1621,6 +1755,252 @@ void renderGiraffe()
 	glBindVertexArray(0);
 }
 
+float verticesbk[82000];
+unsigned int indicesbk[72000];
+GLuint backgroundVAO, backgroundVBO, backgroundEBO;
+
+void renderBackground()
+{
+	// initialize (if necessary)
+	if (backgroundVAO == 0)
+	{
+
+		std::vector<float> verticess;
+		std::vector<float> indicess;
+
+
+
+		Loader.LoadFile("..\\OBJ\\background.obj");
+		objl::Mesh curMesh = Loader.LoadedMeshes[0];
+		int size = curMesh.Vertices.size();
+
+		for (int j = 0; j < curMesh.Vertices.size(); j++)
+		{
+
+			verticess.push_back((float)curMesh.Vertices[j].Position.X);
+			verticess.push_back((float)curMesh.Vertices[j].Position.Y);
+			verticess.push_back((float)curMesh.Vertices[j].Position.Z);
+			verticess.push_back((float)curMesh.Vertices[j].Normal.X);
+			verticess.push_back((float)curMesh.Vertices[j].Normal.Y);
+			verticess.push_back((float)curMesh.Vertices[j].Normal.Z);
+			verticess.push_back((float)curMesh.Vertices[j].TextureCoordinate.X);
+			verticess.push_back((float)curMesh.Vertices[j].TextureCoordinate.Y);
+		}
+		for (int j = 0; j < verticess.size(); j++)
+		{
+			verticesbk[j] = verticess.at(j);
+		}
+
+		for (int j = 0; j < curMesh.Indices.size(); j++)
+		{
+
+			indicess.push_back((float)curMesh.Indices[j]);
+
+		}
+		for (int j = 0; j < curMesh.Indices.size(); j++)
+		{
+			indicesbk[j] = indicess.at(j);
+		}
+
+		glGenVertexArrays(1, &backgroundVAO);
+		glGenBuffers(1, &backgroundVBO);
+		glGenBuffers(1, &backgroundEBO);
+		// fill buffer
+		glBindBuffer(GL_ARRAY_BUFFER, backgroundVBO);
+		glBufferData(GL_ARRAY_BUFFER, sizeof(verticesbk), verticesbk, GL_DYNAMIC_DRAW);
+
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, backgroundEBO);
+		glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indicesbk), &indicesbk, GL_DYNAMIC_DRAW);
+		// link vertex attributes
+		glBindVertexArray(backgroundVAO);
+		glEnableVertexAttribArray(0);
+
+
+		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
+		glEnableVertexAttribArray(1);
+		glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float)));
+		glEnableVertexAttribArray(2);
+		glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
+		glBindBuffer(GL_ARRAY_BUFFER, 0);
+		glBindVertexArray(0);
+	}
+	// render Cube
+	glBindVertexArray(backgroundVAO);
+	glBindBuffer(GL_ARRAY_BUFFER, backgroundVBO);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, backgroundEBO);
+	int indexArraySize;
+	glGetBufferParameteriv(GL_ELEMENT_ARRAY_BUFFER, GL_BUFFER_SIZE, &indexArraySize);
+	glDrawElements(GL_TRIANGLES, indexArraySize / sizeof(unsigned int), GL_UNSIGNED_INT, 0);
+	glDrawArrays(GL_TRIANGLES, 0, 36);
+	glBindVertexArray(0);
+}
+
+unsigned int indicesE[72000];
+objl::Vertex verE[82000];
+
+GLuint elephantVAO, elephantVBO, elephantEBO;
+
+void renderElephant()
+{
+	// initialize (if necessary)
+	if (elephantVAO == 0)
+	{
+
+		std::vector<float> verticess;
+		std::vector<float> indicess;
+
+
+
+		Loader.LoadFile("..\\OBJ\\ELEFANTE.obj");
+		objl::Mesh curMesh = Loader.LoadedMeshes[0];
+		int size = curMesh.Vertices.size();
+		objl::Vertex v;
+		for (int j = 0; j < curMesh.Vertices.size(); j++)
+		{
+			v.Position.X = (float)curMesh.Vertices[j].Position.X;
+			v.Position.Y = (float)curMesh.Vertices[j].Position.Y;
+			v.Position.Z = (float)curMesh.Vertices[j].Position.Z;
+			v.Normal.X = (float)curMesh.Vertices[j].Normal.X;
+			v.Normal.Y = (float)curMesh.Vertices[j].Normal.Y;
+			v.Normal.Z = (float)curMesh.Vertices[j].Normal.Z;
+			v.TextureCoordinate.X = (float)curMesh.Vertices[j].TextureCoordinate.X;
+			v.TextureCoordinate.Y = (float)curMesh.Vertices[j].TextureCoordinate.Y;
+
+
+			verE[j] = v;
+		}
+		for (int j = 0; j < verticess.size(); j++)
+		{
+			vertices[j] = verticess.at(j);
+		}
+
+		for (int j = 0; j < curMesh.Indices.size(); j++)
+		{
+
+			indicess.push_back((float)curMesh.Indices[j]);
+
+		}
+		for (int j = 0; j < curMesh.Indices.size(); j++)
+		{
+			indicesE[j] = indicess.at(j);
+		}
+
+		glGenVertexArrays(1, &elephantVAO);
+		glGenBuffers(1, &elephantVBO);
+		glGenBuffers(1, &elephantEBO);
+		// fill buffer
+		glBindBuffer(GL_ARRAY_BUFFER, elephantVBO);
+		glBufferData(GL_ARRAY_BUFFER, sizeof(verE), verE, GL_DYNAMIC_DRAW);
+
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, elephantEBO);
+		glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indicesE), &indicesE, GL_DYNAMIC_DRAW);
+		// link vertex attributes
+		glBindVertexArray(elephantVAO);
+		glEnableVertexAttribArray(0);
+
+
+		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
+		glEnableVertexAttribArray(1);
+		glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float)));
+		glEnableVertexAttribArray(2);
+		glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
+		glBindBuffer(GL_ARRAY_BUFFER, 0);
+		glBindVertexArray(0);
+	}
+	// render Cube
+	glBindVertexArray(elephantVAO);
+	glBindBuffer(GL_ARRAY_BUFFER, elephantVBO);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, elephantEBO);
+	int indexArraySize;
+	glGetBufferParameteriv(GL_ELEMENT_ARRAY_BUFFER, GL_BUFFER_SIZE, &indexArraySize);
+	glDrawElements(GL_TRIANGLES, indexArraySize / sizeof(unsigned int), GL_UNSIGNED_INT, 0);
+	glDrawArrays(GL_TRIANGLES, 0, 36);
+	glBindVertexArray(0);
+}
+
+
+unsigned int indicesC[72000];
+objl::Vertex verC[82000];
+
+GLuint cheetahVAO, cheetahVBO, cheetahEBO;
+
+void renderCheetah()
+{
+	// initialize (if necessary)
+	if (cheetahVAO == 0)
+	{
+
+		std::vector<float> verticess;
+		std::vector<float> indicess;
+
+
+
+		Loader.LoadFile("..\\OBJ\\cheetah.obj");
+		objl::Mesh curMesh = Loader.LoadedMeshes[0];
+		int size = curMesh.Vertices.size();
+		objl::Vertex v;
+		for (int j = 0; j < curMesh.Vertices.size(); j++)
+		{
+			v.Position.X = (float)curMesh.Vertices[j].Position.X;
+			v.Position.Y = (float)curMesh.Vertices[j].Position.Y;
+			v.Position.Z = (float)curMesh.Vertices[j].Position.Z;
+			v.Normal.X = (float)curMesh.Vertices[j].Normal.X;
+			v.Normal.Y = (float)curMesh.Vertices[j].Normal.Y;
+			v.Normal.Z = (float)curMesh.Vertices[j].Normal.Z;
+			v.TextureCoordinate.X = (float)curMesh.Vertices[j].TextureCoordinate.X;
+			v.TextureCoordinate.Y = (float)curMesh.Vertices[j].TextureCoordinate.Y;
+
+
+			verC[j] = v;
+		}
+		for (int j = 0; j < verticess.size(); j++)
+		{
+			vertices[j] = verticess.at(j);
+		}
+
+		for (int j = 0; j < curMesh.Indices.size(); j++)
+		{
+
+			indicess.push_back((float)curMesh.Indices[j]);
+
+		}
+		for (int j = 0; j < curMesh.Indices.size(); j++)
+		{
+			indicesC[j] = indicess.at(j);
+		}
+
+		glGenVertexArrays(1, &cheetahVAO);
+		glGenBuffers(1, &cheetahVBO);
+		glGenBuffers(1, &cheetahEBO);
+		// fill buffer
+		glBindBuffer(GL_ARRAY_BUFFER, cheetahVBO);
+		glBufferData(GL_ARRAY_BUFFER, sizeof(verC), verC, GL_DYNAMIC_DRAW);
+
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, cheetahEBO);
+		glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indicesC), &indicesC, GL_DYNAMIC_DRAW);
+		// link vertex attributes
+		glBindVertexArray(cheetahVAO);
+		glEnableVertexAttribArray(0);
+
+
+		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
+		glEnableVertexAttribArray(1);
+		glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float)));
+		glEnableVertexAttribArray(2);
+		glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
+		glBindBuffer(GL_ARRAY_BUFFER, 0);
+		glBindVertexArray(0);
+	}
+	// render Cube
+	glBindVertexArray(cheetahVAO);
+	glBindBuffer(GL_ARRAY_BUFFER, cheetahVBO);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, cheetahEBO);
+	int indexArraySize;
+	glGetBufferParameteriv(GL_ELEMENT_ARRAY_BUFFER, GL_BUFFER_SIZE, &indexArraySize);
+	glDrawElements(GL_TRIANGLES, indexArraySize / sizeof(unsigned int), GL_UNSIGNED_INT, 0);
+	glDrawArrays(GL_TRIANGLES, 0, 36);
+	glBindVertexArray(0);
+}
 
 
 
