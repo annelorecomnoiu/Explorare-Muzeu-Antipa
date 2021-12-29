@@ -89,6 +89,7 @@ void renderElephant(const Shader& shader);
 void renderCheetah(const Shader& shader);
 void renderBackground1(const Shader& shader);
 void renderBackground2(const Shader& shader);
+void renderGlassWindows(const Shader& shader);
 
 //objects
 void renderFloor();
@@ -100,7 +101,7 @@ void renderGiraffe();
 void renderElephant();
 void renderCheetah();
 void renderBackground();
-
+void renderGlassWindows();
 
 //room
 void renderWall1();
@@ -180,6 +181,7 @@ int main(int argc, char** argv)
 	unsigned int elephantTexture = CreateTexture(strExePath + "\\elephant.jpg");
 	unsigned int cheetahTexture = CreateTexture(strExePath + "\\cheetah.png");
 	unsigned int backgroundTexture = CreateTexture(strExePath + "\\sunset.jpg");
+	unsigned int glassTexture = CreateTexture(strExePath + "\\glass.jpg");
 
 
 
@@ -378,6 +380,18 @@ int main(int argc, char** argv)
 		glCullFace(GL_BACK);
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
+		glViewport(0, 0, SHADOW_WIDTH, SHADOW_HEIGHT);
+		glBindFramebuffer(GL_FRAMEBUFFER, depthMapFBO);
+		glClear(GL_DEPTH_BUFFER_BIT);
+		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_2D, glassTexture);
+		glEnable(GL_CULL_FACE);
+		glCullFace(GL_FRONT);
+		renderGlassWindows(shadowMappingDepthShader);
+		glCullFace(GL_BACK);
+		glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+
 		// reset viewport
 		glViewport(0, 0, SCR_WIDTH, SCR_HEIGHT);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -479,6 +493,19 @@ int main(int argc, char** argv)
 		renderBackground2(shadowMappingShader);
 
 
+		//transparent object
+		glEnable(GL_BLEND); 
+		glBlendFunc(GL_ONE, GL_ONE);
+		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_2D, glassTexture);
+		glActiveTexture(GL_TEXTURE1);
+		glBindTexture(GL_TEXTURE_2D, depthMap);
+		glDisable(GL_CULL_FACE);
+		renderGlassWindows(shadowMappingShader);
+		glDisable(GL_BLEND);
+
+
+
 		// glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
 		glfwSwapBuffers(window);
 		glfwPollEvents();
@@ -576,7 +603,7 @@ void renderDino(const Shader& shader)
 	glm::mat4 model;
 
 	static float Offset = 0.0f;
-	const float Increment = 0.005f;
+	const float Increment = 0.004f;
 	Offset += Increment;
 
 
@@ -724,6 +751,26 @@ void renderBackground2(const Shader& shader)
 	model = glm::rotate(model, glm::radians(90.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 	shader.SetMat4("model", model);
 	renderBackground();
+}
+
+void renderGlassWindows(const Shader& shader)
+{
+	//window 
+	glm::mat4 model;
+	model = glm::mat4();
+	model = glm::translate(model, glm::vec3(-0.5f, -1.0f, -25.4f));
+	model = glm::scale(model, glm::vec3(1.25f));
+	shader.SetMat4("model", model);
+	renderGlassWindows();
+
+
+	//window 
+	model = glm::mat4();
+	model = glm::translate(model, glm::vec3(-0.5f, -1.0f, 0.4f));
+	model = glm::scale(model, glm::vec3(1.25f));
+	shader.SetMat4("model", model);
+	renderGlassWindows();
+
 }
 
 
@@ -2198,6 +2245,84 @@ void renderPlatform()
 	glBindVertexArray(platformVAO);
 	glBindBuffer(GL_ARRAY_BUFFER, platformVBO);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, platformEBO);
+	int indexArraySize;
+	glGetBufferParameteriv(GL_ELEMENT_ARRAY_BUFFER, GL_BUFFER_SIZE, &indexArraySize);
+	glDrawElements(GL_TRIANGLES, indexArraySize / sizeof(unsigned int), GL_UNSIGNED_INT, 0);
+	glDrawArrays(GL_TRIANGLES, 0, 36);
+	glBindVertexArray(0);
+}
+
+
+GLuint glassVAO, glassVBO, glassEBO;
+void renderGlassWindows()
+{
+	if (glassVAO == 0)
+	{
+
+		std::vector<float> verticess;
+		std::vector<float> indicess;
+
+
+
+		Loader.LoadFile("..\\OBJ\\glassWindow.obj");
+		objl::Mesh curMesh = Loader.LoadedMeshes[0];
+		int size = curMesh.Vertices.size();
+
+		objl::Vertex v;
+		for (int j = 0; j < curMesh.Vertices.size(); j++)
+		{
+			v.Position.X = (float)curMesh.Vertices[j].Position.X;
+			v.Position.Y = (float)curMesh.Vertices[j].Position.Y;
+			v.Position.Z = (float)curMesh.Vertices[j].Position.Z;
+			v.Normal.X = (float)curMesh.Vertices[j].Normal.X;
+			v.Normal.Y = (float)curMesh.Vertices[j].Normal.Y;
+			v.Normal.Z = (float)curMesh.Vertices[j].Normal.Z;
+			v.TextureCoordinate.X = (float)curMesh.Vertices[j].TextureCoordinate.X;
+			v.TextureCoordinate.Y = (float)curMesh.Vertices[j].TextureCoordinate.Y;
+			ver1[j] = v;
+		}
+		for (int j = 0; j < verticess.size(); j++)
+		{
+			vertices[j] = verticess.at(j);
+		}
+
+		for (int j = 0; j < curMesh.Indices.size(); j++)
+		{
+
+			indicess.push_back((float)curMesh.Indices[j]);
+
+		}
+		for (int j = 0; j < curMesh.Indices.size(); j++)
+		{
+			indices1[j] = indicess.at(j);
+		}
+
+		glGenVertexArrays(1, &glassVAO);
+		glGenBuffers(1, &glassVBO);
+		glGenBuffers(1, &glassEBO);
+		// fill buffer
+		glBindBuffer(GL_ARRAY_BUFFER, glassVBO);
+		glBufferData(GL_ARRAY_BUFFER, sizeof(ver1), ver1, GL_DYNAMIC_DRAW);
+
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, glassEBO);
+		glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices1), &indices1, GL_DYNAMIC_DRAW);
+		// link vertex attributes
+		glBindVertexArray(glassVAO);
+		glEnableVertexAttribArray(0);
+
+
+		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
+		glEnableVertexAttribArray(1);
+		glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float)));
+		glEnableVertexAttribArray(2);
+		glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
+		glBindBuffer(GL_ARRAY_BUFFER, 0);
+		glBindVertexArray(0);
+	}
+	// render Cube
+	glBindVertexArray(glassVAO);
+	glBindBuffer(GL_ARRAY_BUFFER, glassVBO);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, glassEBO);
 	int indexArraySize;
 	glGetBufferParameteriv(GL_ELEMENT_ARRAY_BUFFER, GL_BUFFER_SIZE, &indexArraySize);
 	glDrawElements(GL_TRIANGLES, indexArraySize / sizeof(unsigned int), GL_UNSIGNED_INT, 0);
