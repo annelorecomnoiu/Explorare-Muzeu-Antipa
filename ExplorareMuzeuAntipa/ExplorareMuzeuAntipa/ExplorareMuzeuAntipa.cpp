@@ -96,6 +96,7 @@ void renderDuck(const Shader& shader);
 void renderPelican(const Shader& shader);
 void renderStork(const Shader& shader);
 void renderGrass(const Shader& shader);
+void renderGrassBush(const Shader& shader);
 void renderDinoSkull(const Shader& shader);
 void renderpedastal(const Shader& shader);
 
@@ -117,6 +118,7 @@ void renderDuck();
 void renderPelican();
 void renderStork();
 void renderGrass();
+void renderGrassBush();
 void renderTrexBottom();
 void renderTrexTop();
 void renderpedastal();
@@ -206,6 +208,7 @@ int main(int argc, char** argv)
 	unsigned int pelicanTexture = CreateTexture(strExePath + "\\pelican.jpg");
 	unsigned int storkTexture = CreateTexture(strExePath + "\\stork.jpg");
 	unsigned int GrassTexture = CreateTexture(strExePath + "\\Grass.jpg");
+	unsigned int GrassBushTexture = CreateTexture(strExePath + "\\GrassBush.jpg");
 	unsigned int bonesTexture = CreateTexture(strExePath + "\\bones1.jpg");
 	unsigned int pedastalTexture = CreateTexture(strExePath + "\\pedastal.jpg");
 
@@ -487,6 +490,17 @@ int main(int argc, char** argv)
 		glBindFramebuffer(GL_FRAMEBUFFER, depthMapFBO);
 		glClear(GL_DEPTH_BUFFER_BIT);
 		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_2D, GrassBushTexture);
+		glEnable(GL_CULL_FACE);
+		glCullFace(GL_FRONT);
+		renderGrassBush(shadowMappingDepthShader);
+		glCullFace(GL_BACK);
+		glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+		glViewport(0, 0, SHADOW_WIDTH, SHADOW_HEIGHT);
+		glBindFramebuffer(GL_FRAMEBUFFER, depthMapFBO);
+		glClear(GL_DEPTH_BUFFER_BIT);
+		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D, bonesTexture);
 		glEnable(GL_CULL_FACE);
 		glCullFace(GL_FRONT);
@@ -647,6 +661,13 @@ int main(int argc, char** argv)
 		glBindTexture(GL_TEXTURE_2D, depthMap);
 		glDisable(GL_CULL_FACE);
 		renderGrass(shadowMappingShader);
+
+		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_2D, GrassBushTexture);
+		glActiveTexture(GL_TEXTURE1);
+		glBindTexture(GL_TEXTURE_2D, depthMap);
+		glDisable(GL_CULL_FACE);
+		renderGrassBush(shadowMappingShader);
 
 		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D, bonesTexture);
@@ -1056,6 +1077,37 @@ void renderGrass(const Shader& shader)
 	renderGrass();
 
 
+}
+
+void renderGrassBush(const Shader& shader)
+{
+
+	//GrassBush
+	for (int i = 0; i < 35; i++)
+	{
+		if (i % 2 == 0)
+		{
+			glm::mat4 model;
+			model = glm::mat4();
+			model = glm::translate(model, glm::vec3(-27.0f - i * 1.3, -1.2f, -10.5f));
+			model = glm::scale(model, glm::vec3(0.003f));
+			model = glm::rotate(model, glm::radians(145.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+
+			shader.SetMat4("model", model);
+			renderGrassBush();
+		}
+		else
+		{
+			glm::mat4 model;
+			model = glm::mat4();
+			model = glm::translate(model, glm::vec3(-27.0f - i * 1.3, -1.2f, -10.5f));
+			model = glm::scale(model, glm::vec3(0.005f));
+			model = glm::rotate(model, glm::radians(145.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+
+			shader.SetMat4("model", model);
+			renderGrassBush();
+		}
+	}
 }
 
 
@@ -3143,6 +3195,87 @@ void renderGrass()
 	glBindVertexArray(0);
 }
 
+unsigned int indicesGb[720000];
+objl::Vertex verGb[1000000];
+GLuint GrassBushVAO, GrassBushVBO, GrassBushEBO;
+
+void renderGrassBush()
+{
+	// initialize (if necessary)
+	if (GrassBushVAO == 0)
+	{
+
+		std::vector<float> verticess;
+		std::vector<float> indicess;
+
+
+
+		Loader.LoadFile("..\\OBJ\\GrassBush.obj");
+		objl::Mesh curMesh = Loader.LoadedMeshes[0];
+		int size = curMesh.Vertices.size();
+		objl::Vertex v;
+		for (int j = 0; j < curMesh.Vertices.size(); j++)
+		{
+			v.Position.X = (float)curMesh.Vertices[j].Position.X;
+			v.Position.Y = (float)curMesh.Vertices[j].Position.Y;
+			v.Position.Z = (float)curMesh.Vertices[j].Position.Z;
+			v.Normal.X = (float)curMesh.Vertices[j].Normal.X;
+			v.Normal.Y = (float)curMesh.Vertices[j].Normal.Y;
+			v.Normal.Z = (float)curMesh.Vertices[j].Normal.Z;
+			v.TextureCoordinate.X = (float)curMesh.Vertices[j].TextureCoordinate.X;
+			v.TextureCoordinate.Y = (float)curMesh.Vertices[j].TextureCoordinate.Y;
+
+
+			verGb[j] = v;
+		}
+		for (int j = 0; j < verticess.size(); j++)
+		{
+			vertices[j] = verticess.at(j);
+		}
+
+		for (int j = 0; j < curMesh.Indices.size(); j++)
+		{
+
+			indicess.push_back((float)curMesh.Indices[j]);
+
+		}
+		for (int j = 0; j < curMesh.Indices.size(); j++)
+		{
+			indicesGb[j] = indicess.at(j);
+		}
+
+		glGenVertexArrays(1, &GrassBushVAO);
+		glGenBuffers(1, &GrassBushVBO);
+		glGenBuffers(1, &GrassBushEBO);
+		// fill buffer
+		glBindBuffer(GL_ARRAY_BUFFER, GrassBushVBO);
+		glBufferData(GL_ARRAY_BUFFER, sizeof(verGb), verGb, GL_DYNAMIC_DRAW);
+
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, GrassBushEBO);
+		glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indicesGb), &indicesGb, GL_DYNAMIC_DRAW);
+		// link vertex attributes
+		glBindVertexArray(GrassBushVAO);
+		glEnableVertexAttribArray(0);
+
+
+		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
+		glEnableVertexAttribArray(1);
+		glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float)));
+		glEnableVertexAttribArray(2);
+		glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
+		glBindBuffer(GL_ARRAY_BUFFER, 0);
+		glBindVertexArray(0);
+	}
+	// render Cube
+	glBindVertexArray(GrassBushVAO);
+	glBindBuffer(GL_ARRAY_BUFFER, GrassBushVBO);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, GrassBushEBO);
+	int indexArraySize;
+	glGetBufferParameteriv(GL_ELEMENT_ARRAY_BUFFER, GL_BUFFER_SIZE, &indexArraySize);
+	glDrawElements(GL_TRIANGLES, indexArraySize / sizeof(unsigned int), GL_UNSIGNED_INT, 0);
+	glDrawArrays(GL_TRIANGLES, 0, 36);
+	glBindVertexArray(0);
+}
 
 // process all input: query GLFW whether relevant keys are pressed/released this frame and react accordingly
 void processInput(GLFWwindow* window)
