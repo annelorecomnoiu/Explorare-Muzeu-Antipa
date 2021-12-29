@@ -93,6 +93,7 @@ void renderGlassWindows(const Shader& shader);
 void renderTree(const Shader& shader);
 void renderWoodpecker(const Shader& shader);
 void renderGrass(const Shader& shader);
+void renderDinoSkull(const Shader& shader);
 
 
 //objects
@@ -109,6 +110,8 @@ void renderGlassWindows();
 void renderTree();
 void renderWoodpecker();
 void renderGrass();
+void renderTrexBottom();
+void renderTrexTop();
 
 //room
 void renderWall1();
@@ -192,6 +195,7 @@ int main(int argc, char** argv)
 	unsigned int treeTexture = CreateTexture(strExePath + "\\tree.jpg");
 	unsigned int woodpeckerTexture = CreateTexture(strExePath + "\\woodpecker.jpg");
 	unsigned int GrassTexture = CreateTexture(strExePath + "\\Grass.jpg");
+	unsigned int bonesTexture = CreateTexture(strExePath + "\\bones1.jpg");
 
 	// configure depth map FBO
 	// -----------------------
@@ -434,6 +438,18 @@ int main(int argc, char** argv)
 		glCullFace(GL_BACK);
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
+		glViewport(0, 0, SHADOW_WIDTH, SHADOW_HEIGHT);
+		glBindFramebuffer(GL_FRAMEBUFFER, depthMapFBO);
+		glClear(GL_DEPTH_BUFFER_BIT);
+		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_2D, bonesTexture);
+		glEnable(GL_CULL_FACE);
+		glCullFace(GL_FRONT);
+		renderDinoSkull(shadowMappingDepthShader);
+		glCullFace(GL_BACK);
+		glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+
 		// reset viewport
 		glViewport(0, 0, SCR_WIDTH, SCR_HEIGHT);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -534,19 +550,6 @@ int main(int argc, char** argv)
 		glDisable(GL_CULL_FACE);
 		renderBackground2(shadowMappingShader);
 
-
-		//transparent object
-		glEnable(GL_BLEND); 
-		glBlendFunc(GL_ONE, GL_ONE);
-		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D, glassTexture);
-		glActiveTexture(GL_TEXTURE1);
-		glBindTexture(GL_TEXTURE_2D, depthMap);
-		glDisable(GL_CULL_FACE);
-		renderGlassWindows(shadowMappingShader);
-		glDisable(GL_BLEND);
-
-
 		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D, treeTexture);
 		glActiveTexture(GL_TEXTURE1);
@@ -568,6 +571,29 @@ int main(int argc, char** argv)
 		glBindTexture(GL_TEXTURE_2D, depthMap);
 		glDisable(GL_CULL_FACE);
 		renderGrass(shadowMappingShader);
+
+		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_2D, bonesTexture);
+		glActiveTexture(GL_TEXTURE1);
+		glBindTexture(GL_TEXTURE_2D, depthMap);
+		glDisable(GL_CULL_FACE);
+		renderDinoSkull(shadowMappingShader);
+
+
+
+
+		//transparent object
+		glEnable(GL_BLEND);
+		glBlendFunc(GL_ONE, GL_ONE);
+		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_2D, glassTexture);
+		glActiveTexture(GL_TEXTURE1);
+		glBindTexture(GL_TEXTURE_2D, depthMap);
+		glDisable(GL_CULL_FACE);
+		renderGlassWindows(shadowMappingShader);
+		glDisable(GL_BLEND);
+		//end
+
 
 
 		// glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
@@ -902,6 +928,23 @@ void renderGrass(const Shader& shader)
 
 }
 
+
+void renderDinoSkull(const Shader& shader)
+{
+	glm::mat4 model;
+	model = glm::mat4();
+	model = glm::translate(model, glm::vec3(12.0f, -0.5f, -24.5f));
+	model = glm::scale(model, glm::vec3(4.0f));
+	shader.SetMat4("model", model);
+	renderTrexBottom();
+
+	model = glm::mat4();
+	model = glm::translate(model, glm::vec3(12.0f, -0.5f, -24.5f));
+	model = glm::scale(model, glm::vec3(4.0f));
+	shader.SetMat4("model", model);
+	renderTrexTop();
+
+}
 
 unsigned int planeVAO = 0;
 void renderFloor()
@@ -2736,6 +2779,171 @@ void processInput(GLFWwindow* window)
 
 	}
 }
+
+
+
+
+float vertices6[82000];
+unsigned int indices6[72000];
+GLuint trexBottomVAO, trexBottomVBO, trexBottomEBO;
+void renderTrexBottom()
+{
+	if (trexBottomVAO == 0)
+	{
+
+		std::vector<float> verticess;
+		std::vector<float> indicess;
+
+
+
+		Loader.LoadFile("..\\OBJ\\Trex.obj");
+		objl::Mesh curMesh = Loader.LoadedMeshes[0];
+		int size = curMesh.Vertices.size();
+
+		for (int j = 0; j < curMesh.Vertices.size(); j++)
+		{
+
+			verticess.push_back((float)curMesh.Vertices[j].Position.X);
+			verticess.push_back((float)curMesh.Vertices[j].Position.Y);
+			verticess.push_back((float)curMesh.Vertices[j].Position.Z);
+			verticess.push_back((float)curMesh.Vertices[j].Normal.X);
+			verticess.push_back((float)curMesh.Vertices[j].Normal.Y);
+			verticess.push_back((float)curMesh.Vertices[j].Normal.Z);
+			verticess.push_back((float)curMesh.Vertices[j].TextureCoordinate.X);
+			verticess.push_back((float)curMesh.Vertices[j].TextureCoordinate.Y);
+		}
+		for (int j = 0; j < verticess.size(); j++)
+		{
+			vertices6[j] = verticess.at(j);
+		}
+
+		for (int j = 0; j < curMesh.Indices.size(); j++)
+		{
+
+			indicess.push_back((float)curMesh.Indices[j]);
+
+		}
+		for (int j = 0; j < curMesh.Indices.size(); j++)
+		{
+			indices6[j] = indicess.at(j);
+		}
+
+		glGenVertexArrays(1, &trexBottomVAO);
+		glGenBuffers(1, &trexBottomVBO);
+		glGenBuffers(1, &trexBottomEBO);
+		// fill buffer
+		glBindBuffer(GL_ARRAY_BUFFER, trexBottomVBO);
+		glBufferData(GL_ARRAY_BUFFER, sizeof(vertices6), vertices6, GL_DYNAMIC_DRAW);
+
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, trexBottomEBO);
+		glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices6), &indices6, GL_DYNAMIC_DRAW);
+		// link vertex attributes
+		glBindVertexArray(trexBottomVAO);
+		glEnableVertexAttribArray(0);
+
+
+		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
+		glEnableVertexAttribArray(1);
+		glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float)));
+		glEnableVertexAttribArray(2);
+		glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
+		glBindBuffer(GL_ARRAY_BUFFER, 0);
+		glBindVertexArray(0);
+	}
+	// render Cube
+	glBindVertexArray(trexBottomVAO);
+	glBindBuffer(GL_ARRAY_BUFFER, trexBottomVBO);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, trexBottomEBO);
+	int indexArraySize;
+	glGetBufferParameteriv(GL_ELEMENT_ARRAY_BUFFER, GL_BUFFER_SIZE, &indexArraySize);
+	glDrawElements(GL_TRIANGLES, indexArraySize / sizeof(unsigned int), GL_UNSIGNED_INT, 0);
+	glDrawArrays(GL_TRIANGLES, 0, 36);
+	glBindVertexArray(0);
+}
+
+
+float vertices5[82000];
+unsigned int indices5[72000];
+unsigned int indicesD1[72000];
+objl::Vertex verD1[82000];
+GLuint trexTopVAO, trexTopVBO, trexTopEBO;
+void renderTrexTop()
+{
+	if (trexTopVAO == 0)
+	{
+
+		std::vector<float> verticess;
+		std::vector<float> indicess;
+
+
+
+		Loader.LoadFile("..\\OBJ\\Trex.obj");
+		objl::Mesh curMesh = Loader.LoadedMeshes[1];
+		int size = curMesh.Vertices.size();
+		objl::Vertex v;
+		for (int j = 0; j < curMesh.Vertices.size(); j++)
+		{
+			v.Position.X = (float)curMesh.Vertices[j].Position.X;
+			v.Position.Y = (float)curMesh.Vertices[j].Position.Y;
+			v.Position.Z = (float)curMesh.Vertices[j].Position.Z;
+			v.Normal.X = (float)curMesh.Vertices[j].Normal.X;
+			v.Normal.Y = (float)curMesh.Vertices[j].Normal.Y;
+			v.Normal.Z = (float)curMesh.Vertices[j].Normal.Z;
+			v.TextureCoordinate.X = (float)curMesh.Vertices[j].TextureCoordinate.X;
+			v.TextureCoordinate.Y = (float)curMesh.Vertices[j].TextureCoordinate.Y;
+
+
+			verD1[j] = v;
+		}
+		for (int j = 0; j < verticess.size(); j++)
+		{
+			vertices[j] = verticess.at(j);
+		}
+
+		for (int j = 0; j < curMesh.Indices.size(); j++)
+		{
+
+			indicess.push_back((float)curMesh.Indices[j]);
+
+		}
+		for (int j = 0; j < curMesh.Indices.size(); j++)
+		{
+			indicesD1[j] = indicess.at(j);
+		}
+
+		glGenVertexArrays(1, &trexTopVAO);
+		glGenBuffers(1, &trexTopVBO);
+		glGenBuffers(1, &trexTopEBO);
+		// fill buffer
+		glBindBuffer(GL_ARRAY_BUFFER, trexTopVBO);
+		glBufferData(GL_ARRAY_BUFFER, sizeof(verD1), verD1, GL_DYNAMIC_DRAW);
+
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, trexTopEBO);
+		glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indicesD1), &indicesD1, GL_DYNAMIC_DRAW);
+		// link vertex attributes
+		glBindVertexArray(trexTopVAO);
+		glEnableVertexAttribArray(0);
+
+
+		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
+		glEnableVertexAttribArray(1);
+		glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float)));
+		glEnableVertexAttribArray(2);
+		glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
+		glBindBuffer(GL_ARRAY_BUFFER, 0);
+		glBindVertexArray(0);
+	}
+	// render Cube
+	glBindVertexArray(trexTopVAO);
+	glBindBuffer(GL_ARRAY_BUFFER, trexTopVBO);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, trexTopEBO);
+	int indexArraySize;
+	glGetBufferParameteriv(GL_ELEMENT_ARRAY_BUFFER, GL_BUFFER_SIZE, &indexArraySize);
+	glDrawElements(GL_TRIANGLES, indexArraySize / sizeof(unsigned int), GL_UNSIGNED_INT, 0);
+	glDrawArrays(GL_TRIANGLES, 0, 36);
+	glBindVertexArray(0);
+}
+
 
 // glfw: whenever the window size changed (by OS or user resize) this callback function executes
 // ---------------------------------------------------------------------------------------------
