@@ -1,279 +1,288 @@
 ﻿  ExplorareMuzeuAntipa.cpp
-C:\Users\mihai\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa\OBJ_Loader.h(652,25): warning C4018: '<': signed/unsigned mismatch
-C:\Users\mihai\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa\OBJ_Loader.h(689,22): warning C4018: '<': signed/unsigned mismatch
-C:\Users\mihai\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa\OBJ_Loader.h(695,23): warning C4018: '<': signed/unsigned mismatch
-C:\Users\mihai\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa\OBJ_Loader.h(949,18): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
-C:\Users\mihai\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa.cpp(1426,21): warning C4018: '<': signed/unsigned mismatch
-C:\Users\mihai\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa.cpp(1431,22): warning C4018: '<': signed/unsigned mismatch
-C:\Users\mihai\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa.cpp(1443,22): warning C4018: '<': signed/unsigned mismatch
-C:\Users\mihai\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa.cpp(1448,22): warning C4018: '<': signed/unsigned mismatch
-C:\Users\mihai\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa.cpp(1454,22): warning C4018: '<': signed/unsigned mismatch
-C:\Users\mihai\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa.cpp(1456,29): warning C4244: '=': conversion from '_Ty' to 'unsigned int', possible loss of data
+C:\Users\Alex\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa\OBJ_Loader.h(652,25): warning C4018: '<': signed/unsigned mismatch
+C:\Users\Alex\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa\OBJ_Loader.h(689,22): warning C4018: '<': signed/unsigned mismatch
+C:\Users\Alex\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa\OBJ_Loader.h(695,23): warning C4018: '<': signed/unsigned mismatch
+C:\Users\Alex\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa\OBJ_Loader.h(949,18): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+C:\Users\Alex\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa.cpp(1472,21): warning C4018: '<': signed/unsigned mismatch
+C:\Users\Alex\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa.cpp(1477,22): warning C4018: '<': signed/unsigned mismatch
+C:\Users\Alex\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa.cpp(1489,22): warning C4018: '<': signed/unsigned mismatch
+C:\Users\Alex\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa.cpp(1494,22): warning C4018: '<': signed/unsigned mismatch
+C:\Users\Alex\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa.cpp(1500,22): warning C4018: '<': signed/unsigned mismatch
+C:\Users\Alex\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa.cpp(1502,29): warning C4244: '=': conversion from '_Ty' to 'unsigned int', possible loss of data
           with
           [
               _Ty=float
           ]
-C:\Users\mihai\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa.cpp(1505,21): warning C4018: '<': signed/unsigned mismatch
-C:\Users\mihai\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa.cpp(1510,22): warning C4018: '<': signed/unsigned mismatch
-C:\Users\mihai\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa.cpp(1522,22): warning C4018: '<': signed/unsigned mismatch
-C:\Users\mihai\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa.cpp(1527,22): warning C4018: '<': signed/unsigned mismatch
-C:\Users\mihai\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa.cpp(1533,22): warning C4018: '<': signed/unsigned mismatch
-C:\Users\mihai\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa.cpp(1535,29): warning C4244: '=': conversion from '_Ty' to 'unsigned int', possible loss of data
+C:\Users\Alex\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa.cpp(1551,21): warning C4018: '<': signed/unsigned mismatch
+C:\Users\Alex\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa.cpp(1556,22): warning C4018: '<': signed/unsigned mismatch
+C:\Users\Alex\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa.cpp(1568,22): warning C4018: '<': signed/unsigned mismatch
+C:\Users\Alex\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa.cpp(1573,22): warning C4018: '<': signed/unsigned mismatch
+C:\Users\Alex\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa.cpp(1579,22): warning C4018: '<': signed/unsigned mismatch
+C:\Users\Alex\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa.cpp(1581,29): warning C4244: '=': conversion from '_Ty' to 'unsigned int', possible loss of data
           with
           [
               _Ty=float
           ]
-C:\Users\mihai\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa.cpp(1585,21): warning C4018: '<': signed/unsigned mismatch
-C:\Users\mihai\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa.cpp(1590,22): warning C4018: '<': signed/unsigned mismatch
-C:\Users\mihai\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa.cpp(1602,22): warning C4018: '<': signed/unsigned mismatch
-C:\Users\mihai\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa.cpp(1607,22): warning C4018: '<': signed/unsigned mismatch
-C:\Users\mihai\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa.cpp(1613,22): warning C4018: '<': signed/unsigned mismatch
-C:\Users\mihai\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa.cpp(1615,29): warning C4244: '=': conversion from '_Ty' to 'unsigned int', possible loss of data
+C:\Users\Alex\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa.cpp(1631,21): warning C4018: '<': signed/unsigned mismatch
+C:\Users\Alex\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa.cpp(1636,22): warning C4018: '<': signed/unsigned mismatch
+C:\Users\Alex\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa.cpp(1648,22): warning C4018: '<': signed/unsigned mismatch
+C:\Users\Alex\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa.cpp(1653,22): warning C4018: '<': signed/unsigned mismatch
+C:\Users\Alex\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa.cpp(1659,22): warning C4018: '<': signed/unsigned mismatch
+C:\Users\Alex\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa.cpp(1661,29): warning C4244: '=': conversion from '_Ty' to 'unsigned int', possible loss of data
           with
           [
               _Ty=float
           ]
-C:\Users\mihai\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa.cpp(1663,21): warning C4018: '<': signed/unsigned mismatch
-C:\Users\mihai\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa.cpp(1668,22): warning C4018: '<': signed/unsigned mismatch
-C:\Users\mihai\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa.cpp(1680,22): warning C4018: '<': signed/unsigned mismatch
-C:\Users\mihai\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa.cpp(1685,22): warning C4018: '<': signed/unsigned mismatch
-C:\Users\mihai\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa.cpp(1691,22): warning C4018: '<': signed/unsigned mismatch
-C:\Users\mihai\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa.cpp(1693,29): warning C4244: '=': conversion from '_Ty' to 'unsigned int', possible loss of data
+C:\Users\Alex\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa.cpp(1709,21): warning C4018: '<': signed/unsigned mismatch
+C:\Users\Alex\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa.cpp(1714,22): warning C4018: '<': signed/unsigned mismatch
+C:\Users\Alex\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa.cpp(1726,22): warning C4018: '<': signed/unsigned mismatch
+C:\Users\Alex\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa.cpp(1731,22): warning C4018: '<': signed/unsigned mismatch
+C:\Users\Alex\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa.cpp(1737,22): warning C4018: '<': signed/unsigned mismatch
+C:\Users\Alex\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa.cpp(1739,29): warning C4244: '=': conversion from '_Ty' to 'unsigned int', possible loss of data
           with
           [
               _Ty=float
           ]
-C:\Users\mihai\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa.cpp(1746,21): warning C4018: '<': signed/unsigned mismatch
-C:\Users\mihai\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa.cpp(1758,21): warning C4018: '<': signed/unsigned mismatch
-C:\Users\mihai\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa.cpp(1763,21): warning C4018: '<': signed/unsigned mismatch
-C:\Users\mihai\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa.cpp(1769,21): warning C4018: '<': signed/unsigned mismatch
-C:\Users\mihai\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa.cpp(1771,28): warning C4244: '=': conversion from '_Ty' to 'unsigned int', possible loss of data
+C:\Users\Alex\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa.cpp(1792,21): warning C4018: '<': signed/unsigned mismatch
+C:\Users\Alex\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa.cpp(1804,21): warning C4018: '<': signed/unsigned mismatch
+C:\Users\Alex\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa.cpp(1809,21): warning C4018: '<': signed/unsigned mismatch
+C:\Users\Alex\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa.cpp(1815,21): warning C4018: '<': signed/unsigned mismatch
+C:\Users\Alex\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa.cpp(1817,28): warning C4244: '=': conversion from '_Ty' to 'unsigned int', possible loss of data
           with
           [
               _Ty=float
           ]
-C:\Users\mihai\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa.cpp(1822,21): warning C4018: '<': signed/unsigned mismatch
-C:\Users\mihai\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa.cpp(1834,21): warning C4018: '<': signed/unsigned mismatch
-C:\Users\mihai\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa.cpp(1839,21): warning C4018: '<': signed/unsigned mismatch
-C:\Users\mihai\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa.cpp(1845,21): warning C4018: '<': signed/unsigned mismatch
-C:\Users\mihai\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa.cpp(1847,28): warning C4244: '=': conversion from '_Ty' to 'unsigned int', possible loss of data
+C:\Users\Alex\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa.cpp(1868,21): warning C4018: '<': signed/unsigned mismatch
+C:\Users\Alex\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa.cpp(1880,21): warning C4018: '<': signed/unsigned mismatch
+C:\Users\Alex\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa.cpp(1885,21): warning C4018: '<': signed/unsigned mismatch
+C:\Users\Alex\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa.cpp(1891,21): warning C4018: '<': signed/unsigned mismatch
+C:\Users\Alex\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa.cpp(1893,28): warning C4244: '=': conversion from '_Ty' to 'unsigned int', possible loss of data
           with
           [
               _Ty=float
           ]
-C:\Users\mihai\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa.cpp(1899,21): warning C4018: '<': signed/unsigned mismatch
-C:\Users\mihai\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa.cpp(1911,21): warning C4018: '<': signed/unsigned mismatch
-C:\Users\mihai\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa.cpp(1916,21): warning C4018: '<': signed/unsigned mismatch
-C:\Users\mihai\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa.cpp(1922,21): warning C4018: '<': signed/unsigned mismatch
-C:\Users\mihai\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa.cpp(1924,28): warning C4244: '=': conversion from '_Ty' to 'unsigned int', possible loss of data
+C:\Users\Alex\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa.cpp(1945,21): warning C4018: '<': signed/unsigned mismatch
+C:\Users\Alex\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa.cpp(1957,21): warning C4018: '<': signed/unsigned mismatch
+C:\Users\Alex\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa.cpp(1962,21): warning C4018: '<': signed/unsigned mismatch
+C:\Users\Alex\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa.cpp(1968,21): warning C4018: '<': signed/unsigned mismatch
+C:\Users\Alex\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa.cpp(1970,28): warning C4244: '=': conversion from '_Ty' to 'unsigned int', possible loss of data
           with
           [
               _Ty=float
           ]
-C:\Users\mihai\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa.cpp(1975,21): warning C4018: '<': signed/unsigned mismatch
-C:\Users\mihai\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa.cpp(1987,21): warning C4018: '<': signed/unsigned mismatch
-C:\Users\mihai\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa.cpp(1992,21): warning C4018: '<': signed/unsigned mismatch
-C:\Users\mihai\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa.cpp(1998,21): warning C4018: '<': signed/unsigned mismatch
-C:\Users\mihai\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa.cpp(2000,28): warning C4244: '=': conversion from '_Ty' to 'unsigned int', possible loss of data
+C:\Users\Alex\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa.cpp(2021,21): warning C4018: '<': signed/unsigned mismatch
+C:\Users\Alex\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa.cpp(2033,21): warning C4018: '<': signed/unsigned mismatch
+C:\Users\Alex\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa.cpp(2038,21): warning C4018: '<': signed/unsigned mismatch
+C:\Users\Alex\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa.cpp(2044,21): warning C4018: '<': signed/unsigned mismatch
+C:\Users\Alex\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa.cpp(2046,28): warning C4244: '=': conversion from '_Ty' to 'unsigned int', possible loss of data
           with
           [
               _Ty=float
           ]
-C:\Users\mihai\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa.cpp(2050,21): warning C4018: '<': signed/unsigned mismatch
-C:\Users\mihai\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa.cpp(2062,21): warning C4018: '<': signed/unsigned mismatch
-C:\Users\mihai\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa.cpp(2067,21): warning C4018: '<': signed/unsigned mismatch
-C:\Users\mihai\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa.cpp(2073,21): warning C4018: '<': signed/unsigned mismatch
-C:\Users\mihai\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa.cpp(2075,28): warning C4244: '=': conversion from '_Ty' to 'unsigned int', possible loss of data
+C:\Users\Alex\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa.cpp(2096,21): warning C4018: '<': signed/unsigned mismatch
+C:\Users\Alex\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa.cpp(2108,21): warning C4018: '<': signed/unsigned mismatch
+C:\Users\Alex\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa.cpp(2113,21): warning C4018: '<': signed/unsigned mismatch
+C:\Users\Alex\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa.cpp(2119,21): warning C4018: '<': signed/unsigned mismatch
+C:\Users\Alex\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa.cpp(2121,28): warning C4244: '=': conversion from '_Ty' to 'unsigned int', possible loss of data
           with
           [
               _Ty=float
           ]
-C:\Users\mihai\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa.cpp(2124,21): warning C4018: '<': signed/unsigned mismatch
-C:\Users\mihai\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa.cpp(2136,21): warning C4018: '<': signed/unsigned mismatch
-C:\Users\mihai\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa.cpp(2141,21): warning C4018: '<': signed/unsigned mismatch
-C:\Users\mihai\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa.cpp(2147,21): warning C4018: '<': signed/unsigned mismatch
-C:\Users\mihai\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa.cpp(2149,28): warning C4244: '=': conversion from '_Ty' to 'unsigned int', possible loss of data
+C:\Users\Alex\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa.cpp(2170,21): warning C4018: '<': signed/unsigned mismatch
+C:\Users\Alex\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa.cpp(2182,21): warning C4018: '<': signed/unsigned mismatch
+C:\Users\Alex\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa.cpp(2187,21): warning C4018: '<': signed/unsigned mismatch
+C:\Users\Alex\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa.cpp(2193,21): warning C4018: '<': signed/unsigned mismatch
+C:\Users\Alex\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa.cpp(2195,28): warning C4244: '=': conversion from '_Ty' to 'unsigned int', possible loss of data
           with
           [
               _Ty=float
           ]
-C:\Users\mihai\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa.cpp(2207,21): warning C4018: '<': signed/unsigned mismatch
-C:\Users\mihai\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa.cpp(2221,21): warning C4018: '<': signed/unsigned mismatch
-C:\Users\mihai\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa.cpp(2226,21): warning C4018: '<': signed/unsigned mismatch
-C:\Users\mihai\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa.cpp(2232,21): warning C4018: '<': signed/unsigned mismatch
-C:\Users\mihai\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa.cpp(2234,29): warning C4244: '=': conversion from '_Ty' to 'unsigned int', possible loss of data
+C:\Users\Alex\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa.cpp(2253,21): warning C4018: '<': signed/unsigned mismatch
+C:\Users\Alex\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa.cpp(2267,21): warning C4018: '<': signed/unsigned mismatch
+C:\Users\Alex\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa.cpp(2272,21): warning C4018: '<': signed/unsigned mismatch
+C:\Users\Alex\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa.cpp(2278,21): warning C4018: '<': signed/unsigned mismatch
+C:\Users\Alex\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa.cpp(2280,29): warning C4244: '=': conversion from '_Ty' to 'unsigned int', possible loss of data
           with
           [
               _Ty=float
           ]
-C:\Users\mihai\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa.cpp(2291,21): warning C4018: '<': signed/unsigned mismatch
-C:\Users\mihai\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa.cpp(2305,21): warning C4018: '<': signed/unsigned mismatch
-C:\Users\mihai\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa.cpp(2310,21): warning C4018: '<': signed/unsigned mismatch
-C:\Users\mihai\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa.cpp(2316,21): warning C4018: '<': signed/unsigned mismatch
-C:\Users\mihai\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa.cpp(2318,29): warning C4244: '=': conversion from '_Ty' to 'unsigned int', possible loss of data
+C:\Users\Alex\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa.cpp(2337,21): warning C4018: '<': signed/unsigned mismatch
+C:\Users\Alex\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa.cpp(2351,21): warning C4018: '<': signed/unsigned mismatch
+C:\Users\Alex\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa.cpp(2356,21): warning C4018: '<': signed/unsigned mismatch
+C:\Users\Alex\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa.cpp(2362,21): warning C4018: '<': signed/unsigned mismatch
+C:\Users\Alex\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa.cpp(2364,29): warning C4244: '=': conversion from '_Ty' to 'unsigned int', possible loss of data
           with
           [
               _Ty=float
           ]
-C:\Users\mihai\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa.cpp(2374,21): warning C4018: '<': signed/unsigned mismatch
-C:\Users\mihai\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa.cpp(2388,21): warning C4018: '<': signed/unsigned mismatch
-C:\Users\mihai\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa.cpp(2393,21): warning C4018: '<': signed/unsigned mismatch
-C:\Users\mihai\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa.cpp(2399,21): warning C4018: '<': signed/unsigned mismatch
-C:\Users\mihai\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa.cpp(2401,29): warning C4244: '=': conversion from '_Ty' to 'unsigned int', possible loss of data
+C:\Users\Alex\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa.cpp(2420,21): warning C4018: '<': signed/unsigned mismatch
+C:\Users\Alex\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa.cpp(2434,21): warning C4018: '<': signed/unsigned mismatch
+C:\Users\Alex\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa.cpp(2439,21): warning C4018: '<': signed/unsigned mismatch
+C:\Users\Alex\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa.cpp(2445,21): warning C4018: '<': signed/unsigned mismatch
+C:\Users\Alex\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa.cpp(2447,29): warning C4244: '=': conversion from '_Ty' to 'unsigned int', possible loss of data
           with
           [
               _Ty=float
           ]
-C:\Users\mihai\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa.cpp(2456,21): warning C4018: '<': signed/unsigned mismatch
-C:\Users\mihai\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa.cpp(2468,21): warning C4018: '<': signed/unsigned mismatch
-C:\Users\mihai\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa.cpp(2473,21): warning C4018: '<': signed/unsigned mismatch
-C:\Users\mihai\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa.cpp(2479,21): warning C4018: '<': signed/unsigned mismatch
-C:\Users\mihai\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa.cpp(2481,30): warning C4244: '=': conversion from '_Ty' to 'unsigned int', possible loss of data
+C:\Users\Alex\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa.cpp(2502,21): warning C4018: '<': signed/unsigned mismatch
+C:\Users\Alex\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa.cpp(2514,21): warning C4018: '<': signed/unsigned mismatch
+C:\Users\Alex\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa.cpp(2519,21): warning C4018: '<': signed/unsigned mismatch
+C:\Users\Alex\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa.cpp(2525,21): warning C4018: '<': signed/unsigned mismatch
+C:\Users\Alex\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa.cpp(2527,30): warning C4244: '=': conversion from '_Ty' to 'unsigned int', possible loss of data
           with
           [
               _Ty=float
           ]
-C:\Users\mihai\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa.cpp(2537,21): warning C4018: '<': signed/unsigned mismatch
-C:\Users\mihai\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa.cpp(2551,21): warning C4018: '<': signed/unsigned mismatch
-C:\Users\mihai\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa.cpp(2556,21): warning C4018: '<': signed/unsigned mismatch
-C:\Users\mihai\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa.cpp(2562,21): warning C4018: '<': signed/unsigned mismatch
-C:\Users\mihai\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa.cpp(2564,29): warning C4244: '=': conversion from '_Ty' to 'unsigned int', possible loss of data
+C:\Users\Alex\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa.cpp(2583,21): warning C4018: '<': signed/unsigned mismatch
+C:\Users\Alex\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa.cpp(2597,21): warning C4018: '<': signed/unsigned mismatch
+C:\Users\Alex\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa.cpp(2602,21): warning C4018: '<': signed/unsigned mismatch
+C:\Users\Alex\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa.cpp(2608,21): warning C4018: '<': signed/unsigned mismatch
+C:\Users\Alex\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa.cpp(2610,29): warning C4244: '=': conversion from '_Ty' to 'unsigned int', possible loss of data
           with
           [
               _Ty=float
           ]
-C:\Users\mihai\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa.cpp(2621,21): warning C4018: '<': signed/unsigned mismatch
-C:\Users\mihai\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa.cpp(2635,21): warning C4018: '<': signed/unsigned mismatch
-C:\Users\mihai\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa.cpp(2640,21): warning C4018: '<': signed/unsigned mismatch
-C:\Users\mihai\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa.cpp(2646,21): warning C4018: '<': signed/unsigned mismatch
-C:\Users\mihai\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa.cpp(2648,29): warning C4244: '=': conversion from '_Ty' to 'unsigned int', possible loss of data
+C:\Users\Alex\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa.cpp(2667,21): warning C4018: '<': signed/unsigned mismatch
+C:\Users\Alex\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa.cpp(2681,21): warning C4018: '<': signed/unsigned mismatch
+C:\Users\Alex\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa.cpp(2686,21): warning C4018: '<': signed/unsigned mismatch
+C:\Users\Alex\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa.cpp(2692,21): warning C4018: '<': signed/unsigned mismatch
+C:\Users\Alex\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa.cpp(2694,29): warning C4244: '=': conversion from '_Ty' to 'unsigned int', possible loss of data
           with
           [
               _Ty=float
           ]
-C:\Users\mihai\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa.cpp(2705,21): warning C4018: '<': signed/unsigned mismatch
-C:\Users\mihai\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa.cpp(2719,21): warning C4018: '<': signed/unsigned mismatch
-C:\Users\mihai\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa.cpp(2724,21): warning C4018: '<': signed/unsigned mismatch
-C:\Users\mihai\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa.cpp(2730,21): warning C4018: '<': signed/unsigned mismatch
-C:\Users\mihai\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa.cpp(2732,29): warning C4244: '=': conversion from '_Ty' to 'unsigned int', possible loss of data
+C:\Users\Alex\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa.cpp(2751,21): warning C4018: '<': signed/unsigned mismatch
+C:\Users\Alex\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa.cpp(2765,21): warning C4018: '<': signed/unsigned mismatch
+C:\Users\Alex\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa.cpp(2770,21): warning C4018: '<': signed/unsigned mismatch
+C:\Users\Alex\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa.cpp(2776,21): warning C4018: '<': signed/unsigned mismatch
+C:\Users\Alex\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa.cpp(2778,29): warning C4244: '=': conversion from '_Ty' to 'unsigned int', possible loss of data
           with
           [
               _Ty=float
           ]
-C:\Users\mihai\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa.cpp(2788,21): warning C4018: '<': signed/unsigned mismatch
-C:\Users\mihai\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa.cpp(2805,21): warning C4018: '<': signed/unsigned mismatch
-C:\Users\mihai\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa.cpp(2811,21): warning C4018: '<': signed/unsigned mismatch
-C:\Users\mihai\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa.cpp(2813,29): warning C4244: '=': conversion from '_Ty' to 'unsigned int', possible loss of data
+C:\Users\Alex\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa.cpp(2834,21): warning C4018: '<': signed/unsigned mismatch
+C:\Users\Alex\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa.cpp(2851,21): warning C4018: '<': signed/unsigned mismatch
+C:\Users\Alex\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa.cpp(2857,21): warning C4018: '<': signed/unsigned mismatch
+C:\Users\Alex\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa.cpp(2859,29): warning C4244: '=': conversion from '_Ty' to 'unsigned int', possible loss of data
           with
           [
               _Ty=float
           ]
-C:\Users\mihai\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa.cpp(2866,21): warning C4018: '<': signed/unsigned mismatch
-C:\Users\mihai\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa.cpp(2878,21): warning C4018: '<': signed/unsigned mismatch
-C:\Users\mihai\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa.cpp(2883,21): warning C4018: '<': signed/unsigned mismatch
-C:\Users\mihai\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa.cpp(2889,21): warning C4018: '<': signed/unsigned mismatch
-C:\Users\mihai\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa.cpp(2891,29): warning C4244: '=': conversion from '_Ty' to 'unsigned int', possible loss of data
+C:\Users\Alex\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa.cpp(2912,21): warning C4018: '<': signed/unsigned mismatch
+C:\Users\Alex\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa.cpp(2924,21): warning C4018: '<': signed/unsigned mismatch
+C:\Users\Alex\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa.cpp(2929,21): warning C4018: '<': signed/unsigned mismatch
+C:\Users\Alex\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa.cpp(2935,21): warning C4018: '<': signed/unsigned mismatch
+C:\Users\Alex\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa.cpp(2937,29): warning C4244: '=': conversion from '_Ty' to 'unsigned int', possible loss of data
           with
           [
               _Ty=float
           ]
-C:\Users\mihai\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa.cpp(2948,21): warning C4018: '<': signed/unsigned mismatch
-C:\Users\mihai\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa.cpp(2962,21): warning C4018: '<': signed/unsigned mismatch
-C:\Users\mihai\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa.cpp(2967,21): warning C4018: '<': signed/unsigned mismatch
-C:\Users\mihai\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa.cpp(2973,21): warning C4018: '<': signed/unsigned mismatch
-C:\Users\mihai\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa.cpp(2975,29): warning C4244: '=': conversion from '_Ty' to 'unsigned int', possible loss of data
+C:\Users\Alex\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa.cpp(2994,21): warning C4018: '<': signed/unsigned mismatch
+C:\Users\Alex\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa.cpp(3008,21): warning C4018: '<': signed/unsigned mismatch
+C:\Users\Alex\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa.cpp(3013,21): warning C4018: '<': signed/unsigned mismatch
+C:\Users\Alex\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa.cpp(3019,21): warning C4018: '<': signed/unsigned mismatch
+C:\Users\Alex\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa.cpp(3021,29): warning C4244: '=': conversion from '_Ty' to 'unsigned int', possible loss of data
           with
           [
               _Ty=float
           ]
-C:\Users\mihai\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa.cpp(3032,21): warning C4018: '<': signed/unsigned mismatch
-C:\Users\mihai\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa.cpp(3046,21): warning C4018: '<': signed/unsigned mismatch
-C:\Users\mihai\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa.cpp(3051,21): warning C4018: '<': signed/unsigned mismatch
-C:\Users\mihai\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa.cpp(3057,21): warning C4018: '<': signed/unsigned mismatch
-C:\Users\mihai\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa.cpp(3059,29): warning C4244: '=': conversion from '_Ty' to 'unsigned int', possible loss of data
+C:\Users\Alex\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa.cpp(3078,21): warning C4018: '<': signed/unsigned mismatch
+C:\Users\Alex\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa.cpp(3092,21): warning C4018: '<': signed/unsigned mismatch
+C:\Users\Alex\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa.cpp(3097,21): warning C4018: '<': signed/unsigned mismatch
+C:\Users\Alex\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa.cpp(3103,21): warning C4018: '<': signed/unsigned mismatch
+C:\Users\Alex\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa.cpp(3105,29): warning C4244: '=': conversion from '_Ty' to 'unsigned int', possible loss of data
           with
           [
               _Ty=float
           ]
-C:\Users\mihai\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa.cpp(3114,21): warning C4018: '<': signed/unsigned mismatch
-C:\Users\mihai\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa.cpp(3128,21): warning C4018: '<': signed/unsigned mismatch
-C:\Users\mihai\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa.cpp(3133,21): warning C4018: '<': signed/unsigned mismatch
-C:\Users\mihai\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa.cpp(3139,21): warning C4018: '<': signed/unsigned mismatch
-C:\Users\mihai\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa.cpp(3141,32): warning C4244: '=': conversion from '_Ty' to 'unsigned int', possible loss of data
+C:\Users\Alex\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa.cpp(3160,21): warning C4018: '<': signed/unsigned mismatch
+C:\Users\Alex\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa.cpp(3174,21): warning C4018: '<': signed/unsigned mismatch
+C:\Users\Alex\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa.cpp(3179,21): warning C4018: '<': signed/unsigned mismatch
+C:\Users\Alex\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa.cpp(3185,21): warning C4018: '<': signed/unsigned mismatch
+C:\Users\Alex\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa.cpp(3187,32): warning C4244: '=': conversion from '_Ty' to 'unsigned int', possible loss of data
           with
           [
               _Ty=float
           ]
-C:\Users\mihai\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa.cpp(3197,21): warning C4018: '<': signed/unsigned mismatch
-C:\Users\mihai\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa.cpp(3211,21): warning C4018: '<': signed/unsigned mismatch
-C:\Users\mihai\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa.cpp(3216,21): warning C4018: '<': signed/unsigned mismatch
-C:\Users\mihai\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa.cpp(3222,21): warning C4018: '<': signed/unsigned mismatch
-C:\Users\mihai\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa.cpp(3224,35): warning C4244: '=': conversion from '_Ty' to 'unsigned int', possible loss of data
+C:\Users\Alex\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa.cpp(3243,21): warning C4018: '<': signed/unsigned mismatch
+C:\Users\Alex\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa.cpp(3257,21): warning C4018: '<': signed/unsigned mismatch
+C:\Users\Alex\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa.cpp(3262,21): warning C4018: '<': signed/unsigned mismatch
+C:\Users\Alex\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa.cpp(3268,21): warning C4018: '<': signed/unsigned mismatch
+C:\Users\Alex\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa.cpp(3270,35): warning C4244: '=': conversion from '_Ty' to 'unsigned int', possible loss of data
           with
           [
               _Ty=float
           ]
-C:\Users\mihai\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa.cpp(3279,21): warning C4018: '<': signed/unsigned mismatch
-C:\Users\mihai\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa.cpp(3293,21): warning C4018: '<': signed/unsigned mismatch
-C:\Users\mihai\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa.cpp(3298,21): warning C4018: '<': signed/unsigned mismatch
-C:\Users\mihai\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa.cpp(3304,21): warning C4018: '<': signed/unsigned mismatch
-C:\Users\mihai\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa.cpp(3306,33): warning C4244: '=': conversion from '_Ty' to 'unsigned int', possible loss of data
+C:\Users\Alex\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa.cpp(3325,21): warning C4018: '<': signed/unsigned mismatch
+C:\Users\Alex\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa.cpp(3339,21): warning C4018: '<': signed/unsigned mismatch
+C:\Users\Alex\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa.cpp(3344,21): warning C4018: '<': signed/unsigned mismatch
+C:\Users\Alex\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa.cpp(3350,21): warning C4018: '<': signed/unsigned mismatch
+C:\Users\Alex\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa.cpp(3352,33): warning C4244: '=': conversion from '_Ty' to 'unsigned int', possible loss of data
           with
           [
               _Ty=float
           ]
-C:\Users\mihai\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa.cpp(3362,21): warning C4018: '<': signed/unsigned mismatch
-C:\Users\mihai\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa.cpp(3376,21): warning C4018: '<': signed/unsigned mismatch
-C:\Users\mihai\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa.cpp(3381,21): warning C4018: '<': signed/unsigned mismatch
-C:\Users\mihai\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa.cpp(3387,21): warning C4018: '<': signed/unsigned mismatch
-C:\Users\mihai\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa.cpp(3389,30): warning C4244: '=': conversion from '_Ty' to 'unsigned int', possible loss of data
+C:\Users\Alex\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa.cpp(3408,21): warning C4018: '<': signed/unsigned mismatch
+C:\Users\Alex\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa.cpp(3422,21): warning C4018: '<': signed/unsigned mismatch
+C:\Users\Alex\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa.cpp(3427,21): warning C4018: '<': signed/unsigned mismatch
+C:\Users\Alex\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa.cpp(3433,21): warning C4018: '<': signed/unsigned mismatch
+C:\Users\Alex\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa.cpp(3435,30): warning C4244: '=': conversion from '_Ty' to 'unsigned int', possible loss of data
           with
           [
               _Ty=float
           ]
-C:\Users\mihai\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa.cpp(3444,21): warning C4018: '<': signed/unsigned mismatch
-C:\Users\mihai\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa.cpp(3458,21): warning C4018: '<': signed/unsigned mismatch
-C:\Users\mihai\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa.cpp(3463,21): warning C4018: '<': signed/unsigned mismatch
-C:\Users\mihai\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa.cpp(3469,21): warning C4018: '<': signed/unsigned mismatch
-C:\Users\mihai\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa.cpp(3471,30): warning C4244: '=': conversion from '_Ty' to 'unsigned int', possible loss of data
+C:\Users\Alex\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa.cpp(3490,21): warning C4018: '<': signed/unsigned mismatch
+C:\Users\Alex\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa.cpp(3504,21): warning C4018: '<': signed/unsigned mismatch
+C:\Users\Alex\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa.cpp(3509,21): warning C4018: '<': signed/unsigned mismatch
+C:\Users\Alex\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa.cpp(3515,21): warning C4018: '<': signed/unsigned mismatch
+C:\Users\Alex\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa.cpp(3517,30): warning C4244: '=': conversion from '_Ty' to 'unsigned int', possible loss of data
           with
           [
               _Ty=float
           ]
-C:\Users\mihai\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa.cpp(3526,21): warning C4018: '<': signed/unsigned mismatch
-C:\Users\mihai\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa.cpp(3540,21): warning C4018: '<': signed/unsigned mismatch
-C:\Users\mihai\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa.cpp(3545,21): warning C4018: '<': signed/unsigned mismatch
-C:\Users\mihai\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa.cpp(3551,21): warning C4018: '<': signed/unsigned mismatch
-C:\Users\mihai\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa.cpp(3553,30): warning C4244: '=': conversion from '_Ty' to 'unsigned int', possible loss of data
+C:\Users\Alex\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa.cpp(3572,21): warning C4018: '<': signed/unsigned mismatch
+C:\Users\Alex\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa.cpp(3586,21): warning C4018: '<': signed/unsigned mismatch
+C:\Users\Alex\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa.cpp(3591,21): warning C4018: '<': signed/unsigned mismatch
+C:\Users\Alex\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa.cpp(3597,21): warning C4018: '<': signed/unsigned mismatch
+C:\Users\Alex\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa.cpp(3599,30): warning C4244: '=': conversion from '_Ty' to 'unsigned int', possible loss of data
           with
           [
               _Ty=float
           ]
-C:\Users\mihai\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa.cpp(3636,21): warning C4018: '<': signed/unsigned mismatch
-C:\Users\mihai\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa.cpp(3648,21): warning C4018: '<': signed/unsigned mismatch
-C:\Users\mihai\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa.cpp(3653,21): warning C4018: '<': signed/unsigned mismatch
-C:\Users\mihai\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa.cpp(3659,21): warning C4018: '<': signed/unsigned mismatch
-C:\Users\mihai\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa.cpp(3661,29): warning C4244: '=': conversion from '_Ty' to 'unsigned int', possible loss of data
+C:\Users\Alex\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa.cpp(3682,21): warning C4018: '<': signed/unsigned mismatch
+C:\Users\Alex\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa.cpp(3694,21): warning C4018: '<': signed/unsigned mismatch
+C:\Users\Alex\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa.cpp(3699,21): warning C4018: '<': signed/unsigned mismatch
+C:\Users\Alex\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa.cpp(3705,21): warning C4018: '<': signed/unsigned mismatch
+C:\Users\Alex\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa.cpp(3707,29): warning C4244: '=': conversion from '_Ty' to 'unsigned int', possible loss of data
           with
           [
               _Ty=float
           ]
-C:\Users\mihai\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa.cpp(3717,21): warning C4018: '<': signed/unsigned mismatch
-C:\Users\mihai\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa.cpp(3731,21): warning C4018: '<': signed/unsigned mismatch
-C:\Users\mihai\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa.cpp(3736,21): warning C4018: '<': signed/unsigned mismatch
-C:\Users\mihai\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa.cpp(3742,21): warning C4018: '<': signed/unsigned mismatch
-C:\Users\mihai\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa.cpp(3744,30): warning C4244: '=': conversion from '_Ty' to 'unsigned int', possible loss of data
+C:\Users\Alex\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa.cpp(3763,21): warning C4018: '<': signed/unsigned mismatch
+C:\Users\Alex\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa.cpp(3777,21): warning C4018: '<': signed/unsigned mismatch
+C:\Users\Alex\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa.cpp(3782,21): warning C4018: '<': signed/unsigned mismatch
+C:\Users\Alex\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa.cpp(3788,21): warning C4018: '<': signed/unsigned mismatch
+C:\Users\Alex\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa.cpp(3790,30): warning C4244: '=': conversion from '_Ty' to 'unsigned int', possible loss of data
           with
           [
               _Ty=float
           ]
-C:\Users\mihai\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa.cpp(3800,21): warning C4018: '<': signed/unsigned mismatch
-C:\Users\mihai\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa.cpp(3814,21): warning C4018: '<': signed/unsigned mismatch
-C:\Users\mihai\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa.cpp(3819,21): warning C4018: '<': signed/unsigned mismatch
-C:\Users\mihai\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa.cpp(3825,21): warning C4018: '<': signed/unsigned mismatch
-C:\Users\mihai\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa.cpp(3827,31): warning C4244: '=': conversion from '_Ty' to 'unsigned int', possible loss of data
+C:\Users\Alex\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa.cpp(3846,21): warning C4018: '<': signed/unsigned mismatch
+C:\Users\Alex\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa.cpp(3860,21): warning C4018: '<': signed/unsigned mismatch
+C:\Users\Alex\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa.cpp(3865,21): warning C4018: '<': signed/unsigned mismatch
+C:\Users\Alex\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa.cpp(3871,21): warning C4018: '<': signed/unsigned mismatch
+C:\Users\Alex\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa.cpp(3873,31): warning C4244: '=': conversion from '_Ty' to 'unsigned int', possible loss of data
           with
           [
               _Ty=float
           ]
-  ExplorareMuzeuAntipa.vcxproj -> C:\Users\mihai\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\Debug\ExplorareMuzeuAntipa.exe
+C:\Users\Alex\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa.cpp(3929,21): warning C4018: '<': signed/unsigned mismatch
+C:\Users\Alex\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa.cpp(3943,21): warning C4018: '<': signed/unsigned mismatch
+C:\Users\Alex\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa.cpp(3948,21): warning C4018: '<': signed/unsigned mismatch
+C:\Users\Alex\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa.cpp(3954,21): warning C4018: '<': signed/unsigned mismatch
+C:\Users\Alex\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa\ExplorareMuzeuAntipa.cpp(3956,30): warning C4244: '=': conversion from '_Ty' to 'unsigned int', possible loss of data
+          with
+          [
+              _Ty=float
+          ]
+  ExplorareMuzeuAntipa.vcxproj -> C:\Users\Alex\Documents\GitHub\Explorare-Muzeu-Antipa\ExplorareMuzeuAntipa\Debug\ExplorareMuzeuAntipa.exe

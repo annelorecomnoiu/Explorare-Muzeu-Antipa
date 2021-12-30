@@ -100,6 +100,7 @@ void renderGrassBush(const Shader& shader);
 void renderGround(const Shader& shader);
 void renderDinoSkull(const Shader& shader);
 void renderpedastal(const Shader& shader);
+void renderDinoTero(const Shader& shader);
 
 
 //objects
@@ -121,10 +122,10 @@ void renderStork();
 void renderGrass();
 void renderGrassBush();
 void renderGround();
-
 void renderTrexBottom();
 void renderTrexTop();
 void renderpedastal();
+void renderDinoTero();
 
 //room
 void renderWall1();
@@ -215,6 +216,7 @@ int main(int argc, char** argv)
 	unsigned int GroundTexture = CreateTexture(strExePath + "\\Ground.jpg");
 	unsigned int bonesTexture = CreateTexture(strExePath + "\\bones1.jpg");
 	unsigned int pedastalTexture = CreateTexture(strExePath + "\\pedastal.jpg");
+	unsigned int dinoTero = CreateTexture(strExePath + "\\terodactil.jpg");
 
 	// configure depth map FBO
 	// -----------------------
@@ -533,6 +535,17 @@ int main(int argc, char** argv)
 		glCullFace(GL_BACK);
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
+		glViewport(0, 0, SHADOW_WIDTH, SHADOW_HEIGHT);
+		glBindFramebuffer(GL_FRAMEBUFFER, depthMapFBO);
+		glClear(GL_DEPTH_BUFFER_BIT);
+		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_2D, dinoTero);
+		glEnable(GL_CULL_FACE);
+		glCullFace(GL_FRONT);
+		renderDinoTero(shadowMappingDepthShader);
+		glCullFace(GL_BACK);
+		glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
 
 		// reset viewport
 		glViewport(0, 0, SCR_WIDTH, SCR_HEIGHT);
@@ -705,6 +718,14 @@ int main(int argc, char** argv)
 		glBindTexture(GL_TEXTURE_2D, depthMap);
 		glDisable(GL_CULL_FACE);
 		renderpedastal(shadowMappingShader);
+
+
+		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_2D, dinoTero);
+		glActiveTexture(GL_TEXTURE1);
+		glBindTexture(GL_TEXTURE_2D, depthMap);
+		glDisable(GL_CULL_FACE);
+		renderDinoTero(shadowMappingShader);
 
 
 		//transparent object
@@ -1367,6 +1388,31 @@ void renderpedastal(const Shader& shader)
 	shader.SetMat4("model", model);
 	renderpedastal();
 }
+
+
+void renderDinoTero(const Shader& shader)
+{
+	//dino
+	glm::mat4 model;
+
+	static float triangleOffset = 0.0f;
+	const float triangleIncrement = 0.005f;
+	triangleOffset += triangleIncrement;
+
+
+	model = glm::mat4();
+	model = glm::translate(model, glm::vec3(3.5f, 14.0f, 0.0f));
+	model = glm::scale(model, glm::vec3(0.03f));
+	model = glm::rotate(model, glm::radians(90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+	model = glm::rotate(model, glm::radians(180.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+	model = glm::rotate(model, triangleOffset, glm::vec3(0, 0, 1));
+	shader.SetMat4("model", model);
+	renderDinoTero();
+
+
+}
+
+
 
 unsigned int planeVAO = 0;
 void renderFloor()
@@ -3860,6 +3906,88 @@ void renderpedastal()
 	glBindVertexArray(0);
 }
 
+
+unsigned int indicesDT[720000];
+objl::Vertex verDT[900000];
+
+GLuint dinoTeroVAO, dinoTeroVBO, dinoTeroEBO;
+void renderDinoTero()
+{
+	// initialize (if necessary)
+	if (dinoTeroVAO == 0)
+	{
+
+		std::vector<float> verticess;
+		std::vector<float> indicess;
+
+
+
+		Loader.LoadFile("..\\OBJ\\terodactil.obj");
+		objl::Mesh curMesh = Loader.LoadedMeshes[0];
+		int size = curMesh.Vertices.size();
+		objl::Vertex v;
+		for (int j = 0; j < curMesh.Vertices.size(); j++)
+		{
+			v.Position.X = (float)curMesh.Vertices[j].Position.X;
+			v.Position.Y = (float)curMesh.Vertices[j].Position.Y;
+			v.Position.Z = (float)curMesh.Vertices[j].Position.Z;
+			v.Normal.X = (float)curMesh.Vertices[j].Normal.X;
+			v.Normal.Y = (float)curMesh.Vertices[j].Normal.Y;
+			v.Normal.Z = (float)curMesh.Vertices[j].Normal.Z;
+			v.TextureCoordinate.X = (float)curMesh.Vertices[j].TextureCoordinate.X;
+			v.TextureCoordinate.Y = (float)curMesh.Vertices[j].TextureCoordinate.Y;
+
+
+			verDT[j] = v;
+		}
+		for (int j = 0; j < verticess.size(); j++)
+		{
+			vertices[j] = verticess.at(j);
+		}
+
+		for (int j = 0; j < curMesh.Indices.size(); j++)
+		{
+
+			indicess.push_back((float)curMesh.Indices[j]);
+
+		}
+		for (int j = 0; j < curMesh.Indices.size(); j++)
+		{
+			indicesDT[j] = indicess.at(j);
+		}
+
+		glGenVertexArrays(1, &dinoTeroVAO);
+		glGenBuffers(1, &dinoTeroVBO);
+		glGenBuffers(1, &dinoTeroEBO);
+		// fill buffer
+		glBindBuffer(GL_ARRAY_BUFFER, dinoTeroVBO);
+		glBufferData(GL_ARRAY_BUFFER, sizeof(verDT), verDT, GL_DYNAMIC_DRAW);
+
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, dinoTeroEBO);
+		glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indicesDT), &indicesDT, GL_DYNAMIC_DRAW);
+		// link vertex attributes
+		glBindVertexArray(dinoTeroVAO);
+		glEnableVertexAttribArray(0);
+
+
+		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
+		glEnableVertexAttribArray(1);
+		glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float)));
+		glEnableVertexAttribArray(2);
+		glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
+		glBindBuffer(GL_ARRAY_BUFFER, 0);
+		glBindVertexArray(0);
+	}
+	// render Cube
+	glBindVertexArray(dinoTeroVAO);
+	glBindBuffer(GL_ARRAY_BUFFER, dinoTeroVBO);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, dinoTeroEBO);
+	int indexArraySize;
+	glGetBufferParameteriv(GL_ELEMENT_ARRAY_BUFFER, GL_BUFFER_SIZE, &indexArraySize);
+	glDrawElements(GL_TRIANGLES, indexArraySize / sizeof(unsigned int), GL_UNSIGNED_INT, 0);
+	glDrawArrays(GL_TRIANGLES, 0, 36);
+	glBindVertexArray(0);
+}
 
 // glfw: whenever the window size changed (by OS or user resize) this callback function executes
 // ---------------------------------------------------------------------------------------------
