@@ -80,7 +80,7 @@ void processInput(GLFWwindow* window);
 //textures
 void renderFloor(const Shader& shader);
 void renderWallRoom(const Shader& shader);
-void renderDino(const Shader& shader);
+void renderDino3(const Shader& shader);
 void renderPlatform(const Shader& shader);
 void renderBlackPanther(const Shader& shader);
 void renderZebra(const Shader& shader);
@@ -105,7 +105,7 @@ void renderDinoTero(const Shader& shader);
 
 //objects
 void renderFloor();
-void renderDino();
+void renderDino3();
 void renderPlatform();
 void renderBlackPanther();
 void renderZebra();
@@ -197,7 +197,6 @@ int main(int argc, char** argv)
 
 	unsigned int floorTexture = CreateTexture(strExePath + "\\floor.jpg");
 	unsigned int wallTexture = CreateTexture(strExePath + "\\wall.jpg");
-	unsigned int dinoTex = CreateTexture(strExePath + "\\trex.jpg");
 	unsigned int platformTexture = CreateTexture(strExePath + "\\black.jpg");
 	unsigned int pantherTexture = CreateTexture(strExePath + "\\panther.jpg");
 	unsigned int zebraTexture = CreateTexture(strExePath + "\\zebra.jpg");
@@ -217,6 +216,7 @@ int main(int argc, char** argv)
 	unsigned int bonesTexture = CreateTexture(strExePath + "\\bones1.jpg");
 	unsigned int pedastalTexture = CreateTexture(strExePath + "\\pedastal.jpg");
 	unsigned int dinoTero = CreateTexture(strExePath + "\\terodactil.jpg");
+	unsigned int dino3 = CreateTexture(strExePath + "\\dino3.jpg");
 
 	// configure depth map FBO
 	// -----------------------
@@ -316,13 +316,12 @@ int main(int argc, char** argv)
 		glBindFramebuffer(GL_FRAMEBUFFER, depthMapFBO);
 		glClear(GL_DEPTH_BUFFER_BIT);
 		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D, dinoTex);
+		glBindTexture(GL_TEXTURE_2D, dino3);
 		glEnable(GL_CULL_FACE);
 		glCullFace(GL_FRONT);
-		renderDino(shadowMappingDepthShader);
+		renderDino3(shadowMappingDepthShader);
 		glCullFace(GL_BACK);
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
-
 
 		glViewport(0, 0, SHADOW_WIDTH, SHADOW_HEIGHT);
 		glBindFramebuffer(GL_FRAMEBUFFER, depthMapFBO);
@@ -502,7 +501,7 @@ int main(int argc, char** argv)
 		renderGrassBush(shadowMappingDepthShader);
 		glCullFace(GL_BACK);
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
-
+		
 		glViewport(0, 0, SHADOW_WIDTH, SHADOW_HEIGHT);
 		glBindFramebuffer(GL_FRAMEBUFFER, depthMapFBO);
 		glClear(GL_DEPTH_BUFFER_BIT);
@@ -580,11 +579,11 @@ int main(int argc, char** argv)
 
 
 		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D, dinoTex);
+		glBindTexture(GL_TEXTURE_2D, dino3);
 		glActiveTexture(GL_TEXTURE1);
 		glBindTexture(GL_TEXTURE_2D, depthMap);
 		glDisable(GL_CULL_FACE);
-		renderDino(shadowMappingShader);
+		renderDino3(shadowMappingShader);
 
 
 
@@ -833,22 +832,24 @@ void renderWallRoom(const Shader& shader)
 	renderWall9();
 }
 
-void renderDino(const Shader& shader)
+void renderDino3(const Shader& shader)
 {
 	//dino
 	glm::mat4 model;
 
-	static float Offset = 0.0f;
-	const float Increment = 0.004f;
-	Offset += Increment;
+	static float triangleOffset = 0.0f;
+	const float triangleIncrement = 0.005f;
+	triangleOffset += triangleIncrement;
 
 
 	model = glm::mat4();
-	model = glm::translate(model, glm::vec3(-7.2f, -3.2f, -0.7f));
-	model = glm::scale(model, glm::vec3(0.04f));
-	model = glm::rotate(model, Offset, glm::vec3(0, 1, 0));
+	model = glm::translate(model, glm::vec3(-7.5f, 0.0f, 0.0f));
+	model = glm::scale(model, glm::vec3(0.2f));
+	model = glm::rotate(model, glm::radians(90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+	model = glm::rotate(model, glm::radians(180.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+	model = glm::rotate(model, triangleOffset, glm::vec3(0, 0, 1));
 	shader.SetMat4("model", model);
-	renderDino();
+	renderDino3();
 
 
 }
@@ -2729,14 +2730,14 @@ void renderCheetah()
 
 
 
-unsigned int indicesD[72000];
-objl::Vertex verD[82000];
+unsigned int indicesDT3[720000];
+objl::Vertex verDT3[900000];
 
-GLuint dinoVAO, dinoVBO, dinoEBO;
-void renderDino()
+GLuint dino3VAO, dino3VBO, dino3EBO;
+void renderDino3()
 {
 	// initialize (if necessary)
-	if (dinoVAO == 0)
+	if (dino3VAO == 0)
 	{
 
 		std::vector<float> verticess;
@@ -2744,7 +2745,7 @@ void renderDino()
 
 
 
-		Loader.LoadFile("..\\OBJ\\T-Rex Model.obj");
+		Loader.LoadFile("..\\OBJ\\dino3.obj");
 		objl::Mesh curMesh = Loader.LoadedMeshes[0];
 		int size = curMesh.Vertices.size();
 		objl::Vertex v;
@@ -2760,7 +2761,7 @@ void renderDino()
 			v.TextureCoordinate.Y = (float)curMesh.Vertices[j].TextureCoordinate.Y;
 
 
-			verD[j] = v;
+			verDT3[j] = v;
 		}
 		for (int j = 0; j < verticess.size(); j++)
 		{
@@ -2775,20 +2776,20 @@ void renderDino()
 		}
 		for (int j = 0; j < curMesh.Indices.size(); j++)
 		{
-			indicesD[j] = indicess.at(j);
+			indicesDT3[j] = indicess.at(j);
 		}
 
-		glGenVertexArrays(1, &dinoVAO);
-		glGenBuffers(1, &dinoVBO);
-		glGenBuffers(1, &dinoEBO);
+		glGenVertexArrays(1, &dino3VAO);
+		glGenBuffers(1, &dino3VBO);
+		glGenBuffers(1, &dino3EBO);
 		// fill buffer
-		glBindBuffer(GL_ARRAY_BUFFER, dinoVBO);
-		glBufferData(GL_ARRAY_BUFFER, sizeof(verD), verD, GL_DYNAMIC_DRAW);
+		glBindBuffer(GL_ARRAY_BUFFER, dino3VBO);
+		glBufferData(GL_ARRAY_BUFFER, sizeof(verDT3), verDT3, GL_DYNAMIC_DRAW);
 
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, dinoEBO);
-		glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indicesD), &indicesD, GL_DYNAMIC_DRAW);
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, dino3EBO);
+		glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indicesDT3), &indicesDT3, GL_DYNAMIC_DRAW);
 		// link vertex attributes
-		glBindVertexArray(dinoVAO);
+		glBindVertexArray(dino3VAO);
 		glEnableVertexAttribArray(0);
 
 
@@ -2801,9 +2802,9 @@ void renderDino()
 		glBindVertexArray(0);
 	}
 	// render Cube
-	glBindVertexArray(dinoVAO);
-	glBindBuffer(GL_ARRAY_BUFFER, dinoVBO);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, dinoEBO);
+	glBindVertexArray(dino3VAO);
+	glBindBuffer(GL_ARRAY_BUFFER, dino3VBO);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, dino3EBO);
 	int indexArraySize;
 	glGetBufferParameteriv(GL_ELEMENT_ARRAY_BUFFER, GL_BUFFER_SIZE, &indexArraySize);
 	glDrawElements(GL_TRIANGLES, indexArraySize / sizeof(unsigned int), GL_UNSIGNED_INT, 0);
