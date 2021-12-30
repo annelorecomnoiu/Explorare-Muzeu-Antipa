@@ -95,6 +95,7 @@ void renderWoodpecker(const Shader& shader);
 void renderDuck(const Shader& shader);
 void renderPelican(const Shader& shader);
 void renderStork(const Shader& shader);
+void renderParrot(const Shader& shader);
 void renderGrass(const Shader& shader);
 void renderGrassBush(const Shader& shader);
 void renderGround(const Shader& shader);
@@ -119,6 +120,7 @@ void renderWoodpecker();
 void renderDuck();
 void renderPelican();
 void renderStork();
+void renderParrot();
 void renderGrass();
 void renderGrassBush();
 void renderGround();
@@ -211,6 +213,7 @@ int main(int argc, char** argv)
 	unsigned int duckTexture = CreateTexture(strExePath + "\\duck.jpg");
 	unsigned int pelicanTexture = CreateTexture(strExePath + "\\pelican.jpg");
 	unsigned int storkTexture = CreateTexture(strExePath + "\\stork.jpg");
+	unsigned int parrotTexture = CreateTexture(strExePath + "\\parrot.jpg");
 	unsigned int GrassTexture = CreateTexture(strExePath + "\\Grass.jpg");
 	unsigned int GrassBushTexture = CreateTexture(strExePath + "\\GrassBush.jpg");
 	unsigned int GroundTexture = CreateTexture(strExePath + "\\Ground.jpg");
@@ -486,6 +489,17 @@ int main(int argc, char** argv)
 		glBindFramebuffer(GL_FRAMEBUFFER, depthMapFBO);
 		glClear(GL_DEPTH_BUFFER_BIT);
 		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_2D, parrotTexture);
+		glEnable(GL_CULL_FACE);
+		glCullFace(GL_FRONT);
+		renderParrot(shadowMappingDepthShader);
+		glCullFace(GL_BACK);
+		glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+		glViewport(0, 0, SHADOW_WIDTH, SHADOW_HEIGHT);
+		glBindFramebuffer(GL_FRAMEBUFFER, depthMapFBO);
+		glClear(GL_DEPTH_BUFFER_BIT);
+		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D, GrassTexture);
 		glEnable(GL_CULL_FACE);
 		glCullFace(GL_FRONT);
@@ -694,6 +708,13 @@ int main(int argc, char** argv)
 		glBindTexture(GL_TEXTURE_2D, depthMap);
 		glDisable(GL_CULL_FACE);
 		renderStork(shadowMappingShader);
+
+		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_2D, parrotTexture);
+		glActiveTexture(GL_TEXTURE1);
+		glBindTexture(GL_TEXTURE_2D, depthMap);
+		glDisable(GL_CULL_FACE);
+		renderParrot(shadowMappingShader);
 
 		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D, GrassTexture);
@@ -1114,6 +1135,23 @@ void renderStork(const Shader& shader)
 	model = glm::rotate(model, glm::radians(50.f), glm::vec3(0.0f, 0.0f, 1.0f));
 	shader.SetMat4("model", model);
 	renderStork();
+}
+
+void renderParrot(const Shader& shader)
+{
+
+	//parrot
+
+	glm::mat4 model;
+	model = glm::mat4();
+	model = glm::translate(model, glm::vec3(-60.7f, 5.f, 13.f));
+	model = glm::scale(model, glm::vec3(0.12f));
+	model = glm::rotate(model, glm::radians(90.f), glm::vec3(-1.0f, 0.0f, 0.0f));
+	model = glm::rotate(model, glm::radians(90.f), glm::vec3(0.0f, 0.0f, 1.0f));
+	model = glm::rotate(model, glm::radians(180.f), glm::vec3(0.0f, 0.0f, 1.0f));
+	model = glm::rotate(model, glm::radians(40.f), glm::vec3(0.0f, 0.0f, -1.0f));
+	shader.SetMat4("model", model);
+	renderParrot();
 }
 
 void renderGrass(const Shader& shader)
@@ -3438,6 +3476,88 @@ void renderStork()
 	glBindVertexArray(0);
 }
 
+
+unsigned int indicesParrot[720000];
+objl::Vertex verParrot[820000];
+GLuint  parrotVAO, parrotVBO, parrotEBO;
+
+void renderParrot()
+{
+	// initialize (if necessary)
+	if (parrotVAO == 0)
+	{
+
+		std::vector<float> verticess;
+		std::vector<float> indicess;
+
+
+
+		Loader.LoadFile("..\\OBJ\\parrot.obj");
+		objl::Mesh curMesh = Loader.LoadedMeshes[0];
+		int size = curMesh.Vertices.size();
+		objl::Vertex v;
+		for (int j = 0; j < curMesh.Vertices.size(); j++)
+		{
+			v.Position.X = (float)curMesh.Vertices[j].Position.X;
+			v.Position.Y = (float)curMesh.Vertices[j].Position.Y;
+			v.Position.Z = (float)curMesh.Vertices[j].Position.Z;
+			v.Normal.X = (float)curMesh.Vertices[j].Normal.X;
+			v.Normal.Y = (float)curMesh.Vertices[j].Normal.Y;
+			v.Normal.Z = (float)curMesh.Vertices[j].Normal.Z;
+			v.TextureCoordinate.X = (float)curMesh.Vertices[j].TextureCoordinate.X;
+			v.TextureCoordinate.Y = (float)curMesh.Vertices[j].TextureCoordinate.Y;
+
+
+			verParrot[j] = v;
+		}
+		for (int j = 0; j < verticess.size(); j++)
+		{
+			vertices[j] = verticess.at(j);
+		}
+
+		for (int j = 0; j < curMesh.Indices.size(); j++)
+		{
+
+			indicess.push_back((float)curMesh.Indices[j]);
+
+		}
+		for (int j = 0; j < curMesh.Indices.size(); j++)
+		{
+			indicesParrot[j] = indicess.at(j);
+		}
+
+		glGenVertexArrays(1, &parrotVAO);
+		glGenBuffers(1, &parrotVBO);
+		glGenBuffers(1, &parrotEBO);
+		// fill buffer
+		glBindBuffer(GL_ARRAY_BUFFER, parrotVBO);
+		glBufferData(GL_ARRAY_BUFFER, sizeof(verParrot), verParrot, GL_DYNAMIC_DRAW);
+
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, parrotEBO);
+		glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indicesParrot), &indicesParrot, GL_DYNAMIC_DRAW);
+		// link vertex attributes
+		glBindVertexArray(parrotVAO);
+		glEnableVertexAttribArray(0);
+
+
+		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
+		glEnableVertexAttribArray(1);
+		glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float)));
+		glEnableVertexAttribArray(2);
+		glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
+		glBindBuffer(GL_ARRAY_BUFFER, 0);
+		glBindVertexArray(0);
+	}
+	// render Cube
+	glBindVertexArray(parrotVAO);
+	glBindBuffer(GL_ARRAY_BUFFER, parrotVBO);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, parrotEBO);
+	int indexArraySize;
+	glGetBufferParameteriv(GL_ELEMENT_ARRAY_BUFFER, GL_BUFFER_SIZE, &indexArraySize);
+	glDrawElements(GL_TRIANGLES, indexArraySize / sizeof(unsigned int), GL_UNSIGNED_INT, 0);
+	glDrawArrays(GL_TRIANGLES, 0, 36);
+	glBindVertexArray(0);
+}
 
 unsigned int indicesGr[72000];
 objl::Vertex verGr[82000];
