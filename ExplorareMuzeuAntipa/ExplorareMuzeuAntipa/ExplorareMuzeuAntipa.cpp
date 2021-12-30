@@ -1082,7 +1082,7 @@ void renderGrass(const Shader& shader)
 
 	glm::mat4 model;
 	model = glm::mat4();
-	model = glm::translate(model, glm::vec3(-37.22f, -0.45f, -18.6f));
+	model = glm::translate(model, glm::vec3(-37.42f, -0.45f, -18.6f));
 	model = glm::scale(model, glm::vec3(2.3f));
 	model = glm::rotate(model, glm::radians(180.0f), glm::vec3(0.0f, 0.0f, 1.0f));
 
@@ -1091,7 +1091,7 @@ void renderGrass(const Shader& shader)
 
 
 	model = glm::mat4();
-	model = glm::translate(model, glm::vec3(-61.05f, -0.4f, -19.95f));
+	model = glm::translate(model, glm::vec3(-61.25f, -0.4f, -19.95f));
 	model = glm::scale(model, glm::vec3(2.6f));
 	model = glm::rotate(model, glm::radians(180.0f), glm::vec3(0.0f, 0.0f, 1.0f));
 
@@ -1119,15 +1119,186 @@ void renderGrassBush(const Shader& shader)
 			renderGrassBush();
 		}
 		else
+			if (i % 3 == 0)
+			{
+				continue;
+			}
+			else
+			{
+				glm::mat4 model;
+				model = glm::mat4();
+				model = glm::translate(model, glm::vec3(-27.0f - i * 1.3, -1.2f, -10.5f));
+				model = glm::scale(model, glm::vec3(0.005f));
+				model = glm::rotate(model, glm::radians(145.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+
+				shader.SetMat4("model", model);
+				renderGrassBush();
+			}
+	}
+
+	int j = 0;
+	for (int i = 0; i < 8; i++)
+	{
+		if (i % 2 == 0)
 		{
 			glm::mat4 model;
 			model = glm::mat4();
-			model = glm::translate(model, glm::vec3(-27.0f - i * 1.3, -1.2f, -10.5f));
-			model = glm::scale(model, glm::vec3(0.005f));
+			model = glm::translate(model, glm::vec3(-27.0f - i * 1.3, -1.2f, -17.0f-j));
+			model = glm::scale(model, glm::vec3(0.003f));
 			model = glm::rotate(model, glm::radians(145.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 
 			shader.SetMat4("model", model);
 			renderGrassBush();
+		}
+		else
+			if (i % 3 == 0)
+			{
+				glm::mat4 model;
+				model = glm::mat4();
+				model = glm::translate(model, glm::vec3(-27.0f - i * 1.3, -1.2f, -17.0f-j));
+				model = glm::scale(model, glm::vec3(0.002f));
+				model = glm::rotate(model, glm::radians(145.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+
+				shader.SetMat4("model", model);
+				renderGrassBush();
+				i = i + 3;
+				j = j + 3;
+			}
+			else
+			{
+				glm::mat4 model;
+				model = glm::mat4();
+				model = glm::translate(model, glm::vec3(-27.0f - i * 1.3, -1.2f, -17.0f-j));
+				model = glm::scale(model, glm::vec3(0.005f));
+				model = glm::rotate(model, glm::radians(145.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+
+				shader.SetMat4("model", model);
+				renderGrassBush();
+			}
+	}
+	int k = 6;
+	for (int i = 8; i < 30; i++)
+	{
+		if (i % 2 == 0)
+		{
+			glm::mat4 model;
+			model = glm::mat4();
+			model = glm::translate(model, glm::vec3(-27.0f - i * 1.3, -1.2f, -17.0f + k));
+			model = glm::scale(model, glm::vec3(0.003f));
+			model = glm::rotate(model, glm::radians(145.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+
+			shader.SetMat4("model", model);
+			renderGrassBush();
+		}
+		else
+			if (i % 3 == 0)
+			{
+				glm::mat4 model;
+				model = glm::mat4();
+				model = glm::translate(model, glm::vec3(-27.0f - i * 1.3, -1.2f, -17.0f + k));
+				model = glm::scale(model, glm::vec3(0.002f));
+				model = glm::rotate(model, glm::radians(145.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+
+				shader.SetMat4("model", model);
+				renderGrassBush();
+				i = i + 3;
+				k = k - 3;
+			}
+			else
+			{
+				glm::mat4 model;
+				model = glm::mat4();
+				model = glm::translate(model, glm::vec3(-27.0f - i * 1.3, -1.2f, -17.0f + k));
+				model = glm::scale(model, glm::vec3(0.005f));
+				model = glm::rotate(model, glm::radians(145.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+
+				shader.SetMat4("model", model);
+				renderGrassBush();
+			}
+	}
+
+	for (int a = 0; a < 2; a++)
+	{
+		int l = 0;
+		for (int i = 0; i < 8; i++)
+		{
+			if (i % 2 == 0)
+			{
+				glm::mat4 model;
+				model = glm::mat4();
+				model = glm::translate(model, glm::vec3(-27.0f - i * 1.3, -1.2f, 17.0f - l-a));
+				model = glm::scale(model, glm::vec3(0.003f));
+				model = glm::rotate(model, glm::radians(145.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+
+				shader.SetMat4("model", model);
+				renderGrassBush();
+			}
+			else
+				if (i % 3 == 0)
+				{
+					glm::mat4 model;
+					model = glm::mat4();
+					model = glm::translate(model, glm::vec3(-27.0f - i * 1.3, -1.2f, 17.0f - l-a));
+					model = glm::scale(model, glm::vec3(0.002f));
+					model = glm::rotate(model, glm::radians(145.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+
+					shader.SetMat4("model", model);
+					renderGrassBush();
+					i = i + 3;
+					l = l + 3;
+				}
+				else
+				{
+					glm::mat4 model;
+					model = glm::mat4();
+					model = glm::translate(model, glm::vec3(-27.0f - i * 1.3, -1.2f, 17.0f - l-a));
+					model = glm::scale(model, glm::vec3(0.005f));
+					model = glm::rotate(model, glm::radians(145.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+
+					shader.SetMat4("model", model);
+					renderGrassBush();
+				}
+		}
+
+		int m = 6;
+		for (int i = 8; i < 30; i++)
+		{
+			if (i % 2 == 0)
+			{
+				glm::mat4 model;
+				model = glm::mat4();
+				model = glm::translate(model, glm::vec3(-27.0f - i * 1.3, -1.2f, 17.0f + m-a));
+				model = glm::scale(model, glm::vec3(0.003f));
+				model = glm::rotate(model, glm::radians(145.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+
+				shader.SetMat4("model", model);
+				renderGrassBush();
+			}
+			else
+				if (i % 3 == 0)
+				{
+					glm::mat4 model;
+					model = glm::mat4();
+					model = glm::translate(model, glm::vec3(-27.0f - i * 1.3, -1.2f, 17.0f + m-a));
+					model = glm::scale(model, glm::vec3(0.002f));
+					model = glm::rotate(model, glm::radians(145.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+
+					shader.SetMat4("model", model);
+					renderGrassBush();
+					i = i + 3;
+					m = m - 3;
+				}
+				else
+				{
+					glm::mat4 model;
+					model = glm::mat4();
+					model = glm::translate(model, glm::vec3(-27.0f - i * 1.3, -1.2f, 17.0f + m-a));
+					model = glm::scale(model, glm::vec3(0.005f));
+					model = glm::rotate(model, glm::radians(145.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+
+					shader.SetMat4("model", model);
+					renderGrassBush();
+				}
 		}
 	}
 }
@@ -1140,7 +1311,7 @@ void renderGround(const Shader& shader)
 
 	glm::mat4 model;
 	model = glm::mat4();
-	model = glm::translate(model, glm::vec3(-37.22f, -0.45f, 18.6f));
+	model = glm::translate(model, glm::vec3(-37.42f, -0.45f, 18.6f));
 	model = glm::scale(model, glm::vec3(2.3f));
 	model = glm::rotate(model, glm::radians(180.0f), glm::vec3(0.0f, 0.0f, 1.0f));
 
@@ -1149,7 +1320,7 @@ void renderGround(const Shader& shader)
 
 
 	model = glm::mat4();
-	model = glm::translate(model, glm::vec3(-61.05f, -0.4f, 19.95f));
+	model = glm::translate(model, glm::vec3(-61.25f, -0.4f, 19.95f));
 	model = glm::scale(model, glm::vec3(2.6f));
 	model = glm::rotate(model, glm::radians(180.0f), glm::vec3(0.0f, 0.0f, 1.0f));
 
@@ -1179,10 +1350,18 @@ void renderDinoSkull(const Shader& shader)
 
 void renderpedastal(const Shader& shader)
 {
-	//pedastal
+	//pedastal 1
 	glm::mat4 model;
 	model = glm::mat4();
 	model = glm::translate(model, glm::vec3(12.5f, 7.2f, 14.4f));
+	model = glm::rotate(model, glm::radians(90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+	model = glm::scale(model, glm::vec3(0.1f));
+	shader.SetMat4("model", model);
+	renderpedastal();
+
+	//pedastal 2
+	model = glm::mat4();
+	model = glm::translate(model, glm::vec3(12.5f, 7.2f, -12.4f));
 	model = glm::rotate(model, glm::radians(90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
 	model = glm::scale(model, glm::vec3(0.1f));
 	shader.SetMat4("model", model);
