@@ -1161,7 +1161,7 @@ void renderGrass(const Shader& shader)
 
 	glm::mat4 model;
 	model = glm::mat4();
-	model = glm::translate(model, glm::vec3(-37.42f, -0.45f, -18.6f));
+	model = glm::translate(model, glm::vec3(-37.42f, -0.45f, 18.6f));
 	model = glm::scale(model, glm::vec3(2.3f));
 	model = glm::rotate(model, glm::radians(180.0f), glm::vec3(0.0f, 0.0f, 1.0f));
 
@@ -1170,7 +1170,7 @@ void renderGrass(const Shader& shader)
 
 
 	model = glm::mat4();
-	model = glm::translate(model, glm::vec3(-61.25f, -0.4f, -19.95f));
+	model = glm::translate(model, glm::vec3(-61.25f, -0.4f, 19.95f));
 	model = glm::scale(model, glm::vec3(2.6f));
 	model = glm::rotate(model, glm::radians(180.0f), glm::vec3(0.0f, 0.0f, 1.0f));
 
@@ -1390,7 +1390,7 @@ void renderGround(const Shader& shader)
 
 	glm::mat4 model;
 	model = glm::mat4();
-	model = glm::translate(model, glm::vec3(-37.42f, -0.45f, 18.6f));
+	model = glm::translate(model, glm::vec3(-37.42f, -0.45f, -18.6f));
 	model = glm::scale(model, glm::vec3(2.3f));
 	model = glm::rotate(model, glm::radians(180.0f), glm::vec3(0.0f, 0.0f, 1.0f));
 
@@ -1399,7 +1399,7 @@ void renderGround(const Shader& shader)
 
 
 	model = glm::mat4();
-	model = glm::translate(model, glm::vec3(-61.25f, -0.4f, 19.95f));
+	model = glm::translate(model, glm::vec3(-61.25f, -0.4f, -19.95f));
 	model = glm::scale(model, glm::vec3(2.6f));
 	model = glm::rotate(model, glm::radians(180.0f), glm::vec3(0.0f, 0.0f, 1.0f));
 
