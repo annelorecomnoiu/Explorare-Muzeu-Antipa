@@ -251,7 +251,7 @@ int main(int argc, char** argv)
 
 	// lighting info
 	// -------------
-	glm::vec3 lightPos(-2.0f, 4.0f, -1.0f);
+	glm::vec3 lightPos(-30.0f, 4.0f, -1.0f);
 
 	glEnable(GL_CULL_FACE);
 
@@ -1366,6 +1366,19 @@ void renderDinoSkull(const Shader& shader)
 	model = glm::scale(model, glm::vec3(4.0f));
 	shader.SetMat4("model", model);
 	renderTrexTop();
+
+	model = glm::mat4();
+	model = glm::translate(model, glm::vec3(12.0f, -0.5f, -50.5f));
+	model = glm::scale(model, glm::vec3(4.0f));
+	shader.SetMat4("model", model);
+	renderTrexBottom();
+
+	model = glm::mat4();
+	model = glm::translate(model, glm::vec3(12.0f, -0.5f, -50.5f));
+	model = glm::scale(model, glm::vec3(4.0f));
+	shader.SetMat4("model", model);
+	renderTrexTop();
+
 
 }
 
