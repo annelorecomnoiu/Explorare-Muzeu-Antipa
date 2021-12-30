@@ -97,6 +97,7 @@ void renderPelican(const Shader& shader);
 void renderStork(const Shader& shader);
 void renderGrass(const Shader& shader);
 void renderGrassBush(const Shader& shader);
+void renderGround(const Shader& shader);
 void renderDinoSkull(const Shader& shader);
 void renderpedastal(const Shader& shader);
 
@@ -119,6 +120,8 @@ void renderPelican();
 void renderStork();
 void renderGrass();
 void renderGrassBush();
+void renderGround();
+
 void renderTrexBottom();
 void renderTrexTop();
 void renderpedastal();
@@ -209,6 +212,7 @@ int main(int argc, char** argv)
 	unsigned int storkTexture = CreateTexture(strExePath + "\\stork.jpg");
 	unsigned int GrassTexture = CreateTexture(strExePath + "\\Grass.jpg");
 	unsigned int GrassBushTexture = CreateTexture(strExePath + "\\GrassBush.jpg");
+	unsigned int GroundTexture = CreateTexture(strExePath + "\\Ground.jpg");
 	unsigned int bonesTexture = CreateTexture(strExePath + "\\bones1.jpg");
 	unsigned int pedastalTexture = CreateTexture(strExePath + "\\pedastal.jpg");
 
@@ -501,6 +505,17 @@ int main(int argc, char** argv)
 		glBindFramebuffer(GL_FRAMEBUFFER, depthMapFBO);
 		glClear(GL_DEPTH_BUFFER_BIT);
 		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_2D, GroundTexture);
+		glEnable(GL_CULL_FACE);
+		glCullFace(GL_FRONT);
+		renderGround(shadowMappingDepthShader);
+		glCullFace(GL_BACK);
+		glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+		glViewport(0, 0, SHADOW_WIDTH, SHADOW_HEIGHT);
+		glBindFramebuffer(GL_FRAMEBUFFER, depthMapFBO);
+		glClear(GL_DEPTH_BUFFER_BIT);
+		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D, bonesTexture);
 		glEnable(GL_CULL_FACE);
 		glCullFace(GL_FRONT);
@@ -668,6 +683,13 @@ int main(int argc, char** argv)
 		glBindTexture(GL_TEXTURE_2D, depthMap);
 		glDisable(GL_CULL_FACE);
 		renderGrassBush(shadowMappingShader);
+
+		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_2D, GroundTexture);
+		glActiveTexture(GL_TEXTURE1);
+		glBindTexture(GL_TEXTURE_2D, depthMap);
+		glDisable(GL_CULL_FACE);
+		renderGround(shadowMappingShader);
 
 		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D, bonesTexture);
@@ -1060,7 +1082,7 @@ void renderGrass(const Shader& shader)
 
 	glm::mat4 model;
 	model = glm::mat4();
-	model = glm::translate(model, glm::vec3(-37.47f, -0.45f, -18.6f));
+	model = glm::translate(model, glm::vec3(-37.22f, -0.45f, -18.6f));
 	model = glm::scale(model, glm::vec3(2.3f));
 	model = glm::rotate(model, glm::radians(180.0f), glm::vec3(0.0f, 0.0f, 1.0f));
 
@@ -1069,7 +1091,7 @@ void renderGrass(const Shader& shader)
 
 
 	model = glm::mat4();
-	model = glm::translate(model, glm::vec3(-61.3f, -0.4f, -19.95f));
+	model = glm::translate(model, glm::vec3(-61.05f, -0.4f, -19.95f));
 	model = glm::scale(model, glm::vec3(2.6f));
 	model = glm::rotate(model, glm::radians(180.0f), glm::vec3(0.0f, 0.0f, 1.0f));
 
@@ -1110,6 +1132,32 @@ void renderGrassBush(const Shader& shader)
 	}
 }
 
+
+void renderGround(const Shader& shader)
+{
+
+	//Ground
+
+	glm::mat4 model;
+	model = glm::mat4();
+	model = glm::translate(model, glm::vec3(-37.22f, -0.45f, 18.6f));
+	model = glm::scale(model, glm::vec3(2.3f));
+	model = glm::rotate(model, glm::radians(180.0f), glm::vec3(0.0f, 0.0f, 1.0f));
+
+	shader.SetMat4("model", model);
+	renderGround();
+
+
+	model = glm::mat4();
+	model = glm::translate(model, glm::vec3(-61.05f, -0.4f, 19.95f));
+	model = glm::scale(model, glm::vec3(2.6f));
+	model = glm::rotate(model, glm::radians(180.0f), glm::vec3(0.0f, 0.0f, 1.0f));
+
+	shader.SetMat4("model", model);
+	renderGround();
+
+
+}
 
 void renderDinoSkull(const Shader& shader)
 {
@@ -3270,6 +3318,88 @@ void renderGrassBush()
 	glBindVertexArray(GrassBushVAO);
 	glBindBuffer(GL_ARRAY_BUFFER, GrassBushVBO);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, GrassBushEBO);
+	int indexArraySize;
+	glGetBufferParameteriv(GL_ELEMENT_ARRAY_BUFFER, GL_BUFFER_SIZE, &indexArraySize);
+	glDrawElements(GL_TRIANGLES, indexArraySize / sizeof(unsigned int), GL_UNSIGNED_INT, 0);
+	glDrawArrays(GL_TRIANGLES, 0, 36);
+	glBindVertexArray(0);
+}
+
+unsigned int indicesGo[720000];
+objl::Vertex verGo[1000000];
+GLuint GroundVAO, GroundVBO, GroundEBO;
+
+void renderGround()
+{
+	// initialize (if necessary)
+	if (GroundVAO == 0)
+	{
+
+		std::vector<float> verticess;
+		std::vector<float> indicess;
+
+
+
+		Loader.LoadFile("..\\OBJ\\Ground.obj");
+		objl::Mesh curMesh = Loader.LoadedMeshes[0];
+		int size = curMesh.Vertices.size();
+		objl::Vertex v;
+		for (int j = 0; j < curMesh.Vertices.size(); j++)
+		{
+			v.Position.X = (float)curMesh.Vertices[j].Position.X;
+			v.Position.Y = (float)curMesh.Vertices[j].Position.Y;
+			v.Position.Z = (float)curMesh.Vertices[j].Position.Z;
+			v.Normal.X = (float)curMesh.Vertices[j].Normal.X;
+			v.Normal.Y = (float)curMesh.Vertices[j].Normal.Y;
+			v.Normal.Z = (float)curMesh.Vertices[j].Normal.Z;
+			v.TextureCoordinate.X = (float)curMesh.Vertices[j].TextureCoordinate.X;
+			v.TextureCoordinate.Y = (float)curMesh.Vertices[j].TextureCoordinate.Y;
+
+
+			verGo[j] = v;
+		}
+		for (int j = 0; j < verticess.size(); j++)
+		{
+			vertices[j] = verticess.at(j);
+		}
+
+		for (int j = 0; j < curMesh.Indices.size(); j++)
+		{
+
+			indicess.push_back((float)curMesh.Indices[j]);
+
+		}
+		for (int j = 0; j < curMesh.Indices.size(); j++)
+		{
+			indicesGo[j] = indicess.at(j);
+		}
+
+		glGenVertexArrays(1, &GroundVAO);
+		glGenBuffers(1, &GroundVBO);
+		glGenBuffers(1, &GroundEBO);
+		// fill buffer
+		glBindBuffer(GL_ARRAY_BUFFER, GroundVBO);
+		glBufferData(GL_ARRAY_BUFFER, sizeof(verGo), verGo, GL_DYNAMIC_DRAW);
+
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, GroundEBO);
+		glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indicesGo), &indicesGo, GL_DYNAMIC_DRAW);
+		// link vertex attributes
+		glBindVertexArray(GroundVAO);
+		glEnableVertexAttribArray(0);
+
+
+		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
+		glEnableVertexAttribArray(1);
+		glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float)));
+		glEnableVertexAttribArray(2);
+		glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
+		glBindBuffer(GL_ARRAY_BUFFER, 0);
+		glBindVertexArray(0);
+	}
+	// render Cube
+	glBindVertexArray(GroundVAO);
+	glBindBuffer(GL_ARRAY_BUFFER, GroundVBO);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, GroundEBO);
 	int indexArraySize;
 	glGetBufferParameteriv(GL_ELEMENT_ARRAY_BUFFER, GL_BUFFER_SIZE, &indexArraySize);
 	glDrawElements(GL_TRIANGLES, indexArraySize / sizeof(unsigned int), GL_UNSIGNED_INT, 0);
