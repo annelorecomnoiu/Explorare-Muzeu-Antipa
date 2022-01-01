@@ -269,7 +269,7 @@ int main(int argc, char** argv)
 
 	// lighting info
 	// -------------
-	glm::vec3 lightPos(-2.0f, 6.0f, -1.0f);
+	glm::vec3 lightPos(-25.0f, 6.0f, -1.0f);
 
 	glEnable(GL_CULL_FACE);
 
@@ -908,9 +908,9 @@ void renderDino3(const Shader& shader)
 	//dino
 	glm::mat4 model;
 
-	static float triangleOffset = 0.0f;
-	const float triangleIncrement = 0.005f;
-	triangleOffset += triangleIncrement;
+	static float Offset = 0.0f;
+	const float Increment = 0.005f;
+	Offset += Increment;
 
 
 	model = glm::mat4();
@@ -918,7 +918,7 @@ void renderDino3(const Shader& shader)
 	model = glm::scale(model, glm::vec3(0.2f));
 	model = glm::rotate(model, glm::radians(90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
 	model = glm::rotate(model, glm::radians(180.0f), glm::vec3(0.0f, 1.0f, 0.0f));
-	model = glm::rotate(model, triangleOffset, glm::vec3(0, 0, 1));
+	model = glm::rotate(model, Offset, glm::vec3(0, 0, 1));
 	shader.SetMat4("model", model);
 	renderDino3();
 
@@ -1497,9 +1497,9 @@ void renderDinoTero(const Shader& shader)
 	//dino
 	glm::mat4 model;
 
-	static float triangleOffset = 0.0f;
-	const float triangleIncrement = 0.005f;
-	triangleOffset += triangleIncrement;
+	static float Offset = 0.0f;
+	const float Increment = 0.005f;
+	Offset += Increment;
 
 
 	model = glm::mat4();
@@ -1507,7 +1507,7 @@ void renderDinoTero(const Shader& shader)
 	model = glm::scale(model, glm::vec3(0.03f));
 	model = glm::rotate(model, glm::radians(90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
 	model = glm::rotate(model, glm::radians(180.0f), glm::vec3(0.0f, 1.0f, 0.0f));
-	model = glm::rotate(model, triangleOffset, glm::vec3(0, 0, 1));
+	model = glm::rotate(model, Offset, glm::vec3(0, 0, 1));
 	shader.SetMat4("model", model);
 	renderDinoTero();
 
