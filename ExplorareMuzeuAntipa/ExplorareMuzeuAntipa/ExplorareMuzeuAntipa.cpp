@@ -1523,7 +1523,7 @@ void renderDino2(const Shader& shader)
 
 
 	model = glm::mat4();
-	model = glm::translate(model, glm::vec3(10.5f, -1.0f, 1.0f));
+	model = glm::translate(model, glm::vec3(10.5f, -0.5f, 1.0f));
 	model = glm::scale(model, glm::vec3(0.7f));
 	model = glm::rotate(model, glm::radians(270.0f), glm::vec3(1.0f, 0.0f, 0.0f));
 	model = glm::rotate(model, glm::radians(-90.0f), glm::vec3(0.0f, 0.0f, 1.0f));
